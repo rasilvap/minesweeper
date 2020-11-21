@@ -63,6 +63,40 @@ func (g Game) ShowBoard() {
 	}
 }
 
-func (g Game) getAdjecentTiles(f int, c int) []Tile {
+func (g Game) getAdjacentTiles(f int, c int) []Tile {
+	minF := -1
+	if f == 0 {
+		minF = 0
+	}
 
+	minC := -1
+	if c == 0 {
+		minC = 0
+	}
+
+	maxF := 1
+	if f == (g.Rows - 1) {
+		maxF = 0
+	}
+
+	maxC := 1
+	if c == (g.Columns - 1) {
+		maxC = 0
+	}
+
+	var adjecentTiles []Tile
+	for cc := minC; cc <= maxC; cc++ {
+		for ff := minF; ff <= maxF; ff++ {
+			if cc == 0 && ff == 0 {
+				continue
+			}
+
+			var resultF = ff + f
+			var resultC = cc + c
+
+			adjecentTiles = append(adjecentTiles, g.Board[resultF][resultC])
+		}
+	}
+
+	return adjecentTiles
 }
