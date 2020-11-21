@@ -62,3 +62,7 @@ func (g Game) ShowBoard() {
 		fmt.Println()
 	}
 }
+
+func (g Game) getAdjecentTiles(f int, c int) []Tile {
+
+}

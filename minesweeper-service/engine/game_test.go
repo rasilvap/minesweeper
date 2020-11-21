@@ -13,3 +13,12 @@ func TestBuildGame(t *testing.T) {
 		t.Error("Error", len(game.Board), len(game.Board[0]))
 	}
 }
+
+func TestGetAdjecentTilesShouldBe8(t *testing.T) {
+	game := BuildNewGame(3, 3)
+	result := game.getAdjecentTiles(1, 1)
+
+	if len(result) != 8 {
+		t.Error("Error", len(result))
+	}
+}
