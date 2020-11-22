@@ -72,9 +72,9 @@ func TestMarkPlayMovement(t *testing.T) {
 	}
 
 	if stateGame != StateGameRunning ||
-		pointTiles[0][0].r != 0 || pointTiles[0][0].c != 0 ||
+		pointTiles[0][0].Row != 0 || pointTiles[0][0].Column != 0 ||
 		!reflect.DeepEqual(expected, game.GetStates()) {
-		t.Error("Error", stateGame, pointTiles[0][0].r, pointTiles[0][0].c, game.GetStates())
+		t.Error("Error", stateGame, pointTiles[0][0].Row, pointTiles[0][0].Column, game.GetStates())
 	}
 }
 
@@ -83,7 +83,7 @@ func TestGetAdjacentTilesShouldBe8(t *testing.T) {
 	result := game.getAdjacentTiles(1, 1)
 
 	for d := 0; d < len(result); d++ {
-		fmt.Println(result[d].valueTest)
+		fmt.Println(result[d].ValueTest)
 	}
 
 	if len(result) != 8 {

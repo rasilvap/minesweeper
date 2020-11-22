@@ -25,12 +25,12 @@ const (
 )
 
 type Tile struct {
-	state                StateTile
-	r                    int
-	c                    int
-	surroundingMineCount int
-	isMine               bool
-	valueTest            int
+	State                StateTile
+	Row                  int
+	Column               int
+	SurroundingMineCount int
+	IsMine               bool
+	ValueTest            int
 }
 
 type Mine struct {
@@ -50,30 +50,30 @@ func (g Game) PlayMovement(r, c int) (StateGame, [][]Tile) {
 	tile := &g.Board[r][c]
 
 	//played tile, maybe revert
-	if tile.state != StateTileCovered {
-		if tile.state == StateTileFlagged {
-			tile.state = StateTileCovered
+	if tile.State != StateTileCovered {
+		if tile.State == StateTileFlagged {
+			tile.State = StateTileCovered
 		}
 
-		return StateGameRunning, [][]Tile{{Tile{tile.state,
-			tile.r,
-			tile.c,
-			tile.surroundingMineCount,
-			tile.isMine,
-			tile.valueTest}}}
+		return StateGameRunning, [][]Tile{{Tile{tile.State,
+			tile.Row,
+			tile.Column,
+			tile.SurroundingMineCount,
+			tile.IsMine,
+			tile.ValueTest}}}
 	}
 
 	//game over, clear all tiles
-	if tile.isMine {
-		tile.state = StateTileExploted
+	if tile.IsMine {
+		tile.State = StateTileExploted
 		return StateGameLost, nil
 	}
 
 	//simple case, only mark
-	if tile.surroundingMineCount == 0 {
-		tile.state = StateTileClear
+	if tile.SurroundingMineCount == 0 {
+		tile.State = StateTileClear
 	} else {
-		tile.state = StateTileNumberd
+		tile.State = StateTileNumberd
 	}
 
 	g.RevealEmptyAdjacentTiles(r, c)
@@ -90,8 +90,8 @@ func (g Game) PlayMovement(r, c int) (StateGame, [][]Tile) {
 func (g Game) isFlawlessVictory() bool {
 	for i := 0; i < g.Rows; i++ {
 		for j := 0; j < g.Columns; j++ {
-			if board := g.Board[i][j]; !board.isMine &&
-				(board.state == StateTileClear || board.state == StateTileFlagged) {
+			if board := g.Board[i][j]; !board.IsMine &&
+				(board.State == StateTileClear || board.State == StateTileFlagged) {
 				return false
 			}
 		}
@@ -103,11 +103,11 @@ func (g Game) isFlawlessVictory() bool {
 func (g *Game) MarkFlag(r, c int) int {
 	tile := &g.Board[r][c]
 
-	if tile.state == StateTileCovered {
-		tile.state = StateTileFlagged
+	if tile.State == StateTileCovered {
+		tile.State = StateTileFlagged
 		g.FlagAmount++
-	} else if tile.state == StateTileFlagged {
-		tile.state = StateTileCovered
+	} else if tile.State == StateTileFlagged {
+		tile.State = StateTileCovered
 		g.FlagAmount--
 	}
 
@@ -122,26 +122,26 @@ func (g Game) SetUpMines(amountMines int, minedPointTiles [][2]int) {
 
 		//TODO use to stats
 		mines[i] = Mine{r, c, true}
-		g.Board[r][c].isMine = true
+		g.Board[r][c].IsMine = true
 
 		adjacentTiles := g.getAdjacentTiles(r, c)
 		for i := 0; i < len(adjacentTiles); i++ {
-			g.Board[adjacentTiles[i].r][adjacentTiles[i].c].surroundingMineCount++
+			g.Board[adjacentTiles[i].Row][adjacentTiles[i].Column].SurroundingMineCount++
 		}
 	}
 }
 
 func (g Game) RevealEmptyAdjacentTiles(r int, c int) {
-	if g.Board[r][c].surroundingMineCount == 0 {
+	if g.Board[r][c].SurroundingMineCount == 0 {
 		adjecentTiles := g.getAdjacentTiles(r, c)
 		for i := 0; i < len(adjecentTiles); i++ {
-			if adjecentTiles[i].isMine != true &&
-				(adjecentTiles[i].state == StateTileCovered || adjecentTiles[i].state == StateTileFlagged) {
-				if adjecentTiles[i].surroundingMineCount == 0 {
-					g.Board[adjecentTiles[i].r][adjecentTiles[i].c].state = StateTileClear
-					g.RevealEmptyAdjacentTiles(adjecentTiles[i].r, adjecentTiles[i].c)
+			if adjecentTiles[i].IsMine != true &&
+				(adjecentTiles[i].State == StateTileCovered || adjecentTiles[i].State == StateTileFlagged) {
+				if adjecentTiles[i].SurroundingMineCount == 0 {
+					g.Board[adjecentTiles[i].Row][adjecentTiles[i].Column].State = StateTileClear
+					g.RevealEmptyAdjacentTiles(adjecentTiles[i].Row, adjecentTiles[i].Column)
 				} else {
-					g.Board[adjecentTiles[i].r][adjecentTiles[i].c].state = StateTileNumberd
+					g.Board[adjecentTiles[i].Row][adjecentTiles[i].Column].State = StateTileNumberd
 				}
 			}
 		}
@@ -221,7 +221,7 @@ func (g Game) GetStates() [][]StateTile {
 	for i := 0; i < g.Rows; i++ {
 		states[i] = make([]StateTile, g.Columns)
 		for j := 0; j < g.Columns; j++ {
-			states[i][j] = g.Board[i][j].state
+			states[i][j] = g.Board[i][j].State
 		}
 	}
 	return states
