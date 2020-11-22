@@ -27,7 +27,7 @@ func TestRevealEmptyAdjecentTiles3x8(t *testing.T) {
 	minedPointTile := [][2]int{{1, 1}}
 	game.SetUpMines(1, minedPointTile)
 
-	game.RevealEmptyAdjecentTiles(0, 5)
+	game.RevealEmptyAdjacentTiles(0, 5)
 	game.ShowBoard()
 
 	expected := [][]StateTile{
@@ -35,18 +35,46 @@ func TestRevealEmptyAdjecentTiles3x8(t *testing.T) {
 		{StateTileCovered, StateTileCovered, StateTileNumberd, StateTileClear, StateTileClear, StateTileClear, StateTileClear, StateTileClear},
 		{StateTileCovered, StateTileCovered, StateTileNumberd, StateTileClear, StateTileClear, StateTileClear, StateTileClear, StateTileClear},
 	}
-	if !reflect.DeepEqual(expected, game.getStates()) {
-		t.Error("Error", game.getStates())
+	if !reflect.DeepEqual(expected, game.GetStates()) {
+		t.Error("Error", game.GetStates())
 	}
 }
 
-func TestBuildGame(t *testing.T) {
+func TestMarkFlag(t *testing.T) {
 	game := BuildNewGame(3, 3)
-	game.ShowBoard()
 
-	if len(game.Board) != 3 || game.Rows != 3 &&
-		len(game.Board[0]) != 3 || game.Columns != 3 {
-		t.Error("Error", len(game.Board), len(game.Board[0]))
+	flagAmount := game.MarkFlag(1, 1)
+	if flagAmount != 1 || game.FlagAmount != 1 {
+		t.Error("Error", flagAmount, game.FlagAmount)
+	}
+}
+
+func TestMarkFlagWhenRevert(t *testing.T) {
+	game := BuildNewGame(3, 3)
+
+	flagAmount := game.MarkFlag(1, 1)
+	flagAmount = game.MarkFlag(1, 1)
+
+	if flagAmount != 0 || game.FlagAmount != 0 {
+		t.Error("Error", flagAmount, game.FlagAmount)
+	}
+}
+
+func TestMarkPlayMovement(t *testing.T) {
+	game := BuildNewGame(2, 2)
+	game.MarkFlag(0, 0)
+
+	stateGame, pointTiles := game.PlayMovement(0, 0)
+
+	expected := [][]StateTile{
+		{StateTileCovered, StateTileCovered},
+		{StateTileCovered, StateTileCovered},
+	}
+
+	if stateGame != StateGameRunning ||
+		pointTiles[0][0].r != 0 || pointTiles[0][0].c != 0 ||
+		!reflect.DeepEqual(expected, game.GetStates()) {
+		t.Error("Error", stateGame, pointTiles[0][0].r, pointTiles[0][0].c, game.GetStates())
 	}
 }
 
@@ -84,5 +112,15 @@ func TestGetAdjacentTilesShouldBe0(t *testing.T) {
 	result := game.getAdjacentTiles(0, 0)
 	if len(result) != 0 {
 		t.Error("Error", len(result))
+	}
+}
+
+func TestBuildGame(t *testing.T) {
+	game := BuildNewGame(3, 3)
+	game.ShowBoard()
+
+	if len(game.Board) != 3 || game.Rows != 3 &&
+		len(game.Board[0]) != 3 || game.Columns != 3 {
+		t.Error("Error", len(game.Board), len(game.Board[0]))
 	}
 }

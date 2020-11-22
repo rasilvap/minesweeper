@@ -1,6 +1,9 @@
 package engine
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+)
 
 type StateTile int
 
@@ -10,6 +13,15 @@ const (
 	StateTileFlagged            = 3
 	StateTileNumberd            = 4
 	StateTileExploted           = 4
+)
+
+type StateGame int
+
+const (
+	StateGameNew     StateGame = 1
+	StateGameRunning           = 2
+	StateGameWon               = 3
+	StateGameLost              = 4
 )
 
 type Tile struct {
@@ -34,24 +46,72 @@ type Game struct {
 	FlagAmount int
 }
 
-func BuildNewGame(rows int, columns int) Game {
-	//create the rows
-	board := make([][]Tile, rows)
+func (g Game) PlayMovement(r, c int) (StateGame, [][]Tile) {
+	tile := &g.Board[r][c]
 
-	//create the columns
-	for r := range board {
-		board[r] = make([]Tile, columns)
+	//played tile, maybe revert
+	if tile.state != StateTileCovered {
+		if tile.state == StateTileFlagged {
+			tile.state = StateTileCovered
+		}
+
+		return StateGameRunning, [][]Tile{{Tile{tile.state,
+			tile.r,
+			tile.c,
+			tile.surroundingMineCount,
+			tile.isMine,
+			tile.valueTest}}}
 	}
 
-	cont := 0
-	for i := 0; i < rows; i++ {
-		for j := 0; j < columns; j++ {
-			cont++
-			board[i][j] = Tile{StateTileCovered, i, j, 0, false, cont}
+	//game over, clear all tiles
+	if tile.isMine {
+		tile.state = StateTileExploted
+		return StateGameLost, nil
+	}
+
+	//simple case, only mark
+	if tile.surroundingMineCount == 0 {
+		tile.state = StateTileClear
+	} else {
+		tile.state = StateTileNumberd
+	}
+
+	g.RevealEmptyAdjacentTiles(r, c)
+
+	// game won, clear all tiles
+	if g.isFlawlessVictory() {
+		return StateGameWon, nil
+	}
+
+	//return showable tiles
+	return StateGameRunning, make([][]Tile, 2)
+}
+
+func (g Game) isFlawlessVictory() bool {
+	for i := 0; i < g.Rows; i++ {
+		for j := 0; j < g.Columns; j++ {
+			if board := g.Board[i][j]; !board.isMine &&
+				(board.state == StateTileClear || board.state == StateTileFlagged) {
+				return false
+			}
 		}
 	}
 
-	return Game{board, rows, columns, 0}
+	return true
+}
+
+func (g *Game) MarkFlag(r, c int) int {
+	tile := &g.Board[r][c]
+
+	if tile.state == StateTileCovered {
+		tile.state = StateTileFlagged
+		g.FlagAmount++
+	} else if tile.state == StateTileFlagged {
+		tile.state = StateTileCovered
+		g.FlagAmount--
+	}
+
+	return g.FlagAmount
 }
 
 func (g Game) SetUpMines(amountMines int, minedPointTiles [][2]int) {
@@ -64,14 +124,14 @@ func (g Game) SetUpMines(amountMines int, minedPointTiles [][2]int) {
 		mines[i] = Mine{r, c, true}
 		g.Board[r][c].isMine = true
 
-		adjecentTiles := g.getAdjacentTiles(r, c)
-		for i := 0; i < len(adjecentTiles); i++ {
-			g.Board[adjecentTiles[i].r][adjecentTiles[i].c].surroundingMineCount++
+		adjacentTiles := g.getAdjacentTiles(r, c)
+		for i := 0; i < len(adjacentTiles); i++ {
+			g.Board[adjacentTiles[i].r][adjacentTiles[i].c].surroundingMineCount++
 		}
 	}
 }
 
-func (g Game) RevealEmptyAdjecentTiles(r int, c int) {
+func (g Game) RevealEmptyAdjacentTiles(r int, c int) {
 	if g.Board[r][c].surroundingMineCount == 0 {
 		adjecentTiles := g.getAdjacentTiles(r, c)
 		for i := 0; i < len(adjecentTiles); i++ {
@@ -79,7 +139,7 @@ func (g Game) RevealEmptyAdjecentTiles(r int, c int) {
 				(adjecentTiles[i].state == StateTileCovered || adjecentTiles[i].state == StateTileFlagged) {
 				if adjecentTiles[i].surroundingMineCount == 0 {
 					g.Board[adjecentTiles[i].r][adjecentTiles[i].c].state = StateTileClear
-					g.RevealEmptyAdjecentTiles(adjecentTiles[i].r, adjecentTiles[i].c)
+					g.RevealEmptyAdjacentTiles(adjecentTiles[i].r, adjecentTiles[i].c)
 				} else {
 					g.Board[adjecentTiles[i].r][adjecentTiles[i].c].state = StateTileNumberd
 				}
@@ -126,6 +186,26 @@ func (g Game) getAdjacentTiles(f int, c int) []Tile {
 	return adjecentTiles
 }
 
+func BuildNewGame(rows int, columns int) Game {
+	//create the rows
+	board := make([][]Tile, rows)
+
+	//create the columns
+	for r := range board {
+		board[r] = make([]Tile, columns)
+	}
+
+	cont := 0
+	for i := 0; i < rows; i++ {
+		for j := 0; j < columns; j++ {
+			cont++
+			board[i][j] = Tile{StateTileCovered, i, j, 0, false, cont}
+		}
+	}
+
+	return Game{board, rows, columns, 0}
+}
+
 func (g Game) ShowBoard() {
 	for i := 0; i < g.Rows; i++ {
 		for j := 0; j < g.Columns; j++ {
@@ -135,7 +215,7 @@ func (g Game) ShowBoard() {
 	}
 }
 
-func (g Game) getStates() [][]StateTile {
+func (g Game) GetStates() [][]StateTile {
 	states := make([][]StateTile, g.Rows)
 
 	for i := 0; i < g.Rows; i++ {
@@ -145,4 +225,17 @@ func (g Game) getStates() [][]StateTile {
 		}
 	}
 	return states
+}
+
+//TODO improve random in order to dont repeat
+func generateMinedPointTiles(amountPoints int, maxIncluded int) [][2]int {
+	max := maxIncluded + 1
+	tileMinePoints := make([][2]int, amountPoints)
+	for i := 0; i < amountPoints; i++ {
+		rand.Seed(int64(i))
+		tileMinePoints[i][0] = rand.Intn(max)
+		tileMinePoints[i][1] = rand.Intn(max)
+	}
+
+	return tileMinePoints
 }
