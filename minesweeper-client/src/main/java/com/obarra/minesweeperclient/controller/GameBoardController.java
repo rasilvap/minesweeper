@@ -1,5 +1,7 @@
 package com.obarra.minesweeperclient.controller;
 
+import com.obarra.minesweeperclient.service.GameBoardService;
+import com.obarra.minesweeperclient.utils.GameBoardUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,17 +16,24 @@ import java.util.List;
 @Controller
 @SessionAttributes("boardGame")
 @RequestMapping("/mineswipeer")
-public class ViewController {
+public class GameBoardController {
+
+    private GameBoardService gameBoardService;
+
+    public GameBoardController(final GameBoardService gameBoardService) {
+        this.gameBoardService = gameBoardService;
+    }
 
     @GetMapping("/index")
     public String index(Model model, @ModelAttribute("boardGame") BoardGame boardGame) {
         var board = boardGame.getBoard();
-        board.add(List.of("Omar", "barradev", "dev"));
-        board.add(List.of("Tesla", "dev", "dev"));
-        board.add(List.of("Newton", "newdev", "dev"));
-        board.add(List.of("Newton", "newdev", "dev"));
-        board.add(List.of("Newton", "newdev", "dev"));
-        board.add(List.of("Newton", "newdev", "dev"));
+        var gameId = gameBoardService.createGame(3, 3, 1);
+        System.out.println(gameId);
+        var res = gameBoardService.getGame(gameId);
+        System.out.println(res);
+        List<List<String>> newBoard = GameBoardUtil.generateEmptyBoard(3, 3);
+        board.addAll(newBoard);
+
 
         model.addAttribute("board", board);
         return "index";
@@ -36,8 +45,9 @@ public class ViewController {
                        Model model,
                        @ModelAttribute("boardGame") BoardGame boardGame) {
         System.out.println(row + " play " + column);
+        gameBoardService.playMovement(2, row, column);
         var board = boardGame.getBoard();
-        board.add(List.of("Play", "merge", "new"));
+        board.get(row).set(column, "C");
         model.addAttribute("board", board);
         return "index";
     }
@@ -49,7 +59,8 @@ public class ViewController {
                        @ModelAttribute("boardGame") BoardGame boardGame) {
         System.out.println(row + "mark " + column);
         var board = boardGame.getBoard();
-        board.add(List.of("Mark", "merge", "new"));
+        gameBoardService.markTile(2, row, column);
+        board.get(row).set(column, "F");
         model.addAttribute("board", board);
         return "index";
     }
