@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"minesweeper-API/minesweeper-service/model"
 	"minesweeper-API/minesweeper-service/service"
@@ -19,7 +18,7 @@ const gamesPath = "games"
 // SetupRoutes
 func SetupRoutes(apiBasePath string, router *mux.Router) {
 
-	router.HandleFunc(fmt.Sprintf("%s/%s/{id:[0-9]+}", apiBasePath, gamesPath), getOneM).Methods("GET")
+	router.HandleFunc(fmt.Sprintf("%s/%s/{id:[0-9]+}", apiBasePath, gamesPath), getOne).Methods("GET")
 
 	router.HandleFunc(fmt.Sprintf("%s/%s", apiBasePath, gamesPath), create).Methods("POST")
 
@@ -101,6 +100,7 @@ func play(w http.ResponseWriter, r *http.Request) {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusAccepted)
 }
 
@@ -127,54 +127,11 @@ func mark(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusAccepted)
 }
 
-func getRequestParm(path string) (int, error) {
-	urlPathSegments := strings.Split(path, fmt.Sprintf("%s/", gamesPath))
-
-	if len(urlPathSegments[1:]) > 1 {
-		return 0, fmt.Errorf("%s", "Many possible ids")
-	}
-	id, err := strconv.Atoi(urlPathSegments[len(urlPathSegments)-1])
-	if err != nil {
-		log.Print(err)
-		return 0, fmt.Errorf("%s", "ID can not be parse.")
-	}
-
-	return id, nil
-}
-
 func getOne(w http.ResponseWriter, r *http.Request) {
-	id, err := getRequestParm(r.URL.Path)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	game, err := service.GetOneGame(id)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	if game == nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-	j, err := json.Marshal(game)
-	if err != nil {
-		log.Print(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	_, err = w.Write(j)
-	if err != nil {
-		log.Print(err)
-		w.WriteHeader(http.StatusInternalServerError)
-	}
-}
-
-func getOneM(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -197,6 +154,7 @@ func getOneM(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	_, err = w.Write(j)
 	if err != nil {
 		log.Print(err)
@@ -218,12 +176,19 @@ func create(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(fmt.Sprintf(`{"gameId":%d}`, id)))
 }
 
 func delete(w http.ResponseWriter, r *http.Request) {
-	id, err := getRequestParm(r.URL.Path)
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

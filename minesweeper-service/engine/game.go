@@ -12,7 +12,7 @@ const (
 	StateTileClear              = 2
 	StateTileFlagged            = 3
 	StateTileNumberd            = 4
-	StateTileExploted           = 4
+	StateTileExploted           = 5
 )
 
 type StateGame int
