@@ -54,12 +54,37 @@ func BuildNewGame(rows int, columns int) Game {
 	return Game{board, rows, columns, 0}
 }
 
-func (g Game) ShowBoard() {
-	for i := 0; i < g.Rows; i++ {
-		for j := 0; j < g.Columns; j++ {
-			fmt.Print(g.Board[i][j], " ")
+func (g Game) SetUpMines(amountMines int, minedPointTiles [][2]int) {
+	mines := make([]Mine, amountMines)
+	for i := range mines {
+		r := minedPointTiles[i][0]
+		c := minedPointTiles[i][1]
+
+		//TODO use to stats
+		mines[i] = Mine{r, c, true}
+		g.Board[r][c].isMine = true
+
+		adjecentTiles := g.getAdjacentTiles(r, c)
+		for i := 0; i < len(adjecentTiles); i++ {
+			g.Board[adjecentTiles[i].r][adjecentTiles[i].c].surroundingMineCount++
 		}
-		fmt.Println()
+	}
+}
+
+func (g Game) RevealEmptyAdjecentTiles(r int, c int) {
+	if g.Board[r][c].surroundingMineCount == 0 {
+		adjecentTiles := g.getAdjacentTiles(r, c)
+		for i := 0; i < len(adjecentTiles); i++ {
+			if adjecentTiles[i].isMine != true &&
+				(adjecentTiles[i].state == StateTileCovered || adjecentTiles[i].state == StateTileFlagged) {
+				if adjecentTiles[i].surroundingMineCount == 0 {
+					g.Board[adjecentTiles[i].r][adjecentTiles[i].c].state = StateTileClear
+					g.RevealEmptyAdjecentTiles(adjecentTiles[i].r, adjecentTiles[i].c)
+				} else {
+					g.Board[adjecentTiles[i].r][adjecentTiles[i].c].state = StateTileNumberd
+				}
+			}
+		}
 	}
 }
 
@@ -99,4 +124,25 @@ func (g Game) getAdjacentTiles(f int, c int) []Tile {
 	}
 
 	return adjecentTiles
+}
+
+func (g Game) ShowBoard() {
+	for i := 0; i < g.Rows; i++ {
+		for j := 0; j < g.Columns; j++ {
+			fmt.Print(g.Board[i][j], " ")
+		}
+		fmt.Println()
+	}
+}
+
+func (g Game) getStates() [][]StateTile {
+	states := make([][]StateTile, g.Rows)
+
+	for i := 0; i < g.Rows; i++ {
+		states[i] = make([]StateTile, g.Columns)
+		for j := 0; j < g.Columns; j++ {
+			states[i][j] = g.Board[i][j].state
+		}
+	}
+	return states
 }
