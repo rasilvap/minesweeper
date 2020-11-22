@@ -3,8 +3,8 @@ package com.obarra.minesweeperclient.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class GameBoardUtil {
-    private GameBoardUtil() {
+public final class GameBoardRenderUtil {
+    private GameBoardRenderUtil() {
     }
 
     public static List<List<String>> generateEmptyBoard(Integer rows, Integer columns) {

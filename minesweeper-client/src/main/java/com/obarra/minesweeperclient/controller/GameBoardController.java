@@ -1,7 +1,8 @@
 package com.obarra.minesweeperclient.controller;
 
+import com.obarra.minesweeperclient.model.BoardGame;
 import com.obarra.minesweeperclient.service.GameBoardService;
-import com.obarra.minesweeperclient.utils.GameBoardUtil;
+import com.obarra.minesweeperclient.utils.GameBoardRenderUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,16 +27,19 @@ public class GameBoardController {
 
     @GetMapping("/index")
     public String index(Model model, @ModelAttribute("boardGame") BoardGame boardGame) {
-        var board = boardGame.getBoard();
         var gameId = gameBoardService.createGame(3, 3, 1);
+        boardGame.setGameId(gameId);
         System.out.println(gameId);
+
+        //TODO use in other feature
         var res = gameBoardService.getGame(gameId);
         System.out.println(res);
-        List<List<String>> newBoard = GameBoardUtil.generateEmptyBoard(3, 3);
-        board.addAll(newBoard);
 
 
-        model.addAttribute("board", board);
+        List<List<String>> newBoard = GameBoardRenderUtil.generateEmptyBoard(3, 3);
+        boardGame.setBoard(newBoard);
+
+        model.addAttribute("board", newBoard);
         return "index";
     }
 
@@ -45,9 +49,11 @@ public class GameBoardController {
                        Model model,
                        @ModelAttribute("boardGame") BoardGame boardGame) {
         System.out.println(row + " play " + column);
-        gameBoardService.playMovement(2, row, column);
+        gameBoardService.playMovement(boardGame.getGameId(), row, column);
+
         var board = boardGame.getBoard();
         board.get(row).set(column, "C");
+
         model.addAttribute("board", board);
         return "index";
     }
@@ -58,9 +64,11 @@ public class GameBoardController {
                        Model model,
                        @ModelAttribute("boardGame") BoardGame boardGame) {
         System.out.println(row + "mark " + column);
+        gameBoardService.markTile(boardGame.getGameId(), row, column);
+
         var board = boardGame.getBoard();
-        gameBoardService.markTile(2, row, column);
         board.get(row).set(column, "F");
+
         model.addAttribute("board", board);
         return "index";
     }
