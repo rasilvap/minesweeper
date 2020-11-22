@@ -4,9 +4,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="Description" content="The classic Minesweeper game">
 
-    <script type="text/javascript" src="js/minesweeper.js"></script>
-    <link href="css/styles.css" rel="stylesheet">
+    <script type="text/javascript" src="../js/main.js"></script>
+    <link  rel="stylesheet" href="../css/styles.css">
     <title>Minesweeper in Javascript</title>
+
+    <script>var basePath = buildBasePath(); </script>
 </head>
 
 <body onload="init(30, 480, 99)">
@@ -14,6 +16,11 @@
     <div class="title">
         The classic Minesweeper game
     </div>
+
+    <div style="height: 0px;width: 0px;overflow:hidden;">
+        <a id="myAnchor" href="#"></a>
+    </div>
+
 
     <table id="sqTable" >
         <thead>
@@ -27,13 +34,13 @@
             <td colspan="2"> No Books Available </td>
         </tr>
         <tr th:each="row, iterRow : ${board}">
-            <td class="sq" id="sq-0" th:id="${'sq-' + iterColumn.index + '-' + iterRow.index}" onmousedown="return clickSq(event,0)" th:each="column, iterColumn : ${row}" th:text="${iterColumn.index}" >&nbsp;</td>
+            <td class="sq" id="sq-0" th:id="${'sq-' + iterColumn.index + '-' + iterRow.index}" onmousedown="return clickSq(event,this)" th:each="column, iterColumn : ${row}" th:text="@{/}" >&nbsp;</td>
         </tr>
         </tbody>
     </table>
 
     <div style="font-style: italic">
-        <a class="goHomeLink" href="/home.html" title="Home Page">Home</a>
+        <a class="goHomeLink" href="/index" title="Home Page">Home</a>
     </div>
 </div>
 </body>
