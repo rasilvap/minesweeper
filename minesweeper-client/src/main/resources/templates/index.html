@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="Description" content="The classic Minesweeper game">
+
+    <script type="text/javascript" src="js/minesweeper.js"></script>
+    <link href="css/styles.css" rel="stylesheet">
+    <title>Minesweeper in Javascript</title>
+</head>
+
+<body onload="init(30, 480, 99)">
+<div class="main">
+    <div class="title">
+        The classic Minesweeper game
+    </div>
+
+    <table id="sqTable" >
+        <thead>
+        <tr>
+            <th> Title </th>
+            <th> Author </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${board.empty}">
+            <td colspan="2"> No Books Available </td>
+        </tr>
+        <tr th:each="row, iterRow : ${board}">
+            <td class="sq" id="sq-0" th:id="${'sq-' + iterColumn.index + '-' + iterRow.index}" onmousedown="return clickSq(event,0)" th:each="column, iterColumn : ${row}" th:text="${iterColumn.index}" >&nbsp;</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div style="font-style: italic">
+        <a class="goHomeLink" href="/home.html" title="Home Page">Home</a>
+    </div>
+</div>
+</body>
+</html>
