@@ -47,7 +47,7 @@ type TileDTO struct {
 	Row                  int    `json:"row"`
 	Column               int    `json:"column"`
 	SurroundingMineCount int    `json:"surroundingMineCount"`
-	IsMine               bool   `json:"isMine"`
+	Mine                 bool   `json:"mine"`
 	ValueTest            int    `json:"valueTest"`
 }
 
