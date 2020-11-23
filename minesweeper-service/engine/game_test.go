@@ -57,6 +57,22 @@ func TestMarkPlayMovementWhenRunning(t *testing.T) {
 	}
 }
 
+func TestMarkPlayMovementWhenRunningAndShowNumber(t *testing.T) {
+	//setup
+	game := BuildNewGame(3, 3, 1)
+	minedPointTile := [][2]int{{1, 1}}
+	game.SetUpMines(minedPointTile)
+
+	//execute
+	stateGame, gameCopy := game.PlayMovement(0, 0)
+	fmt.Println(gameCopy)
+
+	//assert
+	if stateGame != StateGameRunning || len(gameCopy.Board) != 0 {
+		t.Error("Error", stateGame, gameCopy, len(gameCopy.Board))
+	}
+}
+
 func TestMarkPlayMovementWhenGameLost(t *testing.T) {
 	//setup
 	game := BuildNewGame(3, 3, 1)

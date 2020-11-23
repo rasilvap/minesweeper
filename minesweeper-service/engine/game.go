@@ -135,6 +135,7 @@ func (g Game) SetUpMines(minedPointTiles [][2]int) {
 	}
 }
 
+//TODO return points adjacent
 func (g Game) RevealEmptyAdjacentTiles(r int, c int) {
 	if g.Board[r][c].SurroundingMineCount == 0 {
 		adjecentTiles := g.getAdjacentTiles(r, c)
@@ -237,7 +238,23 @@ func (g Game) buildGameWithTile(tile Tile) Game {
 }
 
 func (g Game) buildGameWithShowableTiles() Game {
-	board := make([][]Tile, 2)
+	var board [][]Tile
+	for i := 0; i < g.Rows; i++ {
+		var column []Tile
+		for j := 0; j < g.Columns; j++ {
+			if board := g.Board[i][j]; !board.IsMine &&
+				(board.State == StateTileClear) {
+				column = append(column, g.Board[i][j])
+			}
+		}
+		if column != nil && len(column) > 0 {
+			board = append(board, column)
+		}
+	}
+
+	if board == nil {
+		board = [][]Tile{}
+	}
 	return Game{board, g.Rows, g.Columns, 0}
 }
 

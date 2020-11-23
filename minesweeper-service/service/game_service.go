@@ -55,7 +55,58 @@ func PlayMovement(id int, row int, column int) (*model.PlayResponse, error) {
 }
 
 func buildPlayResponse(gameState engine.StateGame, showableGame engine.Game) model.PlayResponse {
-	return model.PlayResponse{gameState, showableGame}
+	var gameStateDTO string
+	switch gameState {
+	case engine.StateGameRunning:
+		gameStateDTO = "RUNNING"
+	case engine.StateGameLost:
+		gameStateDTO = "LOST"
+	case engine.StateGameNew:
+		gameStateDTO = "NEW"
+	case engine.StateGameWon:
+		gameStateDTO = "WON"
+	default:
+		gameStateDTO = ""
+	}
+	row := len(showableGame.Board)
+	if row == 0 {
+		return model.PlayResponse{gameStateDTO,
+			model.GameDTO{[][]model.TileDTO{}, showableGame.Rows, showableGame.Columns, showableGame.FlagAmount}}
+	}
+
+	column := len(showableGame.Board[0])
+	boardDTO := make([][]model.TileDTO, row)
+
+	for r := range boardDTO {
+		boardDTO[r] = make([]model.TileDTO, column)
+	}
+
+	for i := 0; i < row; i++ {
+		for j := 0; j < column; j++ {
+			board := showableGame.Board[i][j]
+
+			var tileStateDTO string
+			switch board.State {
+			case engine.StateTileCovered:
+				tileStateDTO = "COVERED"
+			case engine.StateTileClear:
+				tileStateDTO = "CLEAR"
+			case engine.StateTileFlagged:
+				tileStateDTO = "FLAGGED"
+			case engine.StateTileNumberd:
+				tileStateDTO = "NUMBERED"
+			case engine.StateTileExploted:
+				tileStateDTO = "EXPLOTED"
+			default:
+				tileStateDTO = ""
+			}
+
+			boardDTO[i][j] = model.TileDTO{tileStateDTO, i, j, board.SurroundingMineCount, board.IsMine, -1}
+		}
+	}
+
+	return model.PlayResponse{gameStateDTO,
+		model.GameDTO{boardDTO, showableGame.Rows, showableGame.Columns, showableGame.FlagAmount}}
 }
 
 func GetCompleteGame(id int) *model.GameCompleteResponse {

@@ -27,39 +27,23 @@ func SetupRoutes(apiBasePath string, router *mux.Router) {
 	router.HandleFunc(fmt.Sprintf("%s/%s/{id:[0-9]+}/mark", apiBasePath, gamesPath), mark).Methods("POST")
 }
 
-func handlePlay(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodPost:
-		play(w, r)
-	case http.MethodOptions:
+func create(w http.ResponseWriter, r *http.Request) {
+	var gameRequest model.GameRequest
+	err := json.NewDecoder(r.Body).Decode(&gameRequest)
+	if err != nil {
+		log.Print(err)
+		w.WriteHeader(http.StatusBadRequest)
 		return
-	default:
-		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
-}
-
-func handleGames(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodPost:
-		create(w, r)
-	case http.MethodOptions:
+	id, err := service.CreateGame(gameRequest.Rows, gameRequest.Columns, gameRequest.MineAmount)
+	if err != nil {
+		log.Print(err)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
-	default:
-		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
-}
-
-func handleGame(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodGet:
-		getOne(w, r)
-	case http.MethodDelete:
-		delete(w, r)
-	case http.MethodOptions:
-		return
-	default:
-		w.WriteHeader(http.StatusMethodNotAllowed)
-	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte(fmt.Sprintf(`{"gameId":%d}`, id)))
 }
 
 func play(w http.ResponseWriter, r *http.Request) {
@@ -95,13 +79,12 @@ func play(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	_, err = w.Write(j)
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusAccepted)
 }
 
 func mark(w http.ResponseWriter, r *http.Request) {
@@ -160,25 +143,6 @@ func getOne(w http.ResponseWriter, r *http.Request) {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
-}
-
-func create(w http.ResponseWriter, r *http.Request) {
-	var gameRequest model.GameRequest
-	err := json.NewDecoder(r.Body).Decode(&gameRequest)
-	if err != nil {
-		log.Print(err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	id, err := service.CreateGame(gameRequest.Rows, gameRequest.Columns, gameRequest.MineAmount)
-	if err != nil {
-		log.Print(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(fmt.Sprintf(`{"gameId":%d}`, id)))
 }
 
 func delete(w http.ResponseWriter, r *http.Request) {

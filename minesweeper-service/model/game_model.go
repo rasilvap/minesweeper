@@ -33,11 +33,27 @@ type PlayRequest struct {
 
 // PlayResponse : ...
 type PlayResponse struct {
-	StateGame engine.StateGame `json:"stateGame"`
-	Game      engine.Game      `json:"game"`
+	StateGame string  `json:"stateGame"`
+	Game      GameDTO `json:"game"`
 }
 
 // GameCompleteResponse : ...
 type GameCompleteResponse struct {
 	Game engine.Game
+}
+
+type TileDTO struct {
+	State                string `json:"state"`
+	Row                  int    `json:"row"`
+	Column               int    `json:"column"`
+	SurroundingMineCount int    `json:"surroundingMineCount"`
+	IsMine               bool   `json:"isMine"`
+	ValueTest            int    `json:"valueTest"`
+}
+
+type GameDTO struct {
+	Board      [][]TileDTO `json:"board"`
+	Rows       int         `json:"rows"`
+	Columns    int         `json:"columns"`
+	FlagAmount int         `json:"flagAmount"`
 }
