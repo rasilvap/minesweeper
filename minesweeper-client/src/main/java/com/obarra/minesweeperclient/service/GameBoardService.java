@@ -2,6 +2,7 @@ package com.obarra.minesweeperclient.service;
 
 import com.obarra.minesweeperclient.client.MinesweeperClient;
 import com.obarra.minesweeperclient.model.*;
+import com.obarra.minesweeperclient.utils.StateGameEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class GameBoardService {
     public GameBoard createGameBoard(final Integer rows, final Integer columns, final Integer mineAmount) {
         final var gameResponse = minesweeperClient.create(GameRequest.of(rows, columns, mineAmount));
         final var boardGame = new GameBoard();
+        boardGame.setState(StateGameEnum.NEW);
         boardGame.setGameId(gameResponse.getGameId());
         System.out.println(gameResponse.getGameId());
 

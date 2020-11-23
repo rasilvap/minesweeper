@@ -57,6 +57,7 @@ public final class GameBoardRender {
     }
 
 
+    //TODO create a copy with merge
     private static void updateBoard(List<List<String>> currentBoard, TileDTO[][] resultBoard) {
         for (TileDTO[] rows : resultBoard) {
             for (TileDTO tileDTO : rows) {

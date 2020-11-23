@@ -25,11 +25,13 @@ public class GameBoardController {
 
     @GetMapping("/index")
     public String index(final Model model, final @ModelAttribute("boardGame") GameBoard gameBoard) {
-        final var newGameBoard = gameBoardService.createGameBoard(3, 3, 1);
+        final var newGameBoard = gameBoardService.createGameBoard(3, 8, 1);
         gameBoard.setGameId(newGameBoard.getGameId());
         gameBoard.setBoard(newGameBoard.getBoard());
+        gameBoard.setState(newGameBoard.getState());
 
         model.addAttribute("board", gameBoard.getBoard());
+        model.addAttribute("state", gameBoard.getState());
         return "index";
     }
 
@@ -44,8 +46,12 @@ public class GameBoardController {
         gameBoard.setGameId(updatedGameBoard.getGameId());
         gameBoard.setState(updatedGameBoard.getState());
         gameBoard.setBoard(updatedGameBoard.getBoard());
+        gameBoard.setState(updatedGameBoard.getState());
+
 
         model.addAttribute("board", gameBoard.getBoard());
+        model.addAttribute("state", gameBoard.getState());
+
         return "index";
     }
 
@@ -59,9 +65,12 @@ public class GameBoardController {
         gameBoard.setGameId(updatedGameBoard.getGameId());
         gameBoard.setState(updatedGameBoard.getState());
         gameBoard.setBoard(updatedGameBoard.getBoard());
+        gameBoard.setState(updatedGameBoard.getState());
 
 
         model.addAttribute("board", gameBoard.getBoard());
+        model.addAttribute("state", gameBoard.getState());
+
         return "index";
     }
 
