@@ -5,6 +5,8 @@ import com.obarra.minesweeperclient.model.PlayResponse;
 import com.obarra.minesweeperclient.model.TileDTO;
 import com.obarra.minesweeperclient.utils.StateGameEnum;
 import com.obarra.minesweeperclient.utils.StateTileEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Service
 public final class GameBoardRender {
+    private final static Logger LOGGER = LoggerFactory.getLogger(GameBoardRender.class);
 
     public List<List<String>> generateEmptyBoard(Integer rows, Integer columns) {
         var board = new ArrayList<List<String>>();
@@ -23,17 +26,18 @@ public final class GameBoardRender {
             }
         }
         return board;
-
     }
 
     public GameBoard updateGameBoard(final GameBoard gameBoard, final PlayResponse playResponse) {
         final var updatedGameBoard = new GameBoard();
         updatedGameBoard.setGameId(gameBoard.getGameId());
+        updatedGameBoard.setMineAmount(gameBoard.getMineAmount());
 
         var gameState = getGameState(playResponse.getStateGame());
         updatedGameBoard.setState(gameState);
 
         var updatedBoard = updateBoard(gameBoard.getBoard(), playResponse.getGame().getBoard());
+
         updatedGameBoard.setBoard(updatedBoard);
 
         return updatedGameBoard;
@@ -42,14 +46,17 @@ public final class GameBoardRender {
     private StateGameEnum getGameState(final String stateGameResponse) {
         final var gameState = StateGameEnum.valueOf(stateGameResponse);
         switch (gameState) {
+            //TODO show only a point
             case WON:
-                System.out.println("Flawless Victory");
+                LOGGER.info("Flawless Victory");
                 break;
+            //TODO show only mines
             case LOST:
-                System.out.println("Game Over");
+                LOGGER.info("Game Over");
                 break;
+            //TODO show one o any points
             case RUNNING:
-                System.out.println("The Game is Running");
+                LOGGER.info("The Game is Running");
                 break;
             default:
                 throw new IllegalStateException("Invalid Game State: " + stateGameResponse);
@@ -61,18 +68,15 @@ public final class GameBoardRender {
         List<List<String>> board = copyBoard(currentBoard);
         for (TileDTO[] rows : resultBoard) {
             for (TileDTO tileDTO : rows) {
-                if (tileDTO.getMine() != null && tileDTO.getMine()) {
+                if (tileDTO.getMine()) {
                     board.get(tileDTO.getRow()).set(tileDTO.getColumn(), "X");
                     System.out.println("BOOM.......");
-                } else if (StateTileEnum.CLEAR.name().equals(tileDTO.getState()) &&
-                        (tileDTO.getSurroundingMineCount() == null || tileDTO.getSurroundingMineCount() == 0)) {
+                } else if (tileDTO.getSurroundingMineCount() == 0 &&
+                        (StateTileEnum.CLEAR.name().equals(tileDTO.getState()) ||
+                                StateTileEnum.COVERED.name().equals(tileDTO.getState()))) {
                     System.out.println("CLEAR.......");
                     board.get(tileDTO.getRow()).set(tileDTO.getColumn(), "C");
-                } else if (StateTileEnum.COVERED.name().equals(tileDTO.getState()) &&
-                        (tileDTO.getSurroundingMineCount() == null || tileDTO.getSurroundingMineCount() == 0)) {
-                    System.out.println("CLEAR.......");
-                    board.get(tileDTO.getRow()).set(tileDTO.getColumn(), "C");
-                } else if (tileDTO.getSurroundingMineCount() != null && tileDTO.getSurroundingMineCount() > 0) {
+                } else if (tileDTO.getSurroundingMineCount() > 0) {
                     System.out.println("NUMBERED.......");
                     board.get(tileDTO.getRow()).set(tileDTO.getColumn(), tileDTO.getSurroundingMineCount().toString());
                 } else {
