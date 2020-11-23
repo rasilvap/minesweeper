@@ -67,6 +67,10 @@ public final class GameBoardRender {
                         (tileDTO.getSurroundingMineCount() == null || tileDTO.getSurroundingMineCount() == 0)) {
                     System.out.println("CLEAR.......");
                     currentBoard.get(tileDTO.getRow()).set(tileDTO.getColumn(), "C");
+                } else if (StateTileEnum.COVERED.name().equals(tileDTO.getState()) &&
+                        (tileDTO.getSurroundingMineCount() == null || tileDTO.getSurroundingMineCount() == 0)) {
+                    System.out.println("CLEAR.......");
+                    currentBoard.get(tileDTO.getRow()).set(tileDTO.getColumn(), "C");
                 } else if (tileDTO.getSurroundingMineCount() != null && tileDTO.getSurroundingMineCount() > 0) {
                     System.out.println("NUMBERED.......");
                     currentBoard.get(tileDTO.getRow()).set(tileDTO.getColumn(), tileDTO.getSurroundingMineCount().toString());
