@@ -1,10 +1,21 @@
 package com.obarra.minesweeperclient.model;
 
+import com.obarra.minesweeperclient.utils.StateGameEnum;
+
 import java.util.List;
 
-public class BoardGame {
+public class GameBoard {
+    private StateGameEnum state;
     private Integer gameId;
     private List<List<String>> board;
+
+    public StateGameEnum getState() {
+        return state;
+    }
+
+    public void setState(StateGameEnum state) {
+        this.state = state;
+    }
 
     public Integer getGameId() {
         return gameId;
@@ -25,7 +36,8 @@ public class BoardGame {
     @Override
     public String toString() {
         return "BoardGame{" +
-                "gameId=" + gameId +
+                "state=" + state +
+                ", gameId=" + gameId +
                 ", board=" + board +
                 '}';
     }
