@@ -5,7 +5,7 @@ public class TileDTO {
     private Integer row;
     private Integer column;
     private Integer surroundingMineCount;
-    private Boolean isMine;
+    private Boolean mine;
     private Integer valueTest;
 
     public String getState() {
@@ -40,12 +40,12 @@ public class TileDTO {
         this.surroundingMineCount = surroundingMineCount;
     }
 
-    public Boolean getIsMine() {
-        return isMine;
+    public Boolean getMine() {
+        return mine;
     }
 
-    public void setIsMine(Boolean isMine) {
-        isMine = isMine;
+    public void setMine(Boolean mine) {
+        this.mine = mine;
     }
 
     public Integer getValueTest() {
@@ -63,7 +63,7 @@ public class TileDTO {
                 ", row=" + row +
                 ", column=" + column +
                 ", surroundingMineCount=" + surroundingMineCount +
-                ", isMine=" + isMine +
+                ", mine=" + mine +
                 ", valueTest=" + valueTest +
                 '}';
     }
