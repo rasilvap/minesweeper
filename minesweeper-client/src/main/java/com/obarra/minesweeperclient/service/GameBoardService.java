@@ -44,6 +44,7 @@ public class GameBoardService {
         System.out.println("Marking.....");
         var board = gameBoard.getBoard();
         board.get(row).set(column, "F");
+        gameBoard.setMineAmount(gameBoard.getMineAmount() -1);
         return gameBoard;
     }
 

@@ -24,18 +24,24 @@
 
         <table id="sqTable">
             <thead>
-                <tr>
-                    <th> Board </th>
-                </tr>
+            <tr>
+                <th class="score" colspan="30">
+                    <div class="counter" id="mines" th:text="${mineAmount}">0</div>
+                    <div class="counter" id="timer">&nbsp;</div>
+                    <a href="/mineswipeer/index">
+                        <img alt="face" src="../images/bored.gif">
+                    </a>
+                </th>
+            </tr>
             </thead>
             <tbody>
-                <tr th:if="${board.empty}">
-                    <td colspan="2"> No Game Available </td>
-                </tr>
                 <tr th:each="row, iterRow : ${board}">
                     <td class="sq" id="sq-0" th:id="${'sq-' + iterColumn.index + '-' + iterRow.index}"
                         onmousedown="return clickSq(event,this)" th:each="column, iterColumn : ${row}"
                         th:text="${column}">&nbsp;</td>
+                </tr>
+                <tr th:if="${board.empty}">
+                    <td colspan="2"> No Game Available </td>
                 </tr>
             </tbody>
         </table>

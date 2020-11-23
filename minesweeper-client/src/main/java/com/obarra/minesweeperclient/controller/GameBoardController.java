@@ -33,6 +33,7 @@ public class GameBoardController {
 
         model.addAttribute("board", gameBoard.getBoard());
         model.addAttribute("state", gameBoard.getState());
+        model.addAttribute("mineAmount", gameBoard.getMineAmount());
         return "index";
     }
 
@@ -47,11 +48,11 @@ public class GameBoardController {
         gameBoard.setGameId(updatedGameBoard.getGameId());
         gameBoard.setState(updatedGameBoard.getState());
         gameBoard.setBoard(updatedGameBoard.getBoard());
-        gameBoard.setState(updatedGameBoard.getState());
 
 
         model.addAttribute("board", gameBoard.getBoard());
         model.addAttribute("state", gameBoard.getState());
+        model.addAttribute("mineAmount", gameBoard.getMineAmount());
 
         return "index";
     }
@@ -63,14 +64,15 @@ public class GameBoardController {
                        @ModelAttribute("boardGame") GameBoard gameBoard) {
         System.out.println(row + "mark " + column);
         final GameBoard updatedGameBoard = gameBoardService.markTile(gameBoard, row, column);
-        gameBoard.setGameId(updatedGameBoard.getGameId());
+
         gameBoard.setState(updatedGameBoard.getState());
         gameBoard.setBoard(updatedGameBoard.getBoard());
-        gameBoard.setState(updatedGameBoard.getState());
+        gameBoard.setMineAmount(updatedGameBoard.getMineAmount());
 
 
         model.addAttribute("board", gameBoard.getBoard());
         model.addAttribute("state", gameBoard.getState());
+        model.addAttribute("mineAmount", gameBoard.getMineAmount());
 
         return "index";
     }
