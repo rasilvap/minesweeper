@@ -25,6 +25,7 @@ func GetOneGame(id int) (*model.GameResponse, error) {
 
 func CreateGame(rows, colums, mineAmount int) (int, error) {
 	game := engine.BuildNewGame(rows, colums, mineAmount)
+	//TODO use random mines
 	minedPointTile := [][2]int{{1, 1}}
 	game.SetUpMines(minedPointTile)
 	log.Println(game)

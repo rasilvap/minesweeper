@@ -22,26 +22,6 @@ func TestSetUpMines(t *testing.T) {
 	}
 }
 
-/**
-func TestMarkPlayMovement(t *testing.T) {
-	game := BuildNewGame(2, 2)
-	game.MarkFlag(0, 0)
-
-	stateGame, pointTiles := game.PlayMovement(0, 0)
-
-	expected := [][]StateTile{
-		{StateTileCovered, StateTileCovered},
-		{StateTileCovered, StateTileCovered},
-	}
-
-	if stateGame != StateGameRunning ||
-		pointTiles[0][0].Row != 0 || pointTiles[0][0].Column != 0 ||
-		!reflect.DeepEqual(expected, game.GetStates()) {
-		t.Error("Error", stateGame, pointTiles[0][0].Row, pointTiles[0][0].Column, game.GetStates())
-	}
-}
-*/
-
 func TestMarkPlayMovementWhenRunning(t *testing.T) {
 	//setup
 	game := BuildNewGame(3, 3, 1)

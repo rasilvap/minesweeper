@@ -52,13 +52,14 @@ type Game struct {
 func (g Game) PlayMovement(r, c int) (StateGame, Game) {
 	tile := &g.Board[r][c]
 
+	//TODO unify with MarkFlag
 	if tile.State != StateTileCovered {
 		if tile.State == StateTileFlagged {
 			tile.State = StateTileCovered
 		}
 
 		log.Println("Tile has already been played")
-		return StateGameRunning, g.buildGameWithTile(*tile)
+		return StateGameRunning, g.buildGameWithVisibleTiles()
 	}
 
 	//game over, so show all tiles
@@ -87,7 +88,7 @@ func (g Game) PlayMovement(r, c int) (StateGame, Game) {
 
 	log.Println("The Game is Running")
 	//return showable tiles
-	return StateGameRunning, g.buildGameWithShowableTiles()
+	return StateGameRunning, g.buildGameWithVisibleTiles()
 }
 
 func (g Game) isFlawlessVictory() bool {
@@ -125,6 +126,7 @@ func (g Game) SetUpMines(minedPointTiles [][2]int) {
 
 		//TODO use to stats
 		mines[i] = Mine{r, c, true}
+
 		g.Board[r][c].IsMine = true
 
 		adjacentTiles := g.getAdjacentTiles(r, c)
@@ -225,18 +227,7 @@ func (g Game) copyGame() Game {
 	return Game{board, g.Rows, g.Columns, g.MineAmount, g.FlagAmount}
 }
 
-func (g Game) buildGameWithTile(tile Tile) Game {
-	board := [][]Tile{{Tile{tile.State,
-		tile.Row,
-		tile.Column,
-		tile.SurroundingMineCount,
-		tile.IsMine,
-		tile.ValueTest}}}
-
-	return Game{board, g.Rows, g.Columns, g.MineAmount, g.FlagAmount}
-}
-
-func (g Game) buildGameWithShowableTiles() Game {
+func (g Game) buildGameWithVisibleTiles() Game {
 	var board [][]Tile
 	for i := 0; i < g.Rows; i++ {
 		var column []Tile
