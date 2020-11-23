@@ -8,6 +8,7 @@ public class GameBoard {
     private StateGameEnum state;
     private Integer gameId;
     private List<List<String>> board;
+    private Integer mineAmount;
 
     public StateGameEnum getState() {
         return state;
@@ -33,12 +34,21 @@ public class GameBoard {
         this.board = board;
     }
 
+    public Integer getMineAmount() {
+        return mineAmount;
+    }
+
+    public void setMineAmount(Integer mineAmount) {
+        this.mineAmount = mineAmount;
+    }
+
     @Override
     public String toString() {
-        return "BoardGame{" +
+        return "GameBoard{" +
                 "state=" + state +
                 ", gameId=" + gameId +
                 ", board=" + board +
+                ", mineAmount=" + mineAmount +
                 '}';
     }
 }

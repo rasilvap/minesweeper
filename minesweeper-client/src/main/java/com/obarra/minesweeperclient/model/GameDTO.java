@@ -1,11 +1,9 @@
 package com.obarra.minesweeperclient.model;
 
 import java.util.Arrays;
-import java.util.stream.Collector;
-import java.util.stream.Stream;
 
 public class GameDTO {
-    private TileDTO[][]  board;
+    private TileDTO[][] board;
     private Integer rows;
     private Integer columns;
     private Integer flagAmount;

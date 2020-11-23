@@ -29,6 +29,7 @@ public class GameBoardController {
         gameBoard.setGameId(newGameBoard.getGameId());
         gameBoard.setBoard(newGameBoard.getBoard());
         gameBoard.setState(newGameBoard.getState());
+        gameBoard.setMineAmount(newGameBoard.getMineAmount());
 
         model.addAttribute("board", gameBoard.getBoard());
         model.addAttribute("state", gameBoard.getState());

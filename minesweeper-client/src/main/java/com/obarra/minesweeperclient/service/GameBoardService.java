@@ -22,6 +22,7 @@ public class GameBoardService {
         final var gameResponse = minesweeperClient.create(GameRequest.of(rows, columns, mineAmount));
         final var boardGame = new GameBoard();
         boardGame.setState(StateGameEnum.NEW);
+        boardGame.setMineAmount(mineAmount);
         boardGame.setGameId(gameResponse.getGameId());
         System.out.println(gameResponse.getGameId());
 

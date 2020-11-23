@@ -23,6 +23,7 @@ public final class GameBoardRender {
             }
         }
         return board;
+
     }
 
     public GameBoard updateGameBoard(final GameBoard gameBoard, final PlayResponse playResponse) {
@@ -32,8 +33,8 @@ public final class GameBoardRender {
         var gameState = getGameState(playResponse.getStateGame());
         updatedGameBoard.setState(gameState);
 
-        updateBoard(gameBoard.getBoard(), playResponse.getGame().getBoard());
-        updatedGameBoard.setBoard(gameBoard.getBoard());
+        var updatedBoard = updateBoard(gameBoard.getBoard(), playResponse.getGame().getBoard());
+        updatedGameBoard.setBoard(updatedBoard);
 
         return updatedGameBoard;
     }
@@ -56,29 +57,40 @@ public final class GameBoardRender {
         return gameState;
     }
 
-
-    //TODO create a copy with merge
-    private static void updateBoard(List<List<String>> currentBoard, TileDTO[][] resultBoard) {
+    private static List<List<String>> updateBoard(List<List<String>> currentBoard, TileDTO[][] resultBoard) {
+        List<List<String>> board = copyBoard(currentBoard);
         for (TileDTO[] rows : resultBoard) {
             for (TileDTO tileDTO : rows) {
                 if (tileDTO.getMine() != null && tileDTO.getMine()) {
-                    currentBoard.get(tileDTO.getRow()).set(tileDTO.getColumn(), "B");
+                    board.get(tileDTO.getRow()).set(tileDTO.getColumn(), "M");
                     System.out.println("BOOM.......");
                 } else if (StateTileEnum.CLEAR.name().equals(tileDTO.getState()) &&
                         (tileDTO.getSurroundingMineCount() == null || tileDTO.getSurroundingMineCount() == 0)) {
                     System.out.println("CLEAR.......");
-                    currentBoard.get(tileDTO.getRow()).set(tileDTO.getColumn(), "C");
+                    board.get(tileDTO.getRow()).set(tileDTO.getColumn(), "C");
                 } else if (StateTileEnum.COVERED.name().equals(tileDTO.getState()) &&
                         (tileDTO.getSurroundingMineCount() == null || tileDTO.getSurroundingMineCount() == 0)) {
                     System.out.println("CLEAR.......");
-                    currentBoard.get(tileDTO.getRow()).set(tileDTO.getColumn(), "C");
+                    board.get(tileDTO.getRow()).set(tileDTO.getColumn(), "C");
                 } else if (tileDTO.getSurroundingMineCount() != null && tileDTO.getSurroundingMineCount() > 0) {
                     System.out.println("NUMBERED.......");
-                    currentBoard.get(tileDTO.getRow()).set(tileDTO.getColumn(), tileDTO.getSurroundingMineCount().toString());
+                    board.get(tileDTO.getRow()).set(tileDTO.getColumn(), tileDTO.getSurroundingMineCount().toString());
                 } else {
                     System.out.println("NOTHING.......");
                 }
             }
         }
+
+        return board;
+    }
+
+    private static List<List<String>> copyBoard(final List<List<String>> board) {
+        var copyBoard = new ArrayList<List<String>>();
+        for (var row : board) {
+            var copyRow = new ArrayList<String>();
+            copyBoard.add(copyRow);
+            copyRow.addAll(row);
+        }
+        return copyBoard;
     }
 }
