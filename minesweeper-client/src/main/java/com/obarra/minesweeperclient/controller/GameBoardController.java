@@ -49,10 +49,12 @@ public class GameBoardController {
                        Model model,
                        @ModelAttribute("boardGame") BoardGame boardGame) {
         System.out.println(row + " play " + column);
-        gameBoardService.playMovement(boardGame.getGameId(), row, column);
-
+        var playResponse =  gameBoardService.playMovement(boardGame.getGameId(), row, column);
+        System.out.println(playResponse);
         var board = boardGame.getBoard();
-        board.get(row).set(column, "C");
+        GameBoardRenderUtil.render(board, playResponse);
+
+        //board.get(row).set(column, "C");
 
         model.addAttribute("board", board);
         return "index";

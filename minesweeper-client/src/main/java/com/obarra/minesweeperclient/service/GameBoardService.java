@@ -1,10 +1,7 @@
 package com.obarra.minesweeperclient.service;
 
 import com.obarra.minesweeperclient.client.MinesweeperClient;
-import com.obarra.minesweeperclient.model.GameRequest;
-import com.obarra.minesweeperclient.model.GameResponse;
-import com.obarra.minesweeperclient.model.MarkRequest;
-import com.obarra.minesweeperclient.model.PlayRequest;
+import com.obarra.minesweeperclient.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +28,10 @@ public class GameBoardService {
         minesweeperService.mark(gameId, MarkRequest.flagBuilder(row, column));
     }
 
-    public void playMovement(final Integer gameId, final Integer row, final Integer column) {
+    public PlayResponse playMovement(final Integer gameId, final Integer row, final Integer column) {
         var res = minesweeperService.play(gameId, PlayRequest.of(row, column));
         System.out.println(res);
+        return res;
     }
 
 }

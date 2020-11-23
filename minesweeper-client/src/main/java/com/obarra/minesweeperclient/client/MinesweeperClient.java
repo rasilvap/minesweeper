@@ -1,9 +1,6 @@
 package com.obarra.minesweeperclient.client;
 
-import com.obarra.minesweeperclient.model.GameRequest;
-import com.obarra.minesweeperclient.model.GameResponse;
-import com.obarra.minesweeperclient.model.MarkRequest;
-import com.obarra.minesweeperclient.model.PlayRequest;
+import com.obarra.minesweeperclient.model.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,5 +20,5 @@ public interface MinesweeperClient {
     void mark(@PathVariable Integer id, @RequestBody MarkRequest markRequest);
 
     @PostMapping("/games/{id}/play")
-    Object play(@PathVariable Integer id, @RequestBody PlayRequest playRequest);
+    PlayResponse play(@PathVariable Integer id, @RequestBody PlayRequest playRequest);
 }
