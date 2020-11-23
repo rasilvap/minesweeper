@@ -1,48 +1,54 @@
 <!DOCTYPE HTML>
 <html>
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="Description" content="The classic Minesweeper game">
 
     <script type="text/javascript" src="../js/main.js"></script>
-    <link  rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <title>Minesweeper in Javascript</title>
 
     <script>var basePath = buildBasePath(); </script>
 </head>
 
 <body onload="init(30, 480, 99)">
-<div class="main">
-    <div class="title">
-        The classic Minesweeper game
-    </div>
+    <div class="main">
+        <div class="title">
+            The classic Minesweeper game
+        </div>
 
-    <div style="height: 0px;width: 0px;overflow:hidden;">
-        <a id="myAnchor" href="#"></a>
-    </div>
+        <div style="font-style: italic">
+            <a class="goHomeLink" href="/mineswipeer/index" title="New Game">New Game</a>
+        </div>
 
-    <div>
-        <p th:text="${state}"></p>
-    </div>
-    <table id="sqTable" >
-        <thead>
-        <tr>
-            <th> Board </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:if="${board.empty}">
-            <td colspan="2"> No Game Available </td>
-        </tr>
-        <tr th:each="row, iterRow : ${board}">
-            <td class="sq" id="sq-0" th:id="${'sq-' + iterColumn.index + '-' + iterRow.index}" onmousedown="return clickSq(event,this)" th:each="column, iterColumn : ${row}" th:text="${column}" >&nbsp;</td>
-        </tr>
-        </tbody>
-    </table>
+        <table id="sqTable">
+            <thead>
+                <tr>
+                    <th> Board </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${board.empty}">
+                    <td colspan="2"> No Game Available </td>
+                </tr>
+                <tr th:each="row, iterRow : ${board}">
+                    <td class="sq" id="sq-0" th:id="${'sq-' + iterColumn.index + '-' + iterRow.index}"
+                        onmousedown="return clickSq(event,this)" th:each="column, iterColumn : ${row}"
+                        th:text="${column}">&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
 
-    <div style="font-style: italic">
-        <a class="goHomeLink" href="/mineswipeer/index" title="Home Page">Home</a>
+        <div>
+            <p th:text="${state}"></p>
+        </div>
+
+        <div style="height: 0px;width: 0px;overflow:hidden;">
+            <a id="myAnchor" href="#"></a>
+        </div>
+
     </div>
-</div>
 </body>
+
 </html>
