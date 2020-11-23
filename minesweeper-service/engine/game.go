@@ -44,6 +44,8 @@ type Game struct {
 	Board      [][]Tile
 	Rows       int
 	Columns    int
+	MineAmount int
+
 	FlagAmount int
 }
 
@@ -203,7 +205,7 @@ func BuildNewGame(rows, columns, mineAmount int) Game {
 		}
 	}
 
-	return Game{board, rows, columns, mineAmount}
+	return Game{board, rows, columns, mineAmount, 0}
 }
 
 func (g Game) copyGame() Game {
@@ -220,7 +222,7 @@ func (g Game) copyGame() Game {
 		}
 	}
 
-	return Game{board, g.Rows, g.Columns, 0}
+	return Game{board, g.Rows, g.Columns, g.MineAmount, g.FlagAmount}
 }
 
 func (g Game) buildGameWithTile(tile Tile) Game {
@@ -231,7 +233,7 @@ func (g Game) buildGameWithTile(tile Tile) Game {
 		tile.IsMine,
 		tile.ValueTest}}}
 
-	return Game{board, g.Rows, g.Columns, 0}
+	return Game{board, g.Rows, g.Columns, g.MineAmount, g.FlagAmount}
 }
 
 func (g Game) buildGameWithShowableTiles() Game {
@@ -252,7 +254,7 @@ func (g Game) buildGameWithShowableTiles() Game {
 	if board == nil {
 		board = [][]Tile{}
 	}
-	return Game{board, g.Rows, g.Columns, 0}
+	return Game{board, g.Rows, g.Columns, g.MineAmount, g.FlagAmount}
 }
 
 func (g Game) ShowBoard() {

@@ -17,7 +17,7 @@ func GetOneGame(id int) (*model.GameResponse, error) {
 	gameStorageMap.RLock()
 	defer gameStorageMap.RUnlock()
 	if game, ok := gameStorageMap.m[id]; ok {
-		gameResponse := model.GameResponse{game.Rows, game.Columns, 44}
+		gameResponse := model.GameResponse{game.Rows, game.Columns, game.MineAmount}
 		return &gameResponse, nil
 	}
 	return nil, nil
