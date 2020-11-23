@@ -33,5 +33,11 @@ type PlayRequest struct {
 
 // PlayResponse : ...
 type PlayResponse struct {
+	StateGame engine.StateGame `json:"stateGame"`
+	Game      engine.Game      `json:"game"`
+}
+
+// GameCompleteResponse : ...
+type GameCompleteResponse struct {
 	Game engine.Game
 }

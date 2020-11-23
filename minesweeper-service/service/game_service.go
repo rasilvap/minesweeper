@@ -15,9 +15,9 @@ var gameStorageMap = struct {
 }{m: make(map[int]engine.Game)}
 
 func CreateGame(rows, colums, mineAmount int) (int, error) {
-	game := engine.BuildNewGame(rows, colums)
-	minedPointTile := [][2]int{{0, 1}, {1, 1}, {1, 0}}
-	game.SetUpMines(mineAmount, minedPointTile)
+	game := engine.BuildNewGame(rows, colums, mineAmount)
+	minedPointTile := [][2]int{{1, 1}}
+	game.SetUpMines(minedPointTile)
 	log.Println(game)
 
 	gameStorageMap.Lock()
@@ -45,12 +45,26 @@ func PlayMovement(id int, row int, column int) (*model.PlayResponse, error) {
 	if game, ok := gameStorageMap.m[id]; ok {
 		log.Println(game.GetStates())
 		log.Println("row", row, "col", column)
-		game.PlayMovement(row, column)
+		gameState, showableGame := game.PlayMovement(row, column)
+		playResponse := buildPlayResponse(gameState, showableGame)
 
-		return &model.PlayResponse{game}, nil
+		return &playResponse, nil
 		log.Println(game.GetStates())
 	}
 	return nil, nil
+}
+
+func buildPlayResponse(gameState engine.StateGame, showableGame engine.Game) model.PlayResponse {
+	return model.PlayResponse{gameState, showableGame}
+}
+
+func GetCompleteGame(id int) *model.GameCompleteResponse {
+	gameStorageMap.RLock()
+	defer gameStorageMap.RUnlock()
+	if game, ok := gameStorageMap.m[id]; ok {
+		return &model.GameCompleteResponse{game}
+	}
+	return nil
 }
 
 func GetOneGame(id int) (*model.GameResponse, error) {

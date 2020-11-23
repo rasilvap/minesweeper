@@ -2,6 +2,7 @@ package engine
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
 )
 
@@ -9,19 +10,19 @@ type StateTile int
 
 const (
 	StateTileCovered  StateTile = 1
-	StateTileClear              = 2
-	StateTileFlagged            = 3
-	StateTileNumberd            = 4
-	StateTileExploted           = 5
+	StateTileClear    StateTile = 2
+	StateTileFlagged  StateTile = 3
+	StateTileNumberd  StateTile = 4
+	StateTileExploted StateTile = 5
 )
 
 type StateGame int
 
 const (
 	StateGameNew     StateGame = 1
-	StateGameRunning           = 2
-	StateGameWon               = 3
-	StateGameLost              = 4
+	StateGameRunning StateGame = 2
+	StateGameWon     StateGame = 3
+	StateGameLost    StateGame = 4
 )
 
 type Tile struct {
@@ -46,33 +47,34 @@ type Game struct {
 	FlagAmount int
 }
 
-func (g Game) PlayMovement(r, c int) (StateGame, [][]Tile) {
+func (g Game) PlayMovement(r, c int) (StateGame, Game) {
+	log.Println("PLAY-START")
+	log.Println(g)
+	log.Println("PLAY-START")
 	tile := &g.Board[r][c]
 
-	//played tile, maybe revert
 	if tile.State != StateTileCovered {
 		if tile.State == StateTileFlagged {
 			tile.State = StateTileCovered
 		}
 
-		return StateGameRunning, [][]Tile{{Tile{tile.State,
-			tile.Row,
-			tile.Column,
-			tile.SurroundingMineCount,
-			tile.IsMine,
-			tile.ValueTest}}}
+		log.Println("Tile has already been played")
+		return StateGameRunning, g.buildGameWithTile(*tile)
 	}
 
-	//game over, clear all tiles
+	//game over, so show all tiles
 	if tile.IsMine {
+		log.Println("Game Over")
 		tile.State = StateTileExploted
-		return StateGameLost, nil
+		return StateGameLost, g.copyGame()
 	}
 
 	//simple case, only mark
 	if tile.SurroundingMineCount == 0 {
+		log.Println("Tile was Cleaned")
 		tile.State = StateTileClear
 	} else {
+		log.Println("Tile was Numbered")
 		tile.State = StateTileNumberd
 	}
 
@@ -80,18 +82,20 @@ func (g Game) PlayMovement(r, c int) (StateGame, [][]Tile) {
 
 	// game won, clear all tiles
 	if g.isFlawlessVictory() {
-		return StateGameWon, nil
+		log.Println("Flawless Victory")
+		return StateGameWon, g.copyGame()
 	}
 
+	log.Println("The Game is Running")
 	//return showable tiles
-	return StateGameRunning, make([][]Tile, 2)
+	return StateGameRunning, g.buildGameWithShowableTiles()
 }
 
 func (g Game) isFlawlessVictory() bool {
 	for i := 0; i < g.Rows; i++ {
 		for j := 0; j < g.Columns; j++ {
 			if board := g.Board[i][j]; !board.IsMine &&
-				(board.State == StateTileClear || board.State == StateTileFlagged) {
+				(board.State == StateTileCovered || board.State == StateTileFlagged) {
 				return false
 			}
 		}
@@ -114,8 +118,8 @@ func (g *Game) MarkFlag(r, c int) int {
 	return g.FlagAmount
 }
 
-func (g Game) SetUpMines(amountMines int, minedPointTiles [][2]int) {
-	mines := make([]Mine, amountMines)
+func (g Game) SetUpMines(minedPointTiles [][2]int) {
+	mines := make([]Mine, len(minedPointTiles))
 	for i := range mines {
 		r := minedPointTiles[i][0]
 		c := minedPointTiles[i][1]
@@ -186,11 +190,9 @@ func (g Game) getAdjacentTiles(f int, c int) []Tile {
 	return adjecentTiles
 }
 
-func BuildNewGame(rows int, columns int) Game {
-	//create the rows
+func BuildNewGame(rows, columns, mineAmount int) Game {
 	board := make([][]Tile, rows)
 
-	//create the columns
 	for r := range board {
 		board[r] = make([]Tile, columns)
 	}
@@ -203,7 +205,40 @@ func BuildNewGame(rows int, columns int) Game {
 		}
 	}
 
-	return Game{board, rows, columns, 0}
+	return Game{board, rows, columns, mineAmount}
+}
+
+func (g Game) copyGame() Game {
+	board := make([][]Tile, g.Rows)
+
+	for r := range board {
+		board[r] = make([]Tile, g.Columns)
+	}
+
+	for i := 0; i < g.Rows; i++ {
+		for j := 0; j < g.Columns; j++ {
+			privateBoard := g.Board[i][j]
+			board[i][j] = Tile{privateBoard.State, i, j, privateBoard.SurroundingMineCount, privateBoard.IsMine, -1}
+		}
+	}
+
+	return Game{board, g.Rows, g.Columns, 0}
+}
+
+func (g Game) buildGameWithTile(tile Tile) Game {
+	board := [][]Tile{{Tile{tile.State,
+		tile.Row,
+		tile.Column,
+		tile.SurroundingMineCount,
+		tile.IsMine,
+		tile.ValueTest}}}
+
+	return Game{board, g.Rows, g.Columns, 0}
+}
+
+func (g Game) buildGameWithShowableTiles() Game {
+	board := make([][]Tile, 2)
+	return Game{board, g.Rows, g.Columns, 0}
 }
 
 func (g Game) ShowBoard() {
