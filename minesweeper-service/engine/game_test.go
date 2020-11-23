@@ -68,7 +68,7 @@ func TestMarkPlayMovementWhenRunningAndShowNumber(t *testing.T) {
 	fmt.Println(gameCopy)
 
 	//assert
-	if stateGame != StateGameRunning || len(gameCopy.Board) != 0 {
+	if stateGame != StateGameRunning || len(gameCopy.Board) != 1 {
 		t.Error("Error", stateGame, gameCopy, len(gameCopy.Board))
 	}
 }

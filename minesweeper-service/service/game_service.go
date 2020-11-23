@@ -44,8 +44,9 @@ func PlayMovement(id int, row int, column int) (*model.PlayResponse, error) {
 	defer gameStorageMap.RUnlock()
 	if game, ok := gameStorageMap.m[id]; ok {
 		log.Println(game.GetStates())
-		log.Println("row", row, "col", column)
+		log.Println("Req row", row, "col", column)
 		gameState, showableGame := game.PlayMovement(row, column)
+		log.Println("show: ", gameState, showableGame)
 		playResponse := buildPlayResponse(gameState, showableGame)
 
 		return &playResponse, nil
@@ -74,14 +75,11 @@ func buildPlayResponse(gameState engine.StateGame, showableGame engine.Game) mod
 			model.GameDTO{[][]model.TileDTO{}, showableGame.Rows, showableGame.Columns, showableGame.FlagAmount}}
 	}
 
-	column := len(showableGame.Board[0])
 	boardDTO := make([][]model.TileDTO, row)
-
-	for r := range boardDTO {
-		boardDTO[r] = make([]model.TileDTO, column)
-	}
-
 	for i := 0; i < row; i++ {
+		column := len(showableGame.Board[i])
+		boardDTO[i] = make([]model.TileDTO, column)
+
 		for j := 0; j < column; j++ {
 			board := showableGame.Board[i][j]
 
@@ -101,7 +99,7 @@ func buildPlayResponse(gameState engine.StateGame, showableGame engine.Game) mod
 				tileStateDTO = ""
 			}
 
-			boardDTO[i][j] = model.TileDTO{tileStateDTO, i, j, board.SurroundingMineCount, board.IsMine, -1}
+			boardDTO[i][j] = model.TileDTO{tileStateDTO, board.Row, board.Column, board.SurroundingMineCount, board.IsMine, -1}
 		}
 	}
 

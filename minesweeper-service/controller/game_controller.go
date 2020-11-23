@@ -73,6 +73,7 @@ func play(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+	log.Println(playRespose)
 	j, err := json.Marshal(playRespose)
 	if err != nil {
 		log.Print(err)

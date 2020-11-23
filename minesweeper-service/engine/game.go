@@ -48,9 +48,6 @@ type Game struct {
 }
 
 func (g Game) PlayMovement(r, c int) (StateGame, Game) {
-	log.Println("PLAY-START")
-	log.Println(g)
-	log.Println("PLAY-START")
 	tile := &g.Board[r][c]
 
 	if tile.State != StateTileCovered {
@@ -243,7 +240,7 @@ func (g Game) buildGameWithShowableTiles() Game {
 		var column []Tile
 		for j := 0; j < g.Columns; j++ {
 			if board := g.Board[i][j]; !board.IsMine &&
-				(board.State == StateTileClear) {
+				(board.State == StateTileClear || board.State == StateTileNumberd) {
 				column = append(column, g.Board[i][j])
 			}
 		}
