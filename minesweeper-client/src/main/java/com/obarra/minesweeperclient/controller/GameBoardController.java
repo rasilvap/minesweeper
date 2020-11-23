@@ -17,6 +17,11 @@ import java.util.ArrayList;
 @RequestMapping("/mineswipeer")
 public class GameBoardController {
 
+    private final static Integer ROWS_DEFAULT = 3;
+    private final static Integer COLUMNS_DEFAULT = 8;
+    private final static Integer MINE_AMOUNT_DEFAULT = 1;
+
+
     private final GameBoardService gameBoardService;
 
     public GameBoardController(final GameBoardService gameBoardService) {
@@ -25,7 +30,8 @@ public class GameBoardController {
 
     @GetMapping("/index")
     public String index(final Model model, final @ModelAttribute("boardGame") GameBoard gameBoard) {
-        final var newGameBoard = gameBoardService.createGameBoard(3, 8, 1);
+        final var newGameBoard = gameBoardService
+                .createGameBoard(ROWS_DEFAULT, COLUMNS_DEFAULT, MINE_AMOUNT_DEFAULT);
         gameBoard.setGameId(newGameBoard.getGameId());
         gameBoard.setBoard(newGameBoard.getBoard());
         gameBoard.setState(newGameBoard.getState());

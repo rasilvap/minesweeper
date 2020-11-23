@@ -62,7 +62,7 @@ public final class GameBoardRender {
         for (TileDTO[] rows : resultBoard) {
             for (TileDTO tileDTO : rows) {
                 if (tileDTO.getMine() != null && tileDTO.getMine()) {
-                    board.get(tileDTO.getRow()).set(tileDTO.getColumn(), "M");
+                    board.get(tileDTO.getRow()).set(tileDTO.getColumn(), "X");
                     System.out.println("BOOM.......");
                 } else if (StateTileEnum.CLEAR.name().equals(tileDTO.getState()) &&
                         (tileDTO.getSurroundingMineCount() == null || tileDTO.getSurroundingMineCount() == 0)) {

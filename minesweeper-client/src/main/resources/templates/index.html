@@ -36,9 +36,10 @@
             </thead>
             <tbody>
                 <tr th:each="row, iterRow : ${board}">
-                    <td class="sq" id="sq-0" th:id="${'sq-' + iterColumn.index + '-' + iterRow.index}"
+                    <td class="sq"
+                        id="sq-0" th:id="${'sq-' + iterColumn.index + '-' + iterRow.index}"
                         onmousedown="return clickSq(event,this)" th:each="column, iterColumn : ${row}"
-                        th:text="${column}">&nbsp;</td>
+                        th:text="${column != 'C'? column : '' }"  th:class="'sq '+${column != ''? 'sqExposed' : ''}">&nbsp;</td>
                 </tr>
                 <tr th:if="${board.empty}">
                     <td colspan="2"> No Game Available </td>
