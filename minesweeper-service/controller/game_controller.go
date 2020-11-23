@@ -27,6 +27,37 @@ func SetupRoutes(apiBasePath string, router *mux.Router) {
 	router.HandleFunc(fmt.Sprintf("%s/%s/{id:[0-9]+}/mark", apiBasePath, gamesPath), mark).Methods("POST")
 }
 
+func getOne(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	game, err := service.GetOneGame(id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if game == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	j, err := json.Marshal(game)
+	if err != nil {
+		log.Print(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	_, err = w.Write(j)
+	if err != nil {
+		log.Print(err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
 func create(w http.ResponseWriter, r *http.Request) {
 	var gameRequest model.GameRequest
 	err := json.NewDecoder(r.Body).Decode(&gameRequest)
@@ -113,37 +144,6 @@ func mark(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusAccepted)
-}
-
-func getOne(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	game, err := service.GetOneGame(id)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	if game == nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-	j, err := json.Marshal(game)
-	if err != nil {
-		log.Print(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	_, err = w.Write(j)
-	if err != nil {
-		log.Print(err)
-		w.WriteHeader(http.StatusInternalServerError)
-	}
 }
 
 func delete(w http.ResponseWriter, r *http.Request) {

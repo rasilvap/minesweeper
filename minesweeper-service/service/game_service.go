@@ -8,11 +8,20 @@ import (
 	"minesweeper-API/minesweeper-service/model"
 )
 
-// used to hold our product list in memory
 var gameStorageMap = struct {
 	sync.RWMutex
 	m map[int]engine.Game
 }{m: make(map[int]engine.Game)}
+
+func GetOneGame(id int) (*model.GameResponse, error) {
+	gameStorageMap.RLock()
+	defer gameStorageMap.RUnlock()
+	if game, ok := gameStorageMap.m[id]; ok {
+		gameResponse := model.GameResponse{game.Rows, game.Columns, 44}
+		return &gameResponse, nil
+	}
+	return nil, nil
+}
 
 func CreateGame(rows, colums, mineAmount int) (int, error) {
 	game := engine.BuildNewGame(rows, colums, mineAmount)
@@ -21,9 +30,9 @@ func CreateGame(rows, colums, mineAmount int) (int, error) {
 	log.Println(game)
 
 	gameStorageMap.Lock()
-	gameStorageMap.m[2] = game
+	gameStorageMap.m[len(gameStorageMap.m)] = game
 	gameStorageMap.Unlock()
-	return 2, nil
+	return len(gameStorageMap.m) - 1, nil
 }
 
 //TODO use mark for flag ant ???
@@ -114,16 +123,6 @@ func GetCompleteGame(id int) *model.GameCompleteResponse {
 		return &model.GameCompleteResponse{game}
 	}
 	return nil
-}
-
-func GetOneGame(id int) (*model.GameResponse, error) {
-	gameStorageMap.RLock()
-	defer gameStorageMap.RUnlock()
-	if game, ok := gameStorageMap.m[id]; ok {
-		gameResponse := model.GameResponse{game.Rows, game.Columns, 44}
-		return &gameResponse, nil
-	}
-	return nil, nil
 }
 
 func DeleteGame(id int) error {
