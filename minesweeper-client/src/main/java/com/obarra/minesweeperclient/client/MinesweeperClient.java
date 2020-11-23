@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(value = "minesweeperClient", url = "http://localhost:5000/api")
+
+@FeignClient(name = "minesweeperClient", url = "${minesweeperClient.feign.url}")
 public interface MinesweeperClient {
 
     @PostMapping("/games")
