@@ -22,21 +22,21 @@
             <a class="goHomeLink" href="/mineswipeer/index" title="New Game">New Game</a>
         </div>
 
-        <table id="sqTable">
+        <table id="sqTable" onmouseup="return false">
             <thead>
             <tr>
                 <th class="score" colspan="30">
                     <div class="counter" id="mines" th:text="${mineAmount}">0</div>
                     <div class="counter" id="timer">&nbsp;</div>
                     <a href="/mineswipeer/index">
-                        <img alt="face" src="../images/bored.gif">
+                        <img th:src="${state.name() == 'WON'? '/images/happy.gif': state.name() == 'LOST'? '/images/sad.gif' : '/images/bored.gif'}" />
                     </a>
                 </th>
             </tr>
             </thead>
             <tbody>
                 <tr th:each="row, iterRow : ${board}">
-                    <td class="sq"
+                    <td oncontextmenu="return false;" class="sq"
                         id="sq-0" th:id="${'sq-' + iterColumn.index + '-' + iterRow.index}"
                         onmousedown="return clickSq(event,this)" th:each="column, iterColumn : ${row}"
                         th:text="${column != 'C'? column : '' }"  th:class="'sq '+${column != ''? 'sqExposed' : ''}">&nbsp;</td>
