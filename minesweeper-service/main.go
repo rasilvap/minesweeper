@@ -10,12 +10,10 @@ import (
 	_ "github.com/pdrum/swagger-automation/docs" // This line is necessary for go-swagger to find your docs!
 )
 
-const basePathAPI = "/api"
-
 func main() {
 	router := mux.NewRouter()
 
-	controller.SetupRoutes(basePathAPI, router)
+	controller.SetupRoutes(router)
 
 	port := os.Getenv("PORT")
 	if port == "" {

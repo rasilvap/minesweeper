@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -13,18 +12,16 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const gamesPath = "games"
+// SetupRoutes: ..
+func SetupRoutes(router *mux.Router) {
 
-// SetupRoutes
-func SetupRoutes(apiBasePath string, router *mux.Router) {
+	router.HandleFunc("/v1/games/{id:[0-9]+}", getOne).Methods("GET")
 
-	router.HandleFunc(fmt.Sprintf("%s/%s/{id:[0-9]+}", apiBasePath, gamesPath), getOne).Methods("GET")
+	router.HandleFunc("/v1/games", create).Methods("POST")
 
-	router.HandleFunc(fmt.Sprintf("%s/%s", apiBasePath, gamesPath), create).Methods("POST")
+	router.HandleFunc("/v1/games/{id:[0-9]+}/play", play).Methods("POST")
 
-	router.HandleFunc(fmt.Sprintf("%s/%s/{id:[0-9]+}/play", apiBasePath, gamesPath), play).Methods("POST")
-
-	router.HandleFunc(fmt.Sprintf("%s/%s/{id:[0-9]+}/mark", apiBasePath, gamesPath), mark).Methods("POST")
+	router.HandleFunc("/v1/games/{id:[0-9]+}/mark", mark).Methods("POST")
 }
 
 func getOne(w http.ResponseWriter, r *http.Request) {
@@ -124,6 +121,7 @@ func play(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
 	_, err = w.Write(j)
 	if err != nil {
 		log.Print(err)
