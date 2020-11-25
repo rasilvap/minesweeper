@@ -1,33 +1,7 @@
-basePath: /v1
+basePath: /api
 consumes:
 - application/json
 definitions:
-  FooBarRequest:
-    properties:
-      bar:
-        items:
-          format: int64
-          type: integer
-        type: array
-        x-go-name: Bar
-      foo:
-        type: string
-        x-go-name: Foo
-    title: FooBarRequest represents body of FooBar request.
-    type: object
-    x-go-package: github.com/pdrum/swagger-automation/api
-  FooBarResponse:
-    properties:
-      baz:
-        properties:
-          prop:
-            type: string
-            x-go-name: Prop
-        type: object
-        x-go-name: Baz
-    title: FooBarResponse represents body of FooBar response.
-    type: object
-    x-go-package: github.com/pdrum/swagger-automation/api
   GameDTO:
     properties:
       board:
@@ -87,11 +61,11 @@ definitions:
     x-go-package: minesweeper-API/minesweeper-service/model
   GameSimpleResponse:
     properties:
-      gameId:
+      id:
         format: int64
         type: integer
-        x-go-name: GameId
-    title: 'GameSimpleResponse : ...'
+        x-go-name: Id
+    title: 'GameResponse : ...'
     type: object
     x-go-package: minesweeper-API/minesweeper-service/model
   MarkRequest:
@@ -165,21 +139,6 @@ info:
   title: Minesweeper-Service.
   version: 1.0.0
 paths:
-  /foobar:
-    post:
-      operationId: idOfFoobarEndpoint
-      parameters:
-      - description: This text will appear as description of your request body.
-        in: body
-        name: Body
-        schema:
-          $ref: '#/definitions/FooBarRequest'
-      responses:
-        "200":
-          $ref: '#/responses/foobarResponse'
-      summary: Foobar does some amazing stuff.
-      tags:
-      - foobar-tag
   /games:
     post:
       operationId: createGameEndpoint
@@ -215,9 +174,9 @@ paths:
       responses:
         "200":
           $ref: '#/responses/gameResponseResponseWrapper'
-        "404":
-          $ref: '#/responses/notfound'
-          description: Not Found
+        "400":
+          $ref: '#/responses/badrequest'
+          description: Missing or invalid attributes in body
         "500":
           $ref: '#/responses/internal'
           description: Internal Server Errors
@@ -242,13 +201,10 @@ paths:
         x-go-name: GameId
       responses:
         "200":
-          $ref: '#/responses/accepted'
+          $ref: '#/responses/ok'
         "400":
           $ref: '#/responses/badrequest'
           description: Missing or invalid attributes in body
-        "404":
-          $ref: '#/responses/notfound'
-          description: Not Found
         "500":
           $ref: '#/responses/internal'
           description: Internal Server Errors
@@ -277,9 +233,6 @@ paths:
         "400":
           $ref: '#/responses/badrequest'
           description: Missing or invalid attributes in body
-        "404":
-          $ref: '#/responses/notfound'
-          description: Not Found
         "500":
           $ref: '#/responses/internal'
           description: Internal Server Errors
@@ -289,18 +242,10 @@ paths:
 produces:
 - application/json
 responses:
-  accepted:
-    description: accepted response
-    schema:
-      type: object
   badrequest:
     description: Error BadRequest 400 - Missing or invalid attributes
     schema:
       type: object
-  foobarResponse:
-    description: This text will appear as description of your response body.
-    schema:
-      $ref: '#/definitions/FooBarResponse'
   forbidden:
     description: Error Forbidden 403
     schema:
@@ -318,7 +263,7 @@ responses:
     schema:
       type: object
   notfound:
-    description: Error NotFaund 404
+    description: Error Unauthorized 404
     schema:
       type: object
   ok:
