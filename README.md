@@ -15,6 +15,16 @@ URL Swagger Documentation
 https://app.swaggerhub.com/apis/obarra-dev/MinesweeperApiRest/1.0.0
 
 
+
+##  List of items completed
+
+* Design and implement a documented RESTful API for the game (think of a mobile app for your API)
+* Implement an API client library for the API designed above. Ideally, in a different language, of your preference, to the one used for the API
+* When a cell with no adjacent mines is revealed, all adjacent squares will be revealed (and repeat)
+* Ability to 'flag' a cell with a question mark or red flag
+* Detect when game is over
+
+
 ## Notes
 
 In order to use the programming language and frameworks discussed during the interview I decided to use Thymeleaf/Java to develop the front-end. So my goal is to use Golang and Java to build the solution.
