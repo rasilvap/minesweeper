@@ -1,3 +1,19 @@
+// Minesweeper-Service.
+//
+// The purpose of this API is to provide a Rest Api for game Minesweeper. It is developed in Golang.
+//
+//     Schemes: https
+//     BasePath: /v1
+//     Version: 1.0.0
+//     Host: minesweeper-service-ob.herokuapp.com
+//
+//     Consumes:
+//     - application/json
+//
+//     Produces:
+//     - application/json
+//
+// swagger:meta
 package docs
 
 // ------------------------------------------------------------
