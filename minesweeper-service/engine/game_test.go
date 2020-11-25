@@ -6,6 +6,19 @@ import (
 	"testing"
 )
 
+func TestGenerateMinedPoints(t *testing.T) {
+	minedPoints := generateMinedPoints(24, 3, 8)
+	if len(minedPoints) != 24 {
+		t.Error("Error", minedPoints)
+	}
+}
+func TestGenerateMinedPointsTwoMines(t *testing.T) {
+	minedPoints := generateMinedPoints(2, 3, 3)
+	if len(minedPoints) != 2 {
+		t.Error("Error", minedPoints)
+	}
+}
+
 func TestSetUpMines(t *testing.T) {
 	minedPointTile := [][2]int{{0, 1}, {1, 1}, {1, 0}}
 	game := BuildNewGame(3, 3, len(minedPointTile))

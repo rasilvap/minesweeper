@@ -3,7 +3,6 @@ package engine
 import (
 	"fmt"
 	"log"
-	"math/rand"
 )
 
 type StateTile int
@@ -192,24 +191,6 @@ func (g Game) getAdjacentTiles(f int, c int) []Tile {
 	return adjecentTiles
 }
 
-func BuildNewGame(rows, columns, mineAmount int) Game {
-	board := make([][]Tile, rows)
-
-	for r := range board {
-		board[r] = make([]Tile, columns)
-	}
-
-	cont := 0
-	for i := 0; i < rows; i++ {
-		for j := 0; j < columns; j++ {
-			cont++
-			board[i][j] = Tile{StateTileCovered, i, j, 0, false, cont}
-		}
-	}
-
-	return Game{board, rows, columns, mineAmount, 0}
-}
-
 func (g Game) copyGame() Game {
 	board := make([][]Tile, g.Rows)
 
@@ -267,17 +248,4 @@ func (g Game) GetStates() [][]StateTile {
 		}
 	}
 	return states
-}
-
-//TODO improve random in order to dont repeat
-func generateMinedPointTiles(amountPoints int, maxIncluded int) [][2]int {
-	max := maxIncluded + 1
-	tileMinePoints := make([][2]int, amountPoints)
-	for i := 0; i < amountPoints; i++ {
-		rand.Seed(int64(i))
-		tileMinePoints[i][0] = rand.Intn(max)
-		tileMinePoints[i][1] = rand.Intn(max)
-	}
-
-	return tileMinePoints
 }
