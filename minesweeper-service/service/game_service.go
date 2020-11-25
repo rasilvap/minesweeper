@@ -25,8 +25,6 @@ func GetOneGame(id int) (*model.GameResponse, error) {
 
 func CreateGame(rows, colums, mineAmount int) (int, error) {
 	game := engine.BuildNewGame(rows, colums, mineAmount)
-	//TODO use random mines
-	//minedPointTile := [][2]int{{1, 1}}
 	minedPointTile := engine.GenerateMinedPoints(mineAmount, rows, colums)
 	game.SetUpMines(minedPointTile)
 	log.Println(game)
@@ -37,7 +35,7 @@ func CreateGame(rows, colums, mineAmount int) (int, error) {
 	return len(gameStorageMap.m) - 1, nil
 }
 
-//TODO use mark for flag ant ???
+//TODO unify with play
 func MarkTile(id int, row int, column int, mark string) error {
 	gameStorageMap.RLock()
 	defer gameStorageMap.RUnlock()
@@ -116,17 +114,4 @@ func buildPlayResponse(gameState engine.StateGame, showableGame engine.Game) mod
 
 	return model.PlayResponse{gameStateDTO,
 		model.GameDTO{boardDTO, showableGame.Rows, showableGame.Columns, showableGame.FlagAmount}}
-}
-
-func GetCompleteGame(id int) *model.GameCompleteResponse {
-	gameStorageMap.RLock()
-	defer gameStorageMap.RUnlock()
-	if game, ok := gameStorageMap.m[id]; ok {
-		return &model.GameCompleteResponse{game}
-	}
-	return nil
-}
-
-func DeleteGame(id int) error {
-	return nil
 }

@@ -25,8 +25,6 @@ func BuildNewGame(rows, columns, mineAmount int) Game {
 }
 
 func GenerateMinedPoints(amountPoints, maxRowIncluded, maxColumnIncluded int) [][2]int {
-	//maxRow := maxRowIncluded + 1
-	//maxColumn := maxColumnIncluded + 1
 	tileMinePoints := make([][2]int, amountPoints)
 
 	setPoints := make(map[string]bool)

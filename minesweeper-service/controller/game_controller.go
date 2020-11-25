@@ -87,7 +87,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 }
 
 func play(w http.ResponseWriter, r *http.Request) {
-	log.Println("Play ----")
+	log.Println("Playing")
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -130,7 +130,7 @@ func play(w http.ResponseWriter, r *http.Request) {
 }
 
 func mark(w http.ResponseWriter, r *http.Request) {
-	log.Println("mark ----")
+	log.Println("Marking")
 
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -154,27 +154,4 @@ func mark(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusAccepted)
-}
-
-func delete(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	err = service.DeleteGame(id)
-
-	if err != nil {
-		log.Print(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	w.WriteHeader(http.StatusNoContent)
 }

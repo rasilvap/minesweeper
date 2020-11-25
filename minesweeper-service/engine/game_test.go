@@ -7,13 +7,13 @@ import (
 )
 
 func TestGenerateMinedPoints(t *testing.T) {
-	minedPoints := generateMinedPoints(24, 3, 8)
+	minedPoints := GenerateMinedPoints(24, 3, 8)
 	if len(minedPoints) != 24 {
 		t.Error("Error", minedPoints)
 	}
 }
 func TestGenerateMinedPointsTwoMines(t *testing.T) {
-	minedPoints := generateMinedPoints(2, 3, 3)
+	minedPoints := GenerateMinedPoints(2, 3, 3)
 	if len(minedPoints) != 2 {
 		t.Error("Error", minedPoints)
 	}
