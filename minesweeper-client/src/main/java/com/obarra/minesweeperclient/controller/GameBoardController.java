@@ -19,9 +19,9 @@ import javax.websocket.server.PathParam;
 @RequestMapping("/mineswipeer")
 public class GameBoardController {
     private final static Logger LOGGER = LoggerFactory.getLogger(GameBoardController.class);
-    private final static Integer ROWS_DEFAULT = 3;
-    private final static Integer COLUMNS_DEFAULT = 8;
-    private final static Integer MINE_AMOUNT_DEFAULT = 1;
+    private final static Integer ROWS_DEFAULT = 25;
+    private final static Integer COLUMNS_DEFAULT = 20;
+    private final static Integer MINE_AMOUNT_DEFAULT = 15;
 
     private final GameBoardService gameBoardService;
 
