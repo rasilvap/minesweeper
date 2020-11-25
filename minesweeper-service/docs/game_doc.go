@@ -24,7 +24,7 @@ import (
 // Play a movement.
 // responses:
 //   200: gameResponseResponseWrapper
-//	 400: badrequest Missing or invalid attributes in body
+//	 404: notfound Not Found
 //   500: internal Internal Server Errors
 // Game created OK.
 // swagger:response gameResponseResponseWrapper
@@ -69,6 +69,7 @@ type gameParamsWrapper struct {
 // responses:
 //   200: playResponseResponseWrapper
 //	 400: badrequest Missing or invalid attributes in body
+//	 404: notfound Not Found
 //   500: internal Internal Server Errors
 // Game created OK.
 // swagger:response playResponseResponseWrapper
@@ -94,7 +95,9 @@ type PlayRequestParamsWrapper struct {
 // Marka a tile.
 // responses:
 //   200: ok
+//   200: accepted
 //	 400: badrequest Missing or invalid attributes in body
+//	 404: notfound Not Found
 //   500: internal Internal Server Errors
 // Game created OK.
 

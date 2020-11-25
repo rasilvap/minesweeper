@@ -12,6 +12,14 @@ type swaggerSuccessResponse struct {
 	}
 }
 
+// accepted response
+// swagger:response accepted
+type swaggerAcceptedResponse struct {
+	// in:body
+	Body struct {
+	}
+}
+
 // Error BadRequest 400 - Missing or invalid attributes
 // swagger:response badrequest
 type swaggerErrorBadRequest struct {
@@ -36,7 +44,7 @@ type swaggerErrorForbidden struct {
 	}
 }
 
-// Error Unauthorized 404
+// Error NotFaund 404
 // swagger:response notfound
 type swaggerErrorNotfound struct {
 	// in:body
