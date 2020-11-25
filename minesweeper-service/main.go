@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	_ "github.com/pdrum/swagger-automation/docs" // This line is necessary for go-swagger to find your docs!
 )
 
 const basePathAPI = "/api"

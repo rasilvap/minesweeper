@@ -1,0 +1,286 @@
+basePath: /api
+consumes:
+- application/json
+definitions:
+  GameDTO:
+    properties:
+      board:
+        items:
+          items:
+            $ref: '#/definitions/TileDTO'
+          type: array
+        type: array
+        x-go-name: Board
+      columns:
+        format: int64
+        type: integer
+        x-go-name: Columns
+      flagAmount:
+        format: int64
+        type: integer
+        x-go-name: FlagAmount
+      rows:
+        format: int64
+        type: integer
+        x-go-name: Rows
+    type: object
+    x-go-package: minesweeper-API/minesweeper-service/model
+  GameRequest:
+    properties:
+      columns:
+        format: int64
+        type: integer
+        x-go-name: Columns
+      mineAmount:
+        format: int64
+        type: integer
+        x-go-name: MineAmount
+      rows:
+        format: int64
+        type: integer
+        x-go-name: Rows
+    title: 'GameRequest : ...'
+    type: object
+    x-go-package: minesweeper-API/minesweeper-service/model
+  GameResponse:
+    properties:
+      columns:
+        format: int64
+        type: integer
+        x-go-name: Columns
+      mineAmount:
+        format: int64
+        type: integer
+        x-go-name: MineAmount
+      rows:
+        format: int64
+        type: integer
+        x-go-name: Rows
+    title: 'GameResponse : ...'
+    type: object
+    x-go-package: minesweeper-API/minesweeper-service/model
+  GameSimpleResponse:
+    properties:
+      id:
+        format: int64
+        type: integer
+        x-go-name: Id
+    title: 'GameResponse : ...'
+    type: object
+    x-go-package: minesweeper-API/minesweeper-service/model
+  MarkRequest:
+    properties:
+      column:
+        format: int64
+        type: integer
+        x-go-name: Column
+      mark:
+        type: string
+        x-go-name: Mark
+      row:
+        format: int64
+        type: integer
+        x-go-name: Row
+    title: 'MarkRequest : ...'
+    type: object
+    x-go-package: minesweeper-API/minesweeper-service/model
+  PlayRequest:
+    properties:
+      column:
+        format: int64
+        type: integer
+        x-go-name: Column
+      row:
+        format: int64
+        type: integer
+        x-go-name: Row
+    title: 'PlayRequest : ...'
+    type: object
+    x-go-package: minesweeper-API/minesweeper-service/model
+  PlayResponse:
+    properties:
+      game:
+        $ref: '#/definitions/GameDTO'
+      stateGame:
+        type: string
+        x-go-name: StateGame
+    title: 'PlayResponse : ...'
+    type: object
+    x-go-package: minesweeper-API/minesweeper-service/model
+  TileDTO:
+    properties:
+      column:
+        format: int64
+        type: integer
+        x-go-name: Column
+      mine:
+        type: boolean
+        x-go-name: Mine
+      row:
+        format: int64
+        type: integer
+        x-go-name: Row
+      state:
+        type: string
+        x-go-name: State
+      surroundingMineCount:
+        format: int64
+        type: integer
+        x-go-name: SurroundingMineCount
+      valueTest:
+        format: int64
+        type: integer
+        x-go-name: ValueTest
+    type: object
+    x-go-package: minesweeper-API/minesweeper-service/model
+host: minesweeper-service-ob.herokuapp.com
+info:
+  description: The purpose of this API is to provide a Rest Api for game Minesweeper. It is developed in Golang.
+  title: Minesweeper-Service.
+  version: 1.0.0
+paths:
+  /games:
+    post:
+      operationId: createGameEndpoint
+      parameters:
+      - description: The game's attributes to set.
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/GameRequest'
+      responses:
+        "200":
+          $ref: '#/responses/gameSimpleResponseResponse'
+        "400":
+          $ref: '#/responses/badrequest'
+          description: Missing or invalid attributes in body
+        "500":
+          $ref: '#/responses/internal'
+          description: Internal Server Errors
+      summary: Create a game.
+      tags:
+      - games
+  /games/{id}:
+    get:
+      operationId: getGameEndpoint
+      parameters:
+      - description: The game id
+        format: int64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: GameId
+      responses:
+        "200":
+          $ref: '#/responses/gameResponseResponseWrapper'
+        "400":
+          $ref: '#/responses/badrequest'
+          description: Missing or invalid attributes in body
+        "500":
+          $ref: '#/responses/internal'
+          description: Internal Server Errors
+      summary: Play a movement.
+      tags:
+      - games
+  /games/{id}/mark:
+    post:
+      operationId: markGameEndpoint
+      parameters:
+      - description: The game's attributes to set.
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/MarkRequest'
+      - description: The game id
+        format: int64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: GameId
+      responses:
+        "200":
+          $ref: '#/responses/ok'
+        "400":
+          $ref: '#/responses/badrequest'
+          description: Missing or invalid attributes in body
+        "500":
+          $ref: '#/responses/internal'
+          description: Internal Server Errors
+      summary: Marka a tile.
+      tags:
+      - games
+  /games/{id}/play:
+    post:
+      operationId: playGameEndpoint
+      parameters:
+      - description: The game's attributes to set.
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/PlayRequest'
+      - description: The game id
+        format: int64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: GameId
+      responses:
+        "200":
+          $ref: '#/responses/playResponseResponseWrapper'
+        "400":
+          $ref: '#/responses/badrequest'
+          description: Missing or invalid attributes in body
+        "500":
+          $ref: '#/responses/internal'
+          description: Internal Server Errors
+      summary: Play a movement.
+      tags:
+      - games
+produces:
+- application/json
+responses:
+  badrequest:
+    description: Error BadRequest 400 - Missing or invalid attributes
+    schema:
+      type: object
+  forbidden:
+    description: Error Forbidden 403
+    schema:
+      type: object
+  gameResponseResponseWrapper:
+    description: ""
+    schema:
+      $ref: '#/definitions/GameResponse'
+  gameSimpleResponseResponse:
+    description: ""
+    schema:
+      $ref: '#/definitions/GameSimpleResponse'
+  internal:
+    description: Error Internal Server Error 500
+    schema:
+      type: object
+  notfound:
+    description: Error Unauthorized 404
+    schema:
+      type: object
+  ok:
+    description: Success response
+    schema:
+      type: object
+  playResponseResponseWrapper:
+    description: ""
+    schema:
+      $ref: '#/definitions/PlayResponse'
+  unauthorized:
+    description: Error Unauthorized 401 - Missing Authorization token
+    schema:
+      type: object
+schemes:
+- https
+securityDefinitions:
+  basic:
+    type: basic
+swagger: "2.0"

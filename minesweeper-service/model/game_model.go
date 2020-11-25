@@ -12,6 +12,11 @@ type GameRequest struct {
 }
 
 // GameResponse : ...
+type GameSimpleResponse struct {
+	Id int `json:"id"`
+}
+
+// GameResponse : ...
 type GameResponse struct {
 	Rows       int `json:"rows"`
 	Columns    int `json:"columns"`

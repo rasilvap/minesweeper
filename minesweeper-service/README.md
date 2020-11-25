@@ -31,6 +31,8 @@
 ## Technologies 
 * [Docker](https://docs.docker.com/install/)
 * [GoLang 1.15](https://golang.org/)
+* [Gorilla web toolkit](https://www.gorillatoolkit.org/)
+* [Go-swagger](https://goswagger.io/)
 * Database Server MySQL, database name: courier_service
 
 
@@ -71,15 +73,13 @@ go test -cover -covermode=count  ./...
 This project has a swagger documentation. To re-generate that documentation execute the following command:
 
 ```
-swagger generate spec -b ./cmd/web -o ./swaggerui/swagger.json
+swagger generate spec -o ./swagger.yaml 
 ```
 
-The API documentation is exposed in: <a href="http://localhost:8000/swagger/">http://localhost:8000/swagger/</a>
 
-## Documentation (Todo)
+## Documentation
 
-* [Link to a swagger-hub](https://www.example.com)
-* [Link to another doc](https://www.example.com)
+* [Link to a swagger-hub](https://github.com/deviget/minesweeper-API)
 
 
 ## Contributing

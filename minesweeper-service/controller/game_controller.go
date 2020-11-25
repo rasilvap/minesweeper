@@ -72,9 +72,21 @@ func create(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	j, err := json.Marshal(model.GameSimpleResponse{id})
+	if err != nil {
+		log.Print(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(fmt.Sprintf(`{"gameId":%d}`, id)))
+	_, err = w.Write(j)
+	if err != nil {
+		log.Print(err)
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 }
 
 func play(w http.ResponseWriter, r *http.Request) {
