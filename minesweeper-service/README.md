@@ -79,7 +79,7 @@ swagger generate spec -o ./swagger.yaml
 
 ## Documentation
 
-* [Link to a swagger-hub](https://github.com/deviget/minesweeper-API)
+* [Link to a swagger-hub](https://app.swaggerhub.com/apis/obarra-dev/MinesweeperAPI/1.0.0)
 
 
 ## Contributing
