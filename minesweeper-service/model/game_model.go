@@ -11,9 +11,9 @@ type GameRequest struct {
 	MineAmount int `json:"mineAmount"`
 }
 
-// GameResponse : ...
+// GameSimpleResponse : ...
 type GameSimpleResponse struct {
-	Id int `json:"id"`
+	GameId int `json:"gameId"`
 }
 
 // GameResponse : ...
