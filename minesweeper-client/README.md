@@ -13,6 +13,7 @@
   <a href="#contributing">Contributing</a>
 </p>
 
+# [Click me to play Minesweeper Game](https://minesweeper-client-ob.herokuapp.com/)  
 
 ##  List of items completed
 
