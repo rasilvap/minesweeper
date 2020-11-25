@@ -15,6 +15,7 @@ public class GameResponse {
     public void setGameId(Integer gameId) {
         this.gameId = gameId;
     }
+
     public Integer getRows() {
         return rows;
     }

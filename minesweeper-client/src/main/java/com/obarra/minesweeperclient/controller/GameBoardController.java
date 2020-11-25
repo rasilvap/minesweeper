@@ -9,14 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.websocket.server.PathParam;
 
 @Controller
 @SessionAttributes("gameContainer")
-@RequestMapping("/mineswipeer")
 public class GameBoardController {
     private final static Logger LOGGER = LoggerFactory.getLogger(GameBoardController.class);
     private final static Integer ROWS_DEFAULT = 25;
@@ -29,7 +27,7 @@ public class GameBoardController {
         this.gameBoardService = gameBoardService;
     }
 
-    @GetMapping("/index")
+    @GetMapping("/")
     public String index(final Model model, final @ModelAttribute("gameContainer") GameContainer gameContainer) {
         LOGGER.info("Init new game");
         final var gameBoard = gameBoardService

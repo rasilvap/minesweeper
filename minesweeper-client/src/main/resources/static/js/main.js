@@ -37,8 +37,7 @@ function buildBasePath() {
 	let arr = url.split("/");
 	let protocol = arr[0];
 	let hostPort = arr[2];
-	let contextRoot = arr[3];
 
-	var basePath = `${protocol}//${hostPort}/${contextRoot}`
+	var basePath = `${protocol}//${hostPort}`
 	return basePath;
 }

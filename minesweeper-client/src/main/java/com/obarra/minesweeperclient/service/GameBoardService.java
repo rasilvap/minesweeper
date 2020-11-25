@@ -1,7 +1,11 @@
 package com.obarra.minesweeperclient.service;
 
 import com.obarra.minesweeperclient.client.MinesweeperClient;
-import com.obarra.minesweeperclient.model.*;
+import com.obarra.minesweeperclient.model.GameBoard;
+import com.obarra.minesweeperclient.model.GameRequest;
+import com.obarra.minesweeperclient.model.GameResponse;
+import com.obarra.minesweeperclient.model.MarkRequest;
+import com.obarra.minesweeperclient.model.PlayRequest;
 import com.obarra.minesweeperclient.utils.StateGameEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

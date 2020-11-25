@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 public class GameBoardRender {
     private final static Logger LOGGER = LoggerFactory.getLogger(GameBoardRender.class);
 
-    public List<List<String>>  generateEmptyBoard(Integer rows, Integer columns) {
+    public List<List<String>> generateEmptyBoard(Integer rows, Integer columns) {
         return IntStream.range(0, rows)
                 .mapToObj(x -> IntStream.range(0, columns)
                         .mapToObj(y -> "")
