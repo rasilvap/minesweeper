@@ -2,11 +2,14 @@
 
 ## Deliverables:
 
-URL Repository (front-java, back-golang)
-https://github.com/obarra-dev/minesweeper-API
+URL Repository front-java
+https://github.com/obarra-dev/minesweeper-API/tree/main/minesweeper-client
+
+URL Repository back-golang
+https://github.com/obarra-dev/minesweeper-API/tree/main/minesweeper-service
 
 URL Rest Api
-https://github.com/obarra-dev/minesweeper-API 
+https://minesweeper-service-ob.herokuapp.com/v1
 
 URL Game to play
 https://minesweeper-client-ob.herokuapp.com
