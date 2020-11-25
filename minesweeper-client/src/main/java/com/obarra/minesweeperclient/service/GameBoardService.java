@@ -1,12 +1,13 @@
 package com.obarra.minesweeperclient.service;
 
 import com.obarra.minesweeperclient.client.MinesweeperClient;
+import com.obarra.minesweeperclient.enums.StateGameEnum;
 import com.obarra.minesweeperclient.model.GameBoard;
 import com.obarra.minesweeperclient.model.GameRequest;
 import com.obarra.minesweeperclient.model.GameResponse;
 import com.obarra.minesweeperclient.model.MarkRequest;
 import com.obarra.minesweeperclient.model.PlayRequest;
-import com.obarra.minesweeperclient.utils.StateGameEnum;
+import com.obarra.minesweeperclient.utils.GameBoardConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,8 @@ public class GameBoardService {
             return gameBoard;
         }
 
-        if (gameBoard.getBoard().get(row).get(column).equals("F")) {
-            return markTile(gameBoard, row, column, "");
+        if (gameBoard.getBoard().get(row).get(column).equals(GameBoardConst.FLAG_TILE)) {
+            return markTile(gameBoard, row, column, GameBoardConst.PLAY_MOVEMENT);
         }
 
         final var playResponse = minesweeperClient.play(gameBoard.getGameId(), PlayRequest.of(row, column));
@@ -57,11 +58,11 @@ public class GameBoardService {
     public GameBoard markTile(final GameBoard gameBoard, final Integer row, final Integer column, final String mark) {
         minesweeperClient.mark(gameBoard.getGameId(), MarkRequest.flagBuilder(row, column));
         var board = gameBoard.getBoard();
-        if ("".equals(mark)) {
-            board.get(row).set(column, "");
+        if (GameBoardConst.PLAY_MOVEMENT.equals(mark)) {
+            board.get(row).set(column, GameBoardConst.COVERED_NOT_PLAYED);
             gameBoard.setMineAmount(gameBoard.getMineAmount() + 1);
-        } else if ("FLAG".equals(mark)) {
-            board.get(row).set(column, "F");
+        } else if (GameBoardConst.FLAG_MOVEMENT.equals(mark)) {
+            board.get(row).set(column, GameBoardConst.FLAG_TILE);
             gameBoard.setMineAmount(gameBoard.getMineAmount() - 1);
         }
 
@@ -70,7 +71,7 @@ public class GameBoardService {
 
     private boolean isValidMovement(final GameBoard gameBoard, final Integer row, final Integer column) {
         var tileValue = gameBoard.getBoard().get(row).get(column);
-        return tileValue.isEmpty() || "F".equals(tileValue);
+        return tileValue.isEmpty() || GameBoardConst.FLAG_TILE.equals(tileValue);
     }
 
     public GameResponse getGame(final Integer gameId) {

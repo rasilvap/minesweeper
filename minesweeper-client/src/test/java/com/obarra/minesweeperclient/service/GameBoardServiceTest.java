@@ -3,7 +3,7 @@ package com.obarra.minesweeperclient.service;
 import com.obarra.minesweeperclient.client.MinesweeperClient;
 import com.obarra.minesweeperclient.doubletest.GameBoardDT;
 import com.obarra.minesweeperclient.model.*;
-import com.obarra.minesweeperclient.utils.StateGameEnum;
+import com.obarra.minesweeperclient.enums.StateGameEnum;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

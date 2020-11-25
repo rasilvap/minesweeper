@@ -1,4 +1,4 @@
-package com.obarra.minesweeperclient.utils;
+package com.obarra.minesweeperclient.enums;
 
 public enum StateGameEnum {
     RUNNING,

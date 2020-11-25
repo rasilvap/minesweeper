@@ -3,6 +3,7 @@ package com.obarra.minesweeperclient.controller;
 import com.obarra.minesweeperclient.model.GameBoard;
 import com.obarra.minesweeperclient.model.GameContainer;
 import com.obarra.minesweeperclient.service.GameBoardService;
+import com.obarra.minesweeperclient.utils.GameBoardConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -57,7 +58,7 @@ public class GameBoardController {
                        final Model model,
                        final @ModelAttribute("gameContainer") GameContainer gameContainer) {
         LOGGER.info(String.format("Marking row: %s, column: %s", row, column));
-        final GameBoard gameBoard = gameBoardService.markTile(gameContainer.getGameBoard(), row, column, "FLAG");
+        final GameBoard gameBoard = gameBoardService.markTile(gameContainer.getGameBoard(), row, column, GameBoardConst.FLAG_MOVEMENT);
         gameContainer.setGameBoard(gameBoard);
         fillModel(model, gameContainer);
         return "index";

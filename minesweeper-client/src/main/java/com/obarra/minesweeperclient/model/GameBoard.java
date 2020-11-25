@@ -1,6 +1,6 @@
 package com.obarra.minesweeperclient.model;
 
-import com.obarra.minesweeperclient.utils.StateGameEnum;
+import com.obarra.minesweeperclient.enums.StateGameEnum;
 
 import java.util.List;
 import java.util.Objects;

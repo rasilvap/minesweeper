@@ -1,10 +1,11 @@
 package com.obarra.minesweeperclient.service;
 
+import com.obarra.minesweeperclient.enums.StateGameEnum;
+import com.obarra.minesweeperclient.enums.StateTileEnum;
 import com.obarra.minesweeperclient.model.GameBoard;
 import com.obarra.minesweeperclient.model.PlayResponse;
 import com.obarra.minesweeperclient.model.TileDTO;
-import com.obarra.minesweeperclient.utils.StateGameEnum;
-import com.obarra.minesweeperclient.utils.StateTileEnum;
+import com.obarra.minesweeperclient.utils.GameBoardConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class GameBoardRender {
     public List<List<String>> generateEmptyBoard(Integer rows, Integer columns) {
         return IntStream.range(0, rows)
                 .mapToObj(x -> IntStream.range(0, columns)
-                        .mapToObj(y -> "")
+                        .mapToObj(y -> GameBoardConst.COVERED_NOT_PLAYED)
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
     }
@@ -67,18 +68,13 @@ public class GameBoardRender {
         for (TileDTO[] rows : resultBoard) {
             for (TileDTO tileDTO : rows) {
                 if (tileDTO.getMine()) {
-                    board.get(tileDTO.getRow()).set(tileDTO.getColumn(), "X");
-                    System.out.println("BOOM.......");
+                    board.get(tileDTO.getRow()).set(tileDTO.getColumn(), GameBoardConst.MINE_TILE);
                 } else if (tileDTO.getSurroundingMineCount() == 0 &&
                         (StateTileEnum.CLEAR.name().equals(tileDTO.getState()) ||
                                 StateTileEnum.COVERED.name().equals(tileDTO.getState()))) {
-                    System.out.println("CLEAR.......");
-                    board.get(tileDTO.getRow()).set(tileDTO.getColumn(), "C");
+                    board.get(tileDTO.getRow()).set(tileDTO.getColumn(), GameBoardConst.COVERED_TILE);
                 } else if (tileDTO.getSurroundingMineCount() > 0) {
-                    System.out.println("NUMBERED.......");
                     board.get(tileDTO.getRow()).set(tileDTO.getColumn(), tileDTO.getSurroundingMineCount().toString());
-                } else {
-                    System.out.println("NOTHING.......");
                 }
             }
         }
