@@ -11,21 +11,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
-public final class GameBoardRender {
+public class GameBoardRender {
     private final static Logger LOGGER = LoggerFactory.getLogger(GameBoardRender.class);
 
-    public List<List<String>> generateEmptyBoard(Integer rows, Integer columns) {
-        var board = new ArrayList<List<String>>();
-        for (int i = 0; i < rows; i++) {
-            var row = new ArrayList<String>();
-            board.add(row);
-            for (int j = 0; j < columns; j++) {
-                row.add("");
-            }
-        }
-        return board;
+    public List<List<String>>  generateEmptyBoard(Integer rows, Integer columns) {
+        return IntStream.range(0, rows)
+                .mapToObj(x -> IntStream.range(0, columns)
+                        .mapToObj(y -> "")
+                        .collect(Collectors.toList()))
+                .collect(Collectors.toList());
     }
 
     public GameBoard updateGameBoard(final GameBoard gameBoard, final PlayResponse playResponse) {

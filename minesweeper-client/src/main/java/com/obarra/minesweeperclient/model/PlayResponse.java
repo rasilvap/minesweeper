@@ -1,5 +1,7 @@
 package com.obarra.minesweeperclient.model;
 
+import java.util.Objects;
+
 public class PlayResponse {
     private String stateGame;
     private GameDTO game;
@@ -18,6 +20,20 @@ public class PlayResponse {
 
     public void setGame(GameDTO game) {
         this.game = game;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlayResponse that = (PlayResponse) o;
+        return Objects.equals(stateGame, that.stateGame) &&
+                Objects.equals(game, that.game);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stateGame, game);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.obarra.minesweeperclient.model;
 
+import java.util.Objects;
+
 public class TileDTO {
     private String state;
     private Integer row;
@@ -54,6 +56,24 @@ public class TileDTO {
 
     public void setValueTest(Integer valueTest) {
         this.valueTest = valueTest;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TileDTO tileDTO = (TileDTO) o;
+        return Objects.equals(state, tileDTO.state) &&
+                Objects.equals(row, tileDTO.row) &&
+                Objects.equals(column, tileDTO.column) &&
+                Objects.equals(surroundingMineCount, tileDTO.surroundingMineCount) &&
+                Objects.equals(mine, tileDTO.mine) &&
+                Objects.equals(valueTest, tileDTO.valueTest);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(state, row, column, surroundingMineCount, mine, valueTest);
     }
 
     @Override

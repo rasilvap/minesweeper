@@ -1,6 +1,7 @@
 package com.obarra.minesweeperclient.model;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class GameDTO {
     private TileDTO[][] board;
@@ -40,6 +41,23 @@ public class GameDTO {
         this.flagAmount = flagAmount;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameDTO gameDTO = (GameDTO) o;
+        return Arrays.equals(board, gameDTO.board) &&
+                Objects.equals(rows, gameDTO.rows) &&
+                Objects.equals(columns, gameDTO.columns) &&
+                Objects.equals(flagAmount, gameDTO.flagAmount);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(rows, columns, flagAmount);
+        result = 31 * result + Arrays.hashCode(board);
+        return result;
+    }
 
     @Override
     public String toString() {

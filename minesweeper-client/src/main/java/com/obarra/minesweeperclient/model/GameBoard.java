@@ -3,11 +3,13 @@ package com.obarra.minesweeperclient.model;
 import com.obarra.minesweeperclient.utils.StateGameEnum;
 
 import java.util.List;
+import java.util.Objects;
 
 public class GameBoard {
     private StateGameEnum state;
     private Integer gameId;
     private List<List<String>> board;
+    //TODO change is counter
     private Integer mineAmount;
 
     public StateGameEnum getState() {
@@ -40,6 +42,22 @@ public class GameBoard {
 
     public void setMineAmount(Integer mineAmount) {
         this.mineAmount = mineAmount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameBoard gameBoard = (GameBoard) o;
+        return state == gameBoard.state &&
+                Objects.equals(gameId, gameBoard.gameId) &&
+                Objects.equals(board, gameBoard.board) &&
+                Objects.equals(mineAmount, gameBoard.mineAmount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(state, gameId, board, mineAmount);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.obarra.minesweeperclient.model;
 
+import java.util.Objects;
+
 public class GameResponse {
     private Integer gameId;
     private Integer rows;
@@ -35,6 +37,22 @@ public class GameResponse {
 
     public void setMineAmount(Integer mineAmount) {
         this.mineAmount = mineAmount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameResponse that = (GameResponse) o;
+        return Objects.equals(gameId, that.gameId) &&
+                Objects.equals(rows, that.rows) &&
+                Objects.equals(columns, that.columns) &&
+                Objects.equals(mineAmount, that.mineAmount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gameId, rows, columns, mineAmount);
     }
 
     @Override
