@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func BuildNewGame(rows, columns, mineAmount int) Game {
+func BuildNewGame(rows, columns, mineAmount int) *Game {
 	board := make([][]Tile, rows)
 	for r := range board {
 		board[r] = make([]Tile, columns)
@@ -21,7 +21,7 @@ func BuildNewGame(rows, columns, mineAmount int) Game {
 		}
 	}
 
-	return Game{board, rows, columns, mineAmount, 0}
+	return &Game{board, rows, columns, mineAmount, 0}
 }
 
 func GenerateMinedPoints(amountPoints, maxRowIncluded, maxColumnIncluded int) [][2]int {

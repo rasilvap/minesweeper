@@ -10,8 +10,8 @@ import (
 
 var gameStorageMap = struct {
 	sync.RWMutex
-	m map[int]engine.Game
-}{m: make(map[int]engine.Game)}
+	m map[int]*engine.Game
+}{m: make(map[int]*engine.Game)}
 
 func GetOneGame(id int) (*model.GameResponse, error) {
 	gameStorageMap.RLock()
