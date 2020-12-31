@@ -10,8 +10,8 @@ import (
 
 var gameStorageMap = struct {
 	sync.RWMutex
-	m map[int]engine.Game
-}{m: make(map[int]engine.Game)}
+	m map[int]*engine.Game
+}{m: make(map[int]*engine.Game)}
 
 func GetOneGame(id int) (*model.GameResponse, error) {
 	gameStorageMap.RLock()
@@ -24,9 +24,8 @@ func GetOneGame(id int) (*model.GameResponse, error) {
 }
 
 func CreateGame(rows, colums, mineAmount int) (int, error) {
-	game := engine.BuildNewGame(rows, colums, mineAmount)
 	minedPointTile := engine.GenerateMinedPoints(mineAmount, rows, colums)
-	game.SetUpMines(minedPointTile)
+	game := engine.BuildNewGame(rows, colums, minedPointTile)
 	log.Println(game)
 
 	gameStorageMap.Lock()

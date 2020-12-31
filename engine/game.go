@@ -39,6 +39,7 @@ type Mine struct {
 	active bool
 }
 
+//TODO must be private to avoid invalid states
 type Game struct {
 	Board      [][]Tile
 	Rows       int
@@ -46,6 +47,20 @@ type Game struct {
 	MineAmount int
 
 	FlagAmount int
+}
+
+func (g *Game) MarkFlag(r, c int) int {
+	tile := &g.Board[r][c]
+
+	if tile.State == StateTileCovered {
+		tile.State = StateTileFlagged
+		g.FlagAmount++
+	} else if tile.State == StateTileFlagged {
+		tile.State = StateTileCovered
+		g.FlagAmount--
+	}
+
+	return g.FlagAmount
 }
 
 func (g Game) PlayMovement(r, c int) (StateGame, Game) {
@@ -68,7 +83,7 @@ func (g Game) PlayMovement(r, c int) (StateGame, Game) {
 		return StateGameLost, g.copyGame()
 	}
 
-	//simple case, only mark
+	//it's no mine, so clear or show number
 	if tile.SurroundingMineCount == 0 {
 		log.Println("Tile was Cleaned")
 		tile.State = StateTileClear
@@ -101,38 +116,6 @@ func (g Game) isFlawlessVictory() bool {
 	}
 
 	return true
-}
-
-func (g *Game) MarkFlag(r, c int) int {
-	tile := &g.Board[r][c]
-
-	if tile.State == StateTileCovered {
-		tile.State = StateTileFlagged
-		g.FlagAmount++
-	} else if tile.State == StateTileFlagged {
-		tile.State = StateTileCovered
-		g.FlagAmount--
-	}
-
-	return g.FlagAmount
-}
-
-func (g Game) SetUpMines(minedPointTiles [][2]int) {
-	mines := make([]Mine, len(minedPointTiles))
-	for i := range mines {
-		r := minedPointTiles[i][0]
-		c := minedPointTiles[i][1]
-
-		//TODO use to stats
-		mines[i] = Mine{r, c, true}
-
-		g.Board[r][c].IsMine = true
-
-		adjacentTiles := g.getAdjacentTiles(r, c)
-		for i := 0; i < len(adjacentTiles); i++ {
-			g.Board[adjacentTiles[i].Row][adjacentTiles[i].Column].SurroundingMineCount++
-		}
-	}
 }
 
 //TODO return points adjacent
