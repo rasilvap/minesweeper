@@ -30,7 +30,6 @@ func GenerateMinedPoints(amountPoints, maxRowIncluded, maxColumnIncluded int) []
 	setPoints := make(map[string]bool)
 
 	for len(setPoints) < amountPoints {
-
 		concatenated := fmt.Sprint(rand.Intn(maxRowIncluded), "-", rand.Intn(maxColumnIncluded))
 		setPoints[concatenated] = true
 	}

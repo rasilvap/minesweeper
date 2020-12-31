@@ -48,6 +48,20 @@ type Game struct {
 	FlagAmount int
 }
 
+func (g *Game) MarkFlag(r, c int) int {
+	tile := &g.Board[r][c]
+
+	if tile.State == StateTileCovered {
+		tile.State = StateTileFlagged
+		g.FlagAmount++
+	} else if tile.State == StateTileFlagged {
+		tile.State = StateTileCovered
+		g.FlagAmount--
+	}
+
+	return g.FlagAmount
+}
+
 func (g Game) PlayMovement(r, c int) (StateGame, Game) {
 	tile := &g.Board[r][c]
 
@@ -103,28 +117,10 @@ func (g Game) isFlawlessVictory() bool {
 	return true
 }
 
-func (g *Game) MarkFlag(r, c int) int {
-	tile := &g.Board[r][c]
-
-	if tile.State == StateTileCovered {
-		tile.State = StateTileFlagged
-		g.FlagAmount++
-	} else if tile.State == StateTileFlagged {
-		tile.State = StateTileCovered
-		g.FlagAmount--
-	}
-
-	return g.FlagAmount
-}
-
 func (g Game) SetUpMines(minedPointTiles [][2]int) {
-	mines := make([]Mine, len(minedPointTiles))
-	for i := range mines {
-		r := minedPointTiles[i][0]
-		c := minedPointTiles[i][1]
-
-		//TODO use to stats
-		mines[i] = Mine{r, c, true}
+	for _, mine := range minedPointTiles {
+		r := mine[0]
+		c := mine[1]
 
 		g.Board[r][c].IsMine = true
 
