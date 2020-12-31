@@ -39,6 +39,7 @@ type Mine struct {
 	active bool
 }
 
+//TODO must be private to avoid invalid states
 type Game struct {
 	Board      [][]Tile
 	Rows       int
@@ -82,7 +83,7 @@ func (g Game) PlayMovement(r, c int) (StateGame, Game) {
 		return StateGameLost, g.copyGame()
 	}
 
-	//simple case, only mark
+	//it's no mine, so clear or show number
 	if tile.SurroundingMineCount == 0 {
 		log.Println("Tile was Cleaned")
 		tile.State = StateTileClear
