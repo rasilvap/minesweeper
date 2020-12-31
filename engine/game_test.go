@@ -21,8 +21,7 @@ func TestGenerateMinedPointsTwoMines(t *testing.T) {
 
 func TestSetUpMines(t *testing.T) {
 	minedPointTile := [][2]int{{0, 1}, {1, 1}, {1, 0}}
-	game := BuildNewGame(3, 3, len(minedPointTile))
-	game.SetUpMines(minedPointTile)
+	game := BuildNewGame(3, 3, minedPointTile)
 	game.ShowBoard()
 
 	expected := [][]Tile{
@@ -37,9 +36,8 @@ func TestSetUpMines(t *testing.T) {
 
 func TestMarkPlayMovementWhenRunning(t *testing.T) {
 	//setup
-	game := BuildNewGame(3, 3, 1)
 	minedPointTile := [][2]int{{1, 1}}
-	game.SetUpMines(minedPointTile)
+	game := BuildNewGame(3, 3, minedPointTile)
 
 	//execute
 	stateGame, gameCopy := game.PlayMovement(0, 0)
@@ -52,9 +50,8 @@ func TestMarkPlayMovementWhenRunning(t *testing.T) {
 
 func TestMarkPlayMovementWhenRunningAndShowNumber(t *testing.T) {
 	//setup
-	game := BuildNewGame(3, 3, 1)
 	minedPointTile := [][2]int{{1, 1}}
-	game.SetUpMines(minedPointTile)
+	game := BuildNewGame(3, 3, minedPointTile)
 
 	//execute
 	stateGame, gameCopy := game.PlayMovement(0, 0)
@@ -68,9 +65,8 @@ func TestMarkPlayMovementWhenRunningAndShowNumber(t *testing.T) {
 
 func TestMarkPlayMovementWhenGameLost(t *testing.T) {
 	//setup
-	game := BuildNewGame(3, 3, 1)
 	minedPointTile := [][2]int{{1, 1}}
-	game.SetUpMines(minedPointTile)
+	game := BuildNewGame(3, 3, minedPointTile)
 
 	//execute
 	stateGame, gameCopy := game.PlayMovement(1, 1)
@@ -83,9 +79,8 @@ func TestMarkPlayMovementWhenGameLost(t *testing.T) {
 
 func TestMarkPlayMovementWhenGameWon(t *testing.T) {
 	//setup
-	game := BuildNewGame(3, 3, 1)
 	minedPointTile := [][2]int{{1, 1}}
-	game.SetUpMines(minedPointTile)
+	game := BuildNewGame(3, 3, minedPointTile)
 
 	//execute
 	stateGame, gameCopy := game.PlayMovement(0, 0)
@@ -138,9 +133,8 @@ func TestMarkPlayMovementWhenGameWon(t *testing.T) {
 }
 
 func TestRevealEmptyAdjecentTiles3x3(t *testing.T) {
-	game := BuildNewGame(3, 3, 1)
 	minedPointTile := [][2]int{{1, 1}}
-	game.SetUpMines(minedPointTile)
+	game := BuildNewGame(3, 3, minedPointTile)
 
 	game.RevealEmptyAdjacentTiles(0, 0)
 	game.ShowBoard()
@@ -157,8 +151,7 @@ func TestRevealEmptyAdjecentTiles3x3(t *testing.T) {
 
 func TestRevealEmptyAdjecentTiles3x8(t *testing.T) {
 	minedPointTile := [][2]int{{1, 1}}
-	game := BuildNewGame(3, 8, len(minedPointTile))
-	game.SetUpMines(minedPointTile)
+	game := BuildNewGame(3, 8, minedPointTile)
 
 	game.RevealEmptyAdjacentTiles(0, 5)
 	game.ShowBoard()
@@ -174,7 +167,7 @@ func TestRevealEmptyAdjecentTiles3x8(t *testing.T) {
 }
 
 func TestMarkFlag(t *testing.T) {
-	game := BuildNewGame(3, 3, 0)
+	game := BuildNewGame(3, 3, [][2]int{})
 
 	flagAmount := game.MarkFlag(1, 1)
 	if flagAmount != 1 || game.FlagAmount != 1 {
@@ -183,7 +176,7 @@ func TestMarkFlag(t *testing.T) {
 }
 
 func TestMarkFlagWhenRevert(t *testing.T) {
-	game := BuildNewGame(3, 3, 0)
+	game := BuildNewGame(3, 3, [][2]int{})
 
 	flagAmount := game.MarkFlag(1, 1)
 	flagAmount = game.MarkFlag(1, 1)
@@ -194,7 +187,7 @@ func TestMarkFlagWhenRevert(t *testing.T) {
 }
 
 func TestGetAdjacentTilesShouldBe8(t *testing.T) {
-	game := BuildNewGame(3, 3, 0)
+	game := BuildNewGame(3, 3, [][2]int{})
 	result := game.getAdjacentTiles(1, 1)
 
 	for d := 0; d < len(result); d++ {
@@ -207,7 +200,7 @@ func TestGetAdjacentTilesShouldBe8(t *testing.T) {
 }
 
 func TestGetAdjacentTilesShouldBe3(t *testing.T) {
-	game := BuildNewGame(3, 3, 0)
+	game := BuildNewGame(3, 3, [][2]int{})
 	result := game.getAdjacentTiles(2, 2)
 	if len(result) != 3 {
 		t.Error("Error", len(result))
@@ -215,7 +208,7 @@ func TestGetAdjacentTilesShouldBe3(t *testing.T) {
 }
 
 func TestGetAdjacentTilesShouldBe5(t *testing.T) {
-	game := BuildNewGame(3, 3, 0)
+	game := BuildNewGame(3, 3, [][2]int{})
 	result := game.getAdjacentTiles(0, 1)
 	if len(result) != 5 {
 		t.Error("Error", len(result))
@@ -223,7 +216,7 @@ func TestGetAdjacentTilesShouldBe5(t *testing.T) {
 }
 
 func TestGetAdjacentTilesShouldBe0(t *testing.T) {
-	game := BuildNewGame(1, 1, 0)
+	game := BuildNewGame(1, 1, [][2]int{})
 	result := game.getAdjacentTiles(0, 0)
 	if len(result) != 0 {
 		t.Error("Error", len(result))
@@ -231,7 +224,7 @@ func TestGetAdjacentTilesShouldBe0(t *testing.T) {
 }
 
 func TestBuildGame(t *testing.T) {
-	game := BuildNewGame(3, 3, 0)
+	game := BuildNewGame(3, 3, [][2]int{})
 	game.ShowBoard()
 
 	if len(game.Board) != 3 || game.Rows != 3 &&

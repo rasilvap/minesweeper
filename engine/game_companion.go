@@ -7,21 +7,38 @@ import (
 	"strings"
 )
 
-func BuildNewGame(rows, columns, mineAmount int) *Game {
+func BuildNewGame(rows, columns int, minedPointTiles [][2]int) *Game {
 	board := make([][]Tile, rows)
 	for r := range board {
 		board[r] = make([]Tile, columns)
 	}
 
 	cont := 0
-	for i := 0; i < rows; i++ {
-		for j := 0; j < columns; j++ {
+	for r := 0; r < rows; r++ {
+		for c := 0; c < columns; c++ {
 			cont++
-			board[i][j] = Tile{StateTileCovered, i, j, 0, false, cont}
+			board[r][c] = Tile{StateTileCovered, r, c, 0, false, cont}
 		}
 	}
 
-	return &Game{board, rows, columns, mineAmount, 0}
+	game := &Game{board, rows, columns, len(minedPointTiles), 0}
+	game.setUpMines(minedPointTiles)
+
+	return game
+}
+
+func (g Game) setUpMines(minedPointTiles [][2]int) {
+	for _, mine := range minedPointTiles {
+		r := mine[0]
+		c := mine[1]
+
+		g.Board[r][c].IsMine = true
+
+		adjacentTiles := g.getAdjacentTiles(r, c)
+		for i := 0; i < len(adjacentTiles); i++ {
+			g.Board[adjacentTiles[i].Row][adjacentTiles[i].Column].SurroundingMineCount++
+		}
+	}
 }
 
 func GenerateMinedPoints(amountPoints, maxRowIncluded, maxColumnIncluded int) [][2]int {

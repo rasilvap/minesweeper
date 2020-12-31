@@ -117,20 +117,6 @@ func (g Game) isFlawlessVictory() bool {
 	return true
 }
 
-func (g Game) SetUpMines(minedPointTiles [][2]int) {
-	for _, mine := range minedPointTiles {
-		r := mine[0]
-		c := mine[1]
-
-		g.Board[r][c].IsMine = true
-
-		adjacentTiles := g.getAdjacentTiles(r, c)
-		for i := 0; i < len(adjacentTiles); i++ {
-			g.Board[adjacentTiles[i].Row][adjacentTiles[i].Column].SurroundingMineCount++
-		}
-	}
-}
-
 //TODO return points adjacent
 func (g Game) RevealEmptyAdjacentTiles(r int, c int) {
 	if g.Board[r][c].SurroundingMineCount == 0 {
