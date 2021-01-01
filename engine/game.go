@@ -24,6 +24,16 @@ const (
 	StateGameLost    StateGame = 4
 )
 
+type TypeMove int
+
+const (
+	TypeMoveOpen           TypeMove = 1
+	TypeMoveFlag           TypeMove = 2
+	TypeMoveQuestion       TypeMove = 3
+	TypeMoveRevertFlag     TypeMove = 4
+	TypeMoveRevertQuestion TypeMove = 5
+)
+
 type Tile struct {
 	State                StateTile
 	Row                  int
@@ -49,32 +59,14 @@ type Game struct {
 	FlagAmount int
 }
 
-func (g *Game) MarkFlag(r, c int) int {
-	tile := &g.Board[r][c]
-
-	if tile.State == StateTileCovered {
-		tile.State = StateTileFlagged
-		g.FlagAmount++
-	} else if tile.State == StateTileFlagged {
-		tile.State = StateTileCovered
-		g.FlagAmount--
-	}
-
-	return g.FlagAmount
-}
-
-func (g Game) PlayMovement(r, c int) (StateGame, Game) {
-	tile := &g.Board[r][c]
-
-	//TODO unify with MarkFlag
-	if tile.State != StateTileCovered {
-		if tile.State == StateTileFlagged {
-			tile.State = StateTileCovered
-		}
-
-		log.Println("Tile has already been played")
+func (g *Game) PlayMovement(r, c int, move TypeMove) (StateGame, Game) {
+	if move != TypeMoveOpen {
+		g.mark(r, c)
 		return StateGameRunning, g.buildGameWithVisibleTiles()
 	}
+
+	//play if type move is open
+	tile := &g.Board[r][c]
 
 	//game over, so show all tiles
 	if tile.IsMine {
@@ -103,6 +95,21 @@ func (g Game) PlayMovement(r, c int) (StateGame, Game) {
 	log.Println("The Game is Running")
 	//return showable tiles
 	return StateGameRunning, g.buildGameWithVisibleTiles()
+}
+
+//TODO use Type Move Question
+func (g *Game) mark(r, c int) {
+	tile := &g.Board[r][c]
+
+	if tile.State == StateTileCovered {
+		log.Println("Flaging")
+		tile.State = StateTileFlagged
+		g.FlagAmount++
+	} else if tile.State == StateTileFlagged {
+		log.Println("Covering again")
+		tile.State = StateTileCovered
+		g.FlagAmount--
+	}
 }
 
 func (g Game) isFlawlessVictory() bool {
@@ -191,13 +198,14 @@ func (g Game) copyGame() Game {
 	return Game{board, g.Rows, g.Columns, g.MineAmount, g.FlagAmount}
 }
 
+//TODO no return matrix
 func (g Game) buildGameWithVisibleTiles() Game {
 	var board [][]Tile
 	for i := 0; i < g.Rows; i++ {
 		var column []Tile
 		for j := 0; j < g.Columns; j++ {
 			if board := g.Board[i][j]; !board.IsMine &&
-				(board.State == StateTileClear || board.State == StateTileNumberd) {
+				(board.State == StateTileClear || board.State == StateTileNumberd || board.State == StateTileFlagged) {
 				column = append(column, g.Board[i][j])
 			}
 		}

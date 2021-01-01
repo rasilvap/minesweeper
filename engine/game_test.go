@@ -40,7 +40,7 @@ func TestMarkPlayMovementWhenRunning(t *testing.T) {
 	game := BuildNewGame(3, 3, minedPointTile)
 
 	//execute
-	stateGame, gameCopy := game.PlayMovement(0, 0)
+	stateGame, gameCopy := game.PlayMovement(0, 0, TypeMoveOpen)
 
 	//assert
 	if stateGame != StateGameRunning {
@@ -54,7 +54,7 @@ func TestMarkPlayMovementWhenRunningAndShowNumber(t *testing.T) {
 	game := BuildNewGame(3, 3, minedPointTile)
 
 	//execute
-	stateGame, gameCopy := game.PlayMovement(0, 0)
+	stateGame, gameCopy := game.PlayMovement(0, 0, TypeMoveOpen)
 	fmt.Println(gameCopy)
 
 	//assert
@@ -69,7 +69,7 @@ func TestMarkPlayMovementWhenGameLost(t *testing.T) {
 	game := BuildNewGame(3, 3, minedPointTile)
 
 	//execute
-	stateGame, gameCopy := game.PlayMovement(1, 1)
+	stateGame, gameCopy := game.PlayMovement(1, 1, TypeMoveOpen)
 
 	//assert
 	if stateGame != StateGameLost {
@@ -83,49 +83,49 @@ func TestMarkPlayMovementWhenGameWon(t *testing.T) {
 	game := BuildNewGame(3, 3, minedPointTile)
 
 	//execute
-	stateGame, gameCopy := game.PlayMovement(0, 0)
+	stateGame, gameCopy := game.PlayMovement(0, 0, TypeMoveOpen)
 	//assert
 	if stateGame != StateGameRunning {
 		t.Error("Error", stateGame, gameCopy)
 	}
 
-	stateGame, gameCopy = game.PlayMovement(0, 1)
+	stateGame, gameCopy = game.PlayMovement(0, 1, TypeMoveOpen)
 	//assert
 	if stateGame != StateGameRunning {
 		t.Error("Error", stateGame, gameCopy)
 	}
 
-	stateGame, gameCopy = game.PlayMovement(0, 2)
+	stateGame, gameCopy = game.PlayMovement(0, 2, TypeMoveOpen)
 	//assert
 	if stateGame != StateGameRunning {
 		t.Error("Error", stateGame, gameCopy)
 	}
 
-	stateGame, gameCopy = game.PlayMovement(1, 0)
+	stateGame, gameCopy = game.PlayMovement(1, 0, TypeMoveOpen)
 	//assert
 	if stateGame != StateGameRunning {
 		t.Error("Error", stateGame, gameCopy)
 	}
 
-	stateGame, gameCopy = game.PlayMovement(1, 2)
+	stateGame, gameCopy = game.PlayMovement(1, 2, TypeMoveOpen)
 	//assert
 	if stateGame != StateGameRunning {
 		t.Error("Error", stateGame, gameCopy)
 	}
 
-	stateGame, gameCopy = game.PlayMovement(2, 0)
+	stateGame, gameCopy = game.PlayMovement(2, 0, TypeMoveOpen)
 	//assert
 	if stateGame != StateGameRunning {
 		t.Error("Error", stateGame, gameCopy)
 	}
 
-	stateGame, gameCopy = game.PlayMovement(2, 1)
+	stateGame, gameCopy = game.PlayMovement(2, 1, TypeMoveOpen)
 	//assert
 	if stateGame != StateGameRunning {
 		t.Error("Error", stateGame, gameCopy)
 	}
 
-	stateGame, gameCopy = game.PlayMovement(2, 2)
+	stateGame, gameCopy = game.PlayMovement(2, 2, TypeMoveOpen)
 	//assert
 	if stateGame != StateGameWon {
 		t.Error("Error", stateGame, gameCopy)
@@ -166,23 +166,24 @@ func TestRevealEmptyAdjecentTiles3x8(t *testing.T) {
 	}
 }
 
-func TestMarkFlag(t *testing.T) {
+func TestPlayMoveWhenFlag(t *testing.T) {
 	game := BuildNewGame(3, 3, [][2]int{})
 
-	flagAmount := game.MarkFlag(1, 1)
-	if flagAmount != 1 || game.FlagAmount != 1 {
-		t.Error("Error", flagAmount, game.FlagAmount)
+	stateGame, gameCopy := game.PlayMovement(1, 1, TypeMoveFlag)
+
+	if stateGame != StateGameRunning || game.FlagAmount != 1 || gameCopy.Board[0][0].State != StateTileFlagged {
+		t.Error("Error", game.FlagAmount, stateGame, gameCopy)
 	}
 }
 
-func TestMarkFlagWhenRevert(t *testing.T) {
+func TestPlayMoveWhenRevertTheFlag(t *testing.T) {
 	game := BuildNewGame(3, 3, [][2]int{})
 
-	flagAmount := game.MarkFlag(1, 1)
-	flagAmount = game.MarkFlag(1, 1)
+	stateGame, gameCopy := game.PlayMovement(1, 1, TypeMoveFlag)
+	stateGame, gameCopy = game.PlayMovement(1, 1, TypeMoveRevertFlag)
 
-	if flagAmount != 0 || game.FlagAmount != 0 {
-		t.Error("Error", flagAmount, game.FlagAmount)
+	if stateGame != StateGameRunning || gameCopy.FlagAmount != 0 {
+		t.Error("Error", stateGame, gameCopy, game.FlagAmount)
 	}
 }
 

@@ -20,8 +20,6 @@ func SetupRoutes(router *mux.Router) {
 	router.HandleFunc("/v1/games", create).Methods("POST")
 
 	router.HandleFunc("/v1/games/{id:[0-9]+}/play", play).Methods("POST")
-
-	router.HandleFunc("/v1/games/{id:[0-9]+}/mark", mark).Methods("POST")
 }
 
 func getOne(w http.ResponseWriter, r *http.Request) {
@@ -104,7 +102,7 @@ func play(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	playRespose, err := service.PlayMovement(id, playRequest.Row, playRequest.Column)
+	playRespose, err := service.PlayMove(id, playRequest)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -127,31 +125,4 @@ func play(w http.ResponseWriter, r *http.Request) {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
 	}
-}
-
-func mark(w http.ResponseWriter, r *http.Request) {
-	log.Println("Marking")
-
-	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	var markRequest model.MarkRequest
-	err = json.NewDecoder(r.Body).Decode(&markRequest)
-	if err != nil {
-		log.Print(err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	err = service.MarkTile(id, markRequest.Row, markRequest.Column, markRequest.Mark)
-	if err != nil {
-		log.Print(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusAccepted)
 }

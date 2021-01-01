@@ -23,17 +23,19 @@ type GameResponse struct {
 	MineAmount int `json:"mineAmount"`
 }
 
-// MarkRequest : ...
-type MarkRequest struct {
-	Row    int    `json:"row"`
-	Column int    `json:"column"`
-	Mark   string `json:"mark"`
-}
+type TypeMove string
+
+const (
+	TypeMoveFlag     TypeMove = "FLAG"
+	TypeMoveQuestion TypeMove = "QUESTION"
+	TypeMoveOpen     TypeMove = "OPEN"
+)
 
 // PlayRequest : ...
 type PlayRequest struct {
-	Row    int `json:"row"`
-	Column int `json:"column"`
+	Row    int      `json:"row"`
+	Column int      `json:"column"`
+	Move   TypeMove `json:"move"`
 }
 
 // PlayResponse : ...

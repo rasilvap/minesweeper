@@ -34,33 +34,33 @@ func CreateGame(rows, colums, mineAmount int) (int, error) {
 	return len(gameStorageMap.m) - 1, nil
 }
 
-//TODO unify with play
-func MarkTile(id int, row int, column int, mark string) error {
+func PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResponse, error) {
 	gameStorageMap.RLock()
 	defer gameStorageMap.RUnlock()
 	if game, ok := gameStorageMap.m[id]; ok {
 		log.Println(game.GetStates())
-		log.Println("row", row, "col", column)
-		game.MarkFlag(row, column)
-		log.Println(game.GetStates())
-	}
-	return nil
-}
-
-func PlayMovement(id int, row int, column int) (*model.PlayResponse, error) {
-	gameStorageMap.RLock()
-	defer gameStorageMap.RUnlock()
-	if game, ok := gameStorageMap.m[id]; ok {
-		log.Println(game.GetStates())
-		log.Println("Req row", row, "col", column)
-		gameState, showableGame := game.PlayMovement(row, column)
+		log.Println("PlayRequest", playRequest)
+		gameState, showableGame := game.PlayMovement(playRequest.Row, playRequest.Column, mapTypeMove(playRequest.Move))
 		log.Println("show: ", gameState, showableGame)
 		playResponse := buildPlayResponse(gameState, showableGame)
 
 		return &playResponse, nil
-		log.Println(game.GetStates())
 	}
 	return nil, nil
+}
+
+func mapTypeMove(typeMove model.TypeMove) engine.TypeMove {
+	var move engine.TypeMove
+	switch typeMove {
+	case model.TypeMoveFlag:
+		move = engine.TypeMoveFlag
+	case model.TypeMoveQuestion:
+		move = engine.TypeMoveQuestion
+	case model.TypeMoveOpen:
+		move = engine.TypeMoveOpen
+	}
+
+	return move
 }
 
 func buildPlayResponse(gameState engine.StateGame, showableGame engine.Game) model.PlayResponse {
