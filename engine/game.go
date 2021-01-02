@@ -27,7 +27,7 @@ const (
 type TypeMove int
 
 const (
-	TypeMoveOpen           TypeMove = 1
+	TypeMoveClean          TypeMove = 1
 	TypeMoveFlag           TypeMove = 2
 	TypeMoveQuestion       TypeMove = 3
 	TypeMoveRevertFlag     TypeMove = 4
@@ -51,28 +51,51 @@ type Mine struct {
 
 //TODO must be private to avoid invalid states
 type Game struct {
+	State      StateGame
 	Board      [][]Tile
 	Rows       int
 	Columns    int
 	MineAmount int
-
 	FlagAmount int
 }
 
-func (g *Game) PlayMovement(r, c int, move TypeMove) (StateGame, Game) {
-	if move != TypeMoveOpen {
-		g.mark(r, c)
-		return StateGameRunning, g.buildGameWithVisibleTiles()
+func (g *Game) Play(r, c int, move TypeMove) Game {
+	var game Game
+
+	if g.isMovePlayed(r, c, move) {
+		g.State = StateGameRunning
+		game = g.buildGameWithVisibleTiles()
+	} else if move == TypeMoveClean {
+		game = g.playOpenMove(r, c)
+	} else if move != TypeMoveClean {
+		game = g.mark(r, c)
 	}
 
-	//play if type move is open
+	return game
+}
+
+func (g Game) isMovePlayed(r, c int, move TypeMove) bool {
+	tile := g.Board[r][c]
+	if tile.State == StateTileCovered {
+		return false
+	}
+
+	if tile.State == StateTileNumberd || tile.State == StateTileClear || tile.State == StateTileExploted {
+		return true
+	}
+
+	return tile.State == StateTileFlagged && move == TypeMoveFlag
+}
+
+func (g *Game) playOpenMove(r, c int) Game {
 	tile := &g.Board[r][c]
 
 	//game over, so show all tiles
 	if tile.IsMine {
 		log.Println("Game Over")
 		tile.State = StateTileExploted
-		return StateGameLost, g.copyGame()
+		g.State = StateGameLost
+		return g.copyGame()
 	}
 
 	//it's no mine, so clear or show number
@@ -89,16 +112,17 @@ func (g *Game) PlayMovement(r, c int, move TypeMove) (StateGame, Game) {
 	// game won, clear all tiles
 	if g.isFlawlessVictory() {
 		log.Println("Flawless Victory")
-		return StateGameWon, g.copyGame()
+		g.State = StateGameWon
+		return g.copyGame()
 	}
 
 	log.Println("The Game is Running")
-	//return showable tiles
-	return StateGameRunning, g.buildGameWithVisibleTiles()
+	g.State = StateGameRunning
+	return g.buildGameWithVisibleTiles()
 }
 
 //TODO use Type Move Question
-func (g *Game) mark(r, c int) {
+func (g *Game) mark(r, c int) Game {
 	tile := &g.Board[r][c]
 
 	if tile.State == StateTileCovered {
@@ -110,6 +134,9 @@ func (g *Game) mark(r, c int) {
 		tile.State = StateTileCovered
 		g.FlagAmount--
 	}
+
+	g.State = StateGameRunning
+	return g.buildGameWithVisibleTiles()
 }
 
 func (g Game) isFlawlessVictory() bool {
@@ -195,7 +222,7 @@ func (g Game) copyGame() Game {
 		}
 	}
 
-	return Game{board, g.Rows, g.Columns, g.MineAmount, g.FlagAmount}
+	return Game{g.State, board, g.Rows, g.Columns, g.MineAmount, g.FlagAmount}
 }
 
 //TODO no return matrix
@@ -217,7 +244,7 @@ func (g Game) buildGameWithVisibleTiles() Game {
 	if board == nil {
 		board = [][]Tile{}
 	}
-	return Game{board, g.Rows, g.Columns, g.MineAmount, g.FlagAmount}
+	return Game{g.State, board, g.Rows, g.Columns, g.MineAmount, g.FlagAmount}
 }
 
 func (g Game) ShowBoard() {

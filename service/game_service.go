@@ -40,9 +40,9 @@ func PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResponse, error
 	if game, ok := gameStorageMap.m[id]; ok {
 		log.Println(game.GetStates())
 		log.Println("PlayRequest", playRequest)
-		gameState, showableGame := game.PlayMovement(playRequest.Row, playRequest.Column, mapTypeMove(playRequest.Move))
-		log.Println("show: ", gameState, showableGame)
-		playResponse := buildPlayResponse(gameState, showableGame)
+		showableGame := game.Play(playRequest.Row, playRequest.Column, mapTypeMove(playRequest.Move))
+		log.Println("show: ", showableGame)
+		playResponse := buildPlayResponse(showableGame)
 
 		return &playResponse, nil
 	}
@@ -56,16 +56,16 @@ func mapTypeMove(typeMove model.TypeMove) engine.TypeMove {
 		move = engine.TypeMoveFlag
 	case model.TypeMoveQuestion:
 		move = engine.TypeMoveQuestion
-	case model.TypeMoveOpen:
-		move = engine.TypeMoveOpen
+	case model.TypeMoveClean:
+		move = engine.TypeMoveClean
 	}
 
 	return move
 }
 
-func buildPlayResponse(gameState engine.StateGame, showableGame engine.Game) model.PlayResponse {
+func buildPlayResponse(showableGame engine.Game) model.PlayResponse {
 	var gameStateDTO string
-	switch gameState {
+	switch showableGame.State {
 	case engine.StateGameRunning:
 		gameStateDTO = "RUNNING"
 	case engine.StateGameLost:

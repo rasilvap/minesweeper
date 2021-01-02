@@ -21,7 +21,7 @@ func BuildNewGame(rows, columns int, minedPointTiles [][2]int) *Game {
 		}
 	}
 
-	game := &Game{board, rows, columns, len(minedPointTiles), 0}
+	game := &Game{StateGameNew, board, rows, columns, len(minedPointTiles), 0}
 	game.setUpMines(minedPointTiles)
 
 	return game

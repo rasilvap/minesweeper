@@ -26,9 +26,11 @@ type GameResponse struct {
 type TypeMove string
 
 const (
-	TypeMoveFlag     TypeMove = "FLAG"
-	TypeMoveQuestion TypeMove = "QUESTION"
-	TypeMoveOpen     TypeMove = "OPEN"
+	TypeMoveClean          TypeMove = "CLEAN"
+	TypeMoveFlag           TypeMove = "FLAG"
+	TypeMoveQuestion       TypeMove = "QUESTION"
+	TypeMoveRevertQuestion TypeMove = "REVERT_QUESTION"
+	TypeMoveRevertFlag     TypeMove = "REVERT_FLAG"
 )
 
 // PlayRequest : ...
