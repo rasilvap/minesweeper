@@ -2,13 +2,11 @@ package service
 
 import (
 	"log"
-	"sync"
+	"minesweeper-API/minesweeper-service/repository"
 
 	"minesweeper-API/minesweeper-service/engine"
 	"minesweeper-API/minesweeper-service/model"
 )
-
-type service struct{}
 
 type GameService interface {
 	GetOneGame(id int) (*model.GameResponse, error)
@@ -16,23 +14,21 @@ type GameService interface {
 	PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResponse, error)
 }
 
+type service struct{}
+
+var (
+	gameRepository repository.GameRepository
+)
+
 func NewGameService() GameService {
+	gameRepository = repository.NewMemoryRepository()
 	return &service{}
 }
 
-var gameStorageMap = struct {
-	sync.RWMutex
-	m map[int]*engine.Game
-}{m: make(map[int]*engine.Game)}
-
 func (*service) GetOneGame(id int) (*model.GameResponse, error) {
-	gameStorageMap.RLock()
-	defer gameStorageMap.RUnlock()
-	if game, ok := gameStorageMap.m[id]; ok {
-		gameResponse := model.GameResponse{game.Rows, game.Columns, game.MineAmount}
-		return &gameResponse, nil
-	}
-	return nil, nil
+	game := gameRepository.Get(id)
+	gameResponse := model.GameResponse{game.Rows, game.Columns, game.MineAmount}
+	return &gameResponse, nil
 }
 
 func (*service) CreateGame(rows, colums, mineAmount int) (int, error) {
@@ -40,25 +36,21 @@ func (*service) CreateGame(rows, colums, mineAmount int) (int, error) {
 	game := engine.BuildNewGame(rows, colums, minedPointTile)
 	log.Println(game)
 
-	gameStorageMap.Lock()
-	gameStorageMap.m[len(gameStorageMap.m)] = game
-	gameStorageMap.Unlock()
-	return len(gameStorageMap.m) - 1, nil
+	id := gameRepository.Save(game)
+	return id, nil
 }
 
 func (*service) PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResponse, error) {
-	gameStorageMap.RLock()
-	defer gameStorageMap.RUnlock()
-	if game, ok := gameStorageMap.m[id]; ok {
-		log.Println(game.GetStates())
-		log.Println("PlayRequest", playRequest)
-		showableGame := game.Play(playRequest.Row, playRequest.Column, mapTypeMove(playRequest.Move))
-		log.Println("show: ", showableGame)
-		playResponse := buildPlayResponse(showableGame)
+	game := gameRepository.Get(id)
+	log.Println("PlayRequest", playRequest)
 
-		return &playResponse, nil
-	}
-	return nil, nil
+	showableGame := game.Play(playRequest.Row, playRequest.Column, mapTypeMove(playRequest.Move))
+	gameRepository.Save(game)
+
+	log.Println("show: ", showableGame)
+	playResponse := buildPlayResponse(showableGame)
+
+	return &playResponse, nil
 }
 
 func mapTypeMove(typeMove model.TypeMove) engine.TypeMove {
