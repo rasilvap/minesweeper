@@ -17,10 +17,24 @@ var (
 )
 
 func main() {
+	router := setupRoutes()
+	port := getPort()
+
+	log.Fatal(http.ListenAndServe(port, router))
+}
+
+// SetupRoutes: ..
+func setupRoutes() *mux.Router {
 	router := mux.NewRouter()
 
-	setupRoutes(router)
+	router.HandleFunc("/v1/games/{id:[0-9]+}", gameController.GetOne).Methods("GET")
+	router.HandleFunc("/v1/games", gameController.Create).Methods("POST")
+	router.HandleFunc("/v1/games/{id:[0-9]+}/play", gameController.Play).Methods("POST")
 
+	return router
+}
+
+func getPort() string {
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Println("Using default port :5000")
@@ -30,15 +44,5 @@ func main() {
 		log.Println("Using port ", port)
 	}
 
-	log.Fatal(http.ListenAndServe(port, router))
-}
-
-// SetupRoutes: ..
-func setupRoutes(router *mux.Router) {
-
-	router.HandleFunc("/v1/games/{id:[0-9]+}", gameController.GetOne).Methods("GET")
-
-	router.HandleFunc("/v1/games", gameController.Create).Methods("POST")
-
-	router.HandleFunc("/v1/games/{id:[0-9]+}/play", gameController.Play).Methods("POST")
+	return port
 }
