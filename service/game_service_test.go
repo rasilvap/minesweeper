@@ -5,15 +5,14 @@ import (
 	"testing"
 )
 
-func TestMarkPlayMovementWhenLost3x3(t *testing.T) {
+func TestMarkPlayWhenLost3x3(t *testing.T) {
 	//setup
-	game := engine.BuildNewGame(3, 3, 1)
 	minedPointTile := [][2]int{{1, 1}}
-	game.SetUpMines(minedPointTile)
+	game := engine.BuildNewGame(3, 3, minedPointTile)
 
 	//execute
-	stateGame, gameCopy := game.PlayMovement(1, 1)
-	res := buildPlayResponse(stateGame, gameCopy)
+	gameCopy := game.Play(1, 1, engine.TypeMoveClean)
+	res := buildPlayResponse(gameCopy)
 
 	//assert
 	if res.StateGame != "LOST" || res.Game.Columns != 3 || res.Game.Rows != 3 ||
@@ -22,88 +21,85 @@ func TestMarkPlayMovementWhenLost3x3(t *testing.T) {
 	}
 }
 
-func TestMarkPlayMovementWhenWon3x3(t *testing.T) {
+func TestMarkPlayWhenWon3x3(t *testing.T) {
 	//setup
 	minedPointTile := [][2]int{{1, 1}}
-	game := engine.BuildNewGame(3, 3, len(minedPointTile))
-	game.SetUpMines(minedPointTile)
+	game := engine.BuildNewGame(3, 3, minedPointTile)
 
 	//execute
-	stateGame, gameCopy := game.PlayMovement(0, 0)
-	res := buildPlayResponse(stateGame, gameCopy)
+	gameCopy := game.Play(0, 0, engine.TypeMoveClean)
+	res := buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "RUNNING" {
 		t.Error("Error", res, len(res.Game.Board))
 	}
 
 	//execute
-	stateGame, gameCopy = game.PlayMovement(0, 1)
-	res = buildPlayResponse(stateGame, gameCopy)
+	gameCopy = game.Play(0, 1, engine.TypeMoveClean)
+	res = buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "RUNNING" {
 		t.Error("Error", res)
 	}
 
 	//execute
-	stateGame, gameCopy = game.PlayMovement(0, 2)
-	res = buildPlayResponse(stateGame, gameCopy)
+	gameCopy = game.Play(0, 2, engine.TypeMoveClean)
+	res = buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "RUNNING" {
 		t.Error("Error", res)
 	}
 
 	//execute
-	stateGame, gameCopy = game.PlayMovement(1, 0)
-	res = buildPlayResponse(stateGame, gameCopy)
+	gameCopy = game.Play(1, 0, engine.TypeMoveClean)
+	res = buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "RUNNING" {
 		t.Error("Error", res, len(res.Game.Board))
 	}
 
 	//execute
-	stateGame, gameCopy = game.PlayMovement(1, 2)
-	res = buildPlayResponse(stateGame, gameCopy)
+	gameCopy = game.Play(1, 2, engine.TypeMoveClean)
+	res = buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "RUNNING" {
 		t.Error("Error", res, len(res.Game.Board))
 	}
 
 	//execute
-	stateGame, gameCopy = game.PlayMovement(2, 0)
-	res = buildPlayResponse(stateGame, gameCopy)
+	gameCopy = game.Play(2, 0, engine.TypeMoveClean)
+	res = buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "RUNNING" {
 		t.Error("Error", res, len(res.Game.Board))
 	}
 
 	//execute
-	stateGame, gameCopy = game.PlayMovement(2, 1)
-	res = buildPlayResponse(stateGame, gameCopy)
+	gameCopy = game.Play(2, 1, engine.TypeMoveClean)
+	res = buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "RUNNING" {
 		t.Error("Error", res, len(res.Game.Board))
 	}
 
 	//execute
-	stateGame, gameCopy = game.PlayMovement(2, 2)
-	res = buildPlayResponse(stateGame, gameCopy)
+	gameCopy = game.Play(2, 2, engine.TypeMoveClean)
+	res = buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "WON" {
 		t.Error("Error", res, len(res.Game.Board))
 	}
 }
 
-func TestMarkPlayMovementWhenRunning3X8(t *testing.T) {
+func TestMarkPlayWhenRunning3X8(t *testing.T) {
 	//setup
 	minedPointTile := [][2]int{{1, 1}}
-	game := engine.BuildNewGame(3, 8, len(minedPointTile))
-
-	game.SetUpMines(minedPointTile)
+	game := engine.BuildNewGame(3, 8, minedPointTile)
 
 	//execute
-	stateGame, gameCopy := game.PlayMovement(0, 5)
+	gameCopy := game.Play(0, 5, engine.TypeMoveClean)
 	game.ShowBoard()
-	res := buildPlayResponse(stateGame, gameCopy)
+	res := buildPlayResponse(gameCopy)
 
 	//assert
 	if res.StateGame != "RUNNING" || res.Game.Rows != 3 || res.Game.Columns != 8 ||
