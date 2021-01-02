@@ -8,13 +8,13 @@ import (
 	"minesweeper-API/minesweeper-service/model"
 )
 
+type service struct{}
+
 type GameService interface {
 	GetOneGame(id int) (*model.GameResponse, error)
 	CreateGame(rows, colums, mineAmount int) (int, error)
 	PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResponse, error)
 }
-
-type service struct{}
 
 func NewGameService() GameService {
 	return &service{}

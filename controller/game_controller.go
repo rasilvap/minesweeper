@@ -21,10 +21,11 @@ type GameController interface {
 }
 
 var (
-	gameService service.GameService = service.NewGameService()
+	gameService service.GameService
 )
 
-func NewGameController() GameController {
+func NewGameController(service service.GameService) GameController {
+	gameService = service
 	return &controller{}
 }
 
