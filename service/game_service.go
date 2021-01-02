@@ -8,12 +8,24 @@ import (
 	"minesweeper-API/minesweeper-service/model"
 )
 
+type GameService interface {
+	GetOneGame(id int) (*model.GameResponse, error)
+	CreateGame(rows, colums, mineAmount int) (int, error)
+	PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResponse, error)
+}
+
+type service struct{}
+
+func NewGameService() GameService {
+	return &service{}
+}
+
 var gameStorageMap = struct {
 	sync.RWMutex
 	m map[int]*engine.Game
 }{m: make(map[int]*engine.Game)}
 
-func GetOneGame(id int) (*model.GameResponse, error) {
+func (*service) GetOneGame(id int) (*model.GameResponse, error) {
 	gameStorageMap.RLock()
 	defer gameStorageMap.RUnlock()
 	if game, ok := gameStorageMap.m[id]; ok {
@@ -23,7 +35,7 @@ func GetOneGame(id int) (*model.GameResponse, error) {
 	return nil, nil
 }
 
-func CreateGame(rows, colums, mineAmount int) (int, error) {
+func (*service) CreateGame(rows, colums, mineAmount int) (int, error) {
 	minedPointTile := engine.GenerateMinedPoints(mineAmount, rows, colums)
 	game := engine.BuildNewGame(rows, colums, minedPointTile)
 	log.Println(game)
@@ -34,7 +46,7 @@ func CreateGame(rows, colums, mineAmount int) (int, error) {
 	return len(gameStorageMap.m) - 1, nil
 }
 
-func PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResponse, error) {
+func (*service) PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResponse, error) {
 	gameStorageMap.RLock()
 	defer gameStorageMap.RUnlock()
 	if game, ok := gameStorageMap.m[id]; ok {

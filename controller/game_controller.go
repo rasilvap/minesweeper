@@ -22,6 +22,10 @@ func SetupRoutes(router *mux.Router) {
 	router.HandleFunc("/v1/games/{id:[0-9]+}/play", play).Methods("POST")
 }
 
+var (
+	gameService service.GameService = service.NewGameService()
+)
+
 func getOne(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -30,7 +34,7 @@ func getOne(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	game, err := service.GetOneGame(id)
+	game, err := gameService.GetOneGame(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -61,7 +65,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	id, err := service.CreateGame(gameRequest.Rows, gameRequest.Columns, gameRequest.MineAmount)
+	id, err := gameService.CreateGame(gameRequest.Rows, gameRequest.Columns, gameRequest.MineAmount)
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -102,7 +106,7 @@ func play(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	playRespose, err := service.PlayMove(id, playRequest)
+	playRespose, err := gameService.PlayMove(id, playRequest)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
