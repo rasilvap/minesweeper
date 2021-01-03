@@ -20,8 +20,8 @@ var (
 	gameRepository repository.GameRepository
 )
 
-func NewGameService() GameService {
-	gameRepository = repository.NewMemoryRepository()
+func NewGameService(gameMomoryRepository repository.GameRepository) GameService {
+	gameRepository = gameMomoryRepository
 	return &service{}
 }
 

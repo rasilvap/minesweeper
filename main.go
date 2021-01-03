@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"minesweeper-API/minesweeper-service/controller"
+	"minesweeper-API/minesweeper-service/repository"
 	"minesweeper-API/minesweeper-service/service"
 	"net/http"
 	"os"
@@ -12,8 +13,9 @@ import (
 )
 
 var (
-	gameService    service.GameService       = service.NewGameService()
-	gameController controller.GameController = controller.NewGameController(gameService)
+	gameRespository repository.GameRepository = repository.NewMemoryRepository()
+	gameService     service.GameService       = service.NewGameService(gameRespository)
+	gameController  controller.GameController = controller.NewGameController(gameService)
 )
 
 func main() {
