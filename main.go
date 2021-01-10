@@ -13,9 +13,10 @@ import (
 )
 
 var (
-	gameRespository repository.GameRepository = repository.NewMemoryRepository()
-	gameService     service.GameService       = service.NewGameService(gameRespository)
-	gameController  controller.GameController = controller.NewGameController(gameService)
+	gameRespository    repository.GameRepository  = repository.NewMemoryRepository()
+	minesWeeperService service.MinesWeeperService = service.NewMinesWeeperService()
+	gameService        service.GameService        = service.NewGameService(gameRespository, minesWeeperService)
+	gameController     controller.GameController  = controller.NewGameController(gameService)
 )
 
 func main() {

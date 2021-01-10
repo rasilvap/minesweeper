@@ -18,10 +18,13 @@ type service struct{}
 
 var (
 	gameRepository repository.GameRepository
+	minesWeeper    MinesWeeperService
 )
 
-func NewGameService(gameMomoryRepository repository.GameRepository) GameService {
+func NewGameService(gameMomoryRepository repository.GameRepository,
+	minesWeeperService MinesWeeperService) GameService {
 	gameRepository = gameMomoryRepository
+	minesWeeper = minesWeeperService
 	return &service{}
 }
 
@@ -32,10 +35,7 @@ func (*service) GetOneGame(id int) (*model.GameResponse, error) {
 }
 
 func (*service) CreateGame(rows, colums, mineAmount int) (int, error) {
-	minedPointTile := engine.GenerateMinedPoints(mineAmount, rows, colums)
-	game := engine.BuildNewGame(rows, colums, minedPointTile)
-	log.Println(game)
-
+	game := minesWeeper.BuildGame(rows, colums, mineAmount)
 	id := gameRepository.Save(game)
 	return id, nil
 }
@@ -44,7 +44,7 @@ func (*service) PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResp
 	game := gameRepository.Get(id)
 	log.Println("PlayRequest", playRequest)
 
-	showableGame := game.Play(playRequest.Row, playRequest.Column, mapTypeMove(playRequest.Move))
+	showableGame := minesWeeper.Play(playRequest, game)
 	gameRepository.Save(game)
 
 	log.Println("show: ", showableGame)
@@ -53,34 +53,8 @@ func (*service) PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResp
 	return &playResponse, nil
 }
 
-func mapTypeMove(typeMove model.TypeMove) engine.TypeMove {
-	var move engine.TypeMove
-	switch typeMove {
-	case model.TypeMoveFlag:
-		move = engine.TypeMoveFlag
-	case model.TypeMoveQuestion:
-		move = engine.TypeMoveQuestion
-	case model.TypeMoveClean:
-		move = engine.TypeMoveClean
-	}
-
-	return move
-}
-
 func buildPlayResponse(showableGame engine.Game) model.PlayResponse {
-	var gameStateDTO string
-	switch showableGame.State {
-	case engine.StateGameRunning:
-		gameStateDTO = "RUNNING"
-	case engine.StateGameLost:
-		gameStateDTO = "LOST"
-	case engine.StateGameNew:
-		gameStateDTO = "NEW"
-	case engine.StateGameWon:
-		gameStateDTO = "WON"
-	default:
-		gameStateDTO = ""
-	}
+	gameStateDTO := mapStateGame(showableGame.State)
 	row := len(showableGame.Board)
 	if row == 0 {
 		return model.PlayResponse{gameStateDTO,
@@ -94,23 +68,7 @@ func buildPlayResponse(showableGame engine.Game) model.PlayResponse {
 
 		for j := 0; j < column; j++ {
 			board := showableGame.Board[i][j]
-
-			var tileStateDTO string
-			switch board.State {
-			case engine.StateTileCovered:
-				tileStateDTO = "COVERED"
-			case engine.StateTileClear:
-				tileStateDTO = "CLEAR"
-			case engine.StateTileFlagged:
-				tileStateDTO = "FLAGGED"
-			case engine.StateTileNumberd:
-				tileStateDTO = "NUMBERED"
-			case engine.StateTileExploted:
-				tileStateDTO = "EXPLOTED"
-			default:
-				tileStateDTO = ""
-			}
-
+			tileStateDTO := mapTileState(board.State)
 			boardDTO[i][j] = model.TileDTO{tileStateDTO, board.Row, board.Column, board.SurroundingMineCount, board.IsMine, -1}
 		}
 	}

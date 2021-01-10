@@ -41,7 +41,7 @@ func (g Game) setUpMines(minedPointTiles [][2]int) {
 	}
 }
 
-func GenerateMinedPoints(amountPoints, maxRowIncluded, maxColumnIncluded int) [][2]int {
+func GenerateMinedPoints(maxRowIncluded, maxColumnIncluded, amountPoints int) [][2]int {
 	tileMinePoints := make([][2]int, amountPoints)
 
 	setPoints := make(map[string]bool)
