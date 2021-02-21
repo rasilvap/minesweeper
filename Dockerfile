@@ -6,7 +6,7 @@ ENV GO111MODULE=on \
     GOARCH=amd64
 WORKDIR /Users/Usuario/all-repos/minesweeper-API
 COPY go.mod .
-RUN go mod download
+RUN go mod tidy
 COPY . .
 RUN go install
 
