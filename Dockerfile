@@ -8,8 +8,8 @@ WORKDIR /Users/Usuario/all-repos/minesweeper-API
 COPY go.mod .
 RUN go mod tidy
 COPY . .
-RUN go install
+RUN go build
 
 FROM scratch
 COPY --from=builder /Users/Usuario/all-repos/minesweeper-API .
-ENTRYPOINT [ "./main" ]
+ENTRYPOINT [ "./minesweeper-service" ]
