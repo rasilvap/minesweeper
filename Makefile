@@ -2,12 +2,13 @@
 ##
 ## For more information, refer to https://suva.sh/posts/well-documented-makefiles/
 
+
 -include local/Makefile
 
 .PHONY: 
 
 GO = GO111MODULE=on go
-GO_FILES ?= ./pkg/...
+GO_FILES ?= ./...
 SH_FILES ?= $(shell find ./scripts -name *.sh)
 
 all: deps build
@@ -33,17 +34,36 @@ scripts/go/bin/bra: scripts/go/go.mod
 	@cd scripts/go; \
 	$(GO) build -o ./bin/bra github.com/unknwon/bra
 
-run: scripts/go/bin/bra ## Build and run web server on filesystem changes.
+runxx: scripts/go/bin/bra ## Build and run web server on filesystem changes.
 	@GO111MODULE=on scripts/go/bin/bra run
+
+
+build:
+	@echo "build api"
+	$(GO) build -o bin/minesweeper-api 
+
+compile:
+	echo "Compiling for every OS and Platform"
+	GOOS=freebsd GOARCH=386 $(GO) build -o bin/minesweeper-api-freebsd-386 main.go
+	GOOS=linux GOARCH=386 $(GO) build -o bin/minesweeper-api-linux-386 main.go
+	GOOS=windows GOARCH=386 $(GO) build -o bin/minesweeper-api-windows-386 main.go
+
+run: ## Run API
+	@echo "run api"
+	$(GO) run main.go
 
 
 ##@ Testing
 
 test: ## Run tests for backend.
 	@echo "test backend"
-	$(GO) test -v ./pkg/...
+	$(GO) test -v $(GO_FILES)
 
 ##@ Linting
+
+fmt:
+	@echo "gofmt all files"
+	gofmt -s -w .
 
 scripts/go/bin/revive: scripts/go/go.mod
 	@cd scripts/go; \
