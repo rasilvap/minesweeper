@@ -2,10 +2,12 @@ package service
 
 import (
 	"log"
+
 	"minesweeper-API/minesweeper-service/repository"
 
-	"minesweeper-API/minesweeper-service/engine"
 	"minesweeper-API/minesweeper-service/model"
+
+	"github.com/obarra-dev/minesweeper"
 )
 
 type GameService interface {
@@ -53,7 +55,7 @@ func (*service) PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResp
 	return &playResponse, nil
 }
 
-func buildPlayResponse(showableGame engine.Game) model.PlayResponse {
+func buildPlayResponse(showableGame minesweeper.Game) model.PlayResponse {
 	gameStateDTO := mapStateGame(showableGame.State)
 	row := len(showableGame.Board)
 	if row == 0 {

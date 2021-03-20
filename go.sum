@@ -12,6 +12,8 @@ github.com/mattn/go-colorable v0.1.2 h1:/bC9yWikZXAL9uJdulbSfyVNIR3n3trXl+v8+1sx
 github.com/mattn/go-colorable v0.1.2/go.mod h1:U0ppj6V5qS13XJ6of8GYAs25YV2eR4EVcfRqFIhoBtE=
 github.com/mattn/go-isatty v0.0.8 h1:HLtExJ+uU2HOZ+wI0Tt5DtUDrx8yhUqDcp7fYERX4CE=
 github.com/mattn/go-isatty v0.0.8/go.mod h1:Iq45c/XA43vh69/j3iqttzPXn0bhXyGjM0Hdxcsrc5s=
+github.com/obarra-dev/minesweeper v0.0.1 h1:RTSTEkTjH1SzLg5ORtkBW1TjX/7fcUsQHEZ67SxPVLc=
+github.com/obarra-dev/minesweeper v0.0.1/go.mod h1:FKhIGyqAYz5AtOpparmYn32Gg3uxh2z8km+u+PCfVUQ=
 github.com/pdrum/swagger-automation v0.0.0-20190629163613-c8c7c80ba858 h1:lgbJiJQx8bXo+eM88AFdd0VxUvaTLzCBXpK+H9poJ+Y=
 github.com/pdrum/swagger-automation v0.0.0-20190629163613-c8c7c80ba858/go.mod h1:y02HeaN0visd95W6cEX2NXDv5sCwyqfzucWTdDGEwYY=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

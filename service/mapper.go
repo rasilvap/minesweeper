@@ -1,34 +1,35 @@
 package service
 
 import (
-	"minesweeper-API/minesweeper-service/engine"
 	"minesweeper-API/minesweeper-service/model"
+
+	"github.com/obarra-dev/minesweeper"
 )
 
-func mapTypeMove(typeMove model.TypeMove) engine.TypeMove {
-	var move engine.TypeMove
+func mapTypeMove(typeMove model.TypeMove) minesweeper.TypeMove {
+	var move minesweeper.TypeMove
 	switch typeMove {
 	case model.TypeMoveFlag:
-		move = engine.TypeMoveFlag
+		move = minesweeper.TypeMoveFlag
 	case model.TypeMoveQuestion:
-		move = engine.TypeMoveQuestion
+		move = minesweeper.TypeMoveQuestion
 	case model.TypeMoveClean:
-		move = engine.TypeMoveClean
+		move = minesweeper.TypeMoveClean
 	}
 
 	return move
 }
 
-func mapStateGame(stateGame engine.StateGame) string {
+func mapStateGame(stateGame minesweeper.StateGame) string {
 	var gameStateDTO string
 	switch stateGame {
-	case engine.StateGameRunning:
+	case minesweeper.StateGameRunning:
 		gameStateDTO = "RUNNING"
-	case engine.StateGameLost:
+	case minesweeper.StateGameLost:
 		gameStateDTO = "LOST"
-	case engine.StateGameNew:
+	case minesweeper.StateGameNew:
 		gameStateDTO = "NEW"
-	case engine.StateGameWon:
+	case minesweeper.StateGameWon:
 		gameStateDTO = "WON"
 	default:
 		gameStateDTO = ""
@@ -36,18 +37,18 @@ func mapStateGame(stateGame engine.StateGame) string {
 	return gameStateDTO
 }
 
-func mapTileState(tileState engine.StateTile) string {
+func mapTileState(tileState minesweeper.StateTile) string {
 	var tileStateDTO string
 	switch tileState {
-	case engine.StateTileCovered:
+	case minesweeper.StateTileCovered:
 		tileStateDTO = "COVERED"
-	case engine.StateTileClear:
+	case minesweeper.StateTileClear:
 		tileStateDTO = "CLEAR"
-	case engine.StateTileFlagged:
+	case minesweeper.StateTileFlagged:
 		tileStateDTO = "FLAGGED"
-	case engine.StateTileNumberd:
+	case minesweeper.StateTileNumberd:
 		tileStateDTO = "NUMBERED"
-	case engine.StateTileExploted:
+	case minesweeper.StateTileExploted:
 		tileStateDTO = "EXPLOTED"
 	default:
 		tileStateDTO = ""
