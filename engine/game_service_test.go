@@ -22,6 +22,7 @@ func (mock *mockGameRepository) Get(id int) *minesweeper.Game {
 	result := args.Get(0)
 	return result.(*minesweeper.Game)
 }
+
 /*
 func TestGetOneGame(t *testing.T) {
 	mockRepo := new(mockGameRepository)
@@ -59,7 +60,7 @@ func TestCreateGame(t *testing.T) {
 }
 
 
- */
+*/
 func TestMarkPlayWhenLost3x3(t *testing.T) {
 	//setup
 	minedPointTile := [][2]int{{1, 1}}

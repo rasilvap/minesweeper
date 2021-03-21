@@ -74,6 +74,3 @@ type PlayRequestParamsWrapper struct {
 	// in:path
 	GameId int64 `json:"id"`
 }
-
-
-

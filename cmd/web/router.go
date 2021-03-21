@@ -15,4 +15,3 @@ func setupRoutes() *mux.Router {
 
 	return router
 }
-
