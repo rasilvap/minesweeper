@@ -1,35 +1,28 @@
-package controller
+package main
 
 import (
 	"encoding/json"
 	"log"
+	"minesweeper-API/minesweeper-service/datasource"
+	"minesweeper-API/minesweeper-service/engine"
 	"net/http"
 	"strconv"
 
 	"minesweeper-API/minesweeper-service/model"
-	"minesweeper-API/minesweeper-service/service"
 
 	"github.com/gorilla/mux"
 )
 
-type controller struct{}
-
-type GameController interface {
-	GetOne(w http.ResponseWriter, r *http.Request)
-	Create(w http.ResponseWriter, r *http.Request)
-	Play(w http.ResponseWriter, r *http.Request)
-}
+//TODO avoid global variables, and avoid interface segregation
 
 var (
-	gameService service.GameService
+	gameService = engine.NewGameService(
+		datasource.NewMemoryRepository(),
+		engine.NewMinesWeeperService(),
+	)
 )
 
-func NewGameController(service service.GameService) GameController {
-	gameService = service
-	return &controller{}
-}
-
-func (*controller) GetOne(w http.ResponseWriter, r *http.Request) {
+func getOne(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -60,7 +53,7 @@ func (*controller) GetOne(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (*controller) Create(w http.ResponseWriter, r *http.Request) {
+func create(w http.ResponseWriter, r *http.Request) {
 	var gameRequest model.GameRequest
 	err := json.NewDecoder(r.Body).Decode(&gameRequest)
 	if err != nil {
@@ -75,7 +68,7 @@ func (*controller) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	j, err := json.Marshal(model.GameSimpleResponse{id})
+	j, err := json.Marshal(model.GameSimpleResponse{GameId: id})
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -91,7 +84,7 @@ func (*controller) Create(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (*controller) Play(w http.ResponseWriter, r *http.Request) {
+func play(w http.ResponseWriter, r *http.Request) {
 	log.Println("Playing")
 
 	vars := mux.Vars(r)
@@ -109,17 +102,17 @@ func (*controller) Play(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	playRespose, err := gameService.PlayMove(id, playRequest)
+	playResponse, err := gameService.PlayMove(id, playRequest)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	if playRespose == nil {
+	if playResponse == nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	log.Println(playRespose)
-	j, err := json.Marshal(playRespose)
+	log.Println(playResponse)
+	j, err := json.Marshal(playResponse)
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)

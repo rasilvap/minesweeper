@@ -1,4 +1,4 @@
-package service
+package engine
 
 import (
 	"minesweeper-API/minesweeper-service/model"
@@ -49,7 +49,7 @@ func mapTileState(tileState minesweeper.StateTile) string {
 	case minesweeper.StateTileNumbered:
 		tileStateDTO = "NUMBERED"
 	case minesweeper.StateTileExploited:
-		tileStateDTO = "EXPLOTED"
+		tileStateDTO = "EXPLOITED"
 	default:
 		tileStateDTO = ""
 	}

@@ -5,7 +5,7 @@
 //     Schemes: https
 //     BasePath: /v1
 //     Version: 1.0.0
-//     Host: minesweeper-service-ob.herokuapp.com
+//     Host: minesweeper-engine-ob.herokuapp.com
 //
 //     Consumes:
 //     - application/json
