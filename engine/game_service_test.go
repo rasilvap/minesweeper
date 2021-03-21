@@ -1,4 +1,4 @@
-package service
+package engine
 
 import (
 	"testing"
@@ -25,14 +25,14 @@ func (mock *mockGameRepository) Get(id int) *minesweeper.Game {
 /*
 func TestGetOneGame(t *testing.T) {
 	mockRepo := new(mockGameRepository)
-	service := NewGameService(mockRepo)
+	engine := NewGameService(mockRepo)
 
 	minedPointTile := [][2]int{{1, 1}}
 	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
 	id := 1
 	mockRepo.On("Get", id).Return(game)
 
-	result, _ := service.GetOneGame(id)
+	result, _ := engine.GetOneGame(id)
 
 	//Mock assertion: Behavioral
 	mockRepo.AssertExpectations(t)
@@ -43,14 +43,14 @@ func TestGetOneGame(t *testing.T) {
 
 func TestCreateGame(t *testing.T) {
 	mockRepo := new(mockGameRepository)
-	service := NewGameService(mockRepo)
+	engine := NewGameService(mockRepo)
 
 	minedPointTile := [][2]int{{1, 1}}
 	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
 	id := 1
 	mockRepo.On("Save", game).Return(id)
 
-	result, _ := service.CreateGame(3, 3, 1)
+	result, _ := engine.CreateGame(3, 3, 1)
 
 	//Mock assertion: Behavioral
 	mockRepo.AssertExpectations(t)

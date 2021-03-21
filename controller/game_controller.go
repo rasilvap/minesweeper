@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"minesweeper-API/minesweeper-service/model"
-	"minesweeper-API/minesweeper-service/service"
+	"minesweeper-API/minesweeper-service/engine"
 
 	"github.com/gorilla/mux"
 )
@@ -21,10 +21,10 @@ type GameController interface {
 }
 
 var (
-	gameService service.GameService
+	gameService engine.GameService
 )
 
-func NewGameController(service service.GameService) GameController {
+func NewGameController(service engine.GameService) GameController {
 	gameService = service
 	return &controller{}
 }

@@ -1,4 +1,4 @@
-package service
+package engine
 
 import (
 	"minesweeper-API/minesweeper-service/model"

@@ -1,9 +1,9 @@
-package service
+package engine
 
 import (
 	"log"
 
-	"minesweeper-API/minesweeper-service/repository"
+	"minesweeper-API/minesweeper-service/datasource"
 
 	"minesweeper-API/minesweeper-service/model"
 
@@ -19,11 +19,11 @@ type GameService interface {
 type service struct{}
 
 var (
-	gameRepository repository.GameRepository
+	gameRepository datasource.GameRepository
 	minesWeeper    MinesWeeperService
 )
 
-func NewGameService(gameMomoryRepository repository.GameRepository, minesWeeperService MinesWeeperService) GameService {
+func NewGameService(gameMomoryRepository datasource.GameRepository, minesWeeperService MinesWeeperService) GameService {
 	gameRepository = gameMomoryRepository
 	minesWeeper = minesWeeperService
 	return &service{}
