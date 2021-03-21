@@ -31,7 +31,7 @@ func TestGetOneGame(t *testing.T) {
 	service := NewGameService(mockRepo)
 
 	minedPointTile := [][2]int{{1, 1}}
-	game := minesweeper.BuildNewGame(3, 3, minedPointTile)
+	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
 	id := 1
 	mockRepo.On("Get", id).Return(game)
 
@@ -49,7 +49,7 @@ func TestCreateGame(t *testing.T) {
 	service := NewGameService(mockRepo)
 
 	minedPointTile := [][2]int{{1, 1}}
-	game := minesweeper.BuildNewGame(3, 3, minedPointTile)
+	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
 	id := 1
 	mockRepo.On("Save", game).Return(id)
 
@@ -64,7 +64,7 @@ func TestCreateGame(t *testing.T) {
 func TestMarkPlayWhenLost3x3(t *testing.T) {
 	//setup
 	minedPointTile := [][2]int{{1, 1}}
-	game := minesweeper.BuildNewGame(3, 3, minedPointTile)
+	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
 
 	//execute
 	gameCopy := game.Play(1, 1, minesweeper.TypeMoveClean)
@@ -80,7 +80,7 @@ func TestMarkPlayWhenLost3x3(t *testing.T) {
 func TestMarkPlayWhenWon3x3(t *testing.T) {
 	//setup
 	minedPointTile := [][2]int{{1, 1}}
-	game := minesweeper.BuildNewGame(3, 3, minedPointTile)
+	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
 
 	//execute
 	gameCopy := game.Play(0, 0, minesweeper.TypeMoveClean)
@@ -150,7 +150,7 @@ func TestMarkPlayWhenWon3x3(t *testing.T) {
 func TestMarkPlayWhenRunning3X8(t *testing.T) {
 	//setup
 	minedPointTile := [][2]int{{1, 1}}
-	game := minesweeper.BuildNewGame(3, 8, minedPointTile)
+	game := minesweeper.NewMinesweeper(3, 8, minedPointTile)
 
 	//execute
 	gameCopy := game.Play(0, 5, minesweeper.TypeMoveClean)

@@ -19,7 +19,7 @@ func NewMinesWeeperService() MinesWeeperService {
 
 func (*minesWeeperService) BuildGame(rows, columns, mineAmount int) *minesweeper.Game {
 	minedPointTile := minesweeper.GenerateMinedPoints(rows, columns, mineAmount)
-	return minesweeper.BuildNewGame(rows, columns, minedPointTile)
+	return minesweeper.NewMinesweeper(rows, columns, minedPointTile)
 }
 
 func (*minesWeeperService) Play(playRequest model.PlayRequest, game *minesweeper.Game) minesweeper.Game {

@@ -46,9 +46,9 @@ func mapTileState(tileState minesweeper.StateTile) string {
 		tileStateDTO = "CLEAR"
 	case minesweeper.StateTileFlagged:
 		tileStateDTO = "FLAGGED"
-	case minesweeper.StateTileNumberd:
+	case minesweeper.StateTileNumbered:
 		tileStateDTO = "NUMBERED"
-	case minesweeper.StateTileExploted:
+	case minesweeper.StateTileExploited:
 		tileStateDTO = "EXPLOTED"
 	default:
 		tileStateDTO = ""
