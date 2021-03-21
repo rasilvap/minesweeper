@@ -1,20 +1,21 @@
 package repository
 
 import (
-	"minesweeper-API/minesweeper-service/engine"
 	"sync"
+
+	"github.com/obarra-dev/minesweeper"
 )
 
 type GameRepository interface {
-	Save(game *engine.Game) int
-	Get(id int) *engine.Game
+	Save(game *minesweeper.Game) int
+	Get(id int) *minesweeper.Game
 }
 
 type gameRepositoryMemory struct{}
 
 type gameMemoryMap struct {
 	sync.RWMutex
-	m map[int]*engine.Game
+	m map[int]*minesweeper.Game
 }
 
 var (
@@ -22,11 +23,11 @@ var (
 )
 
 func NewMemoryRepository() GameRepository {
-	gameStorageMap = gameMemoryMap{m: make(map[int]*engine.Game)}
+	gameStorageMap = gameMemoryMap{m: make(map[int]*minesweeper.Game)}
 	return &gameRepositoryMemory{}
 }
 
-func (*gameRepositoryMemory) Save(game *engine.Game) int {
+func (*gameRepositoryMemory) Save(game *minesweeper.Game) int {
 	gameStorageMap.Lock()
 	gameStorageMap.m[len(gameStorageMap.m)] = game
 	gameStorageMap.Unlock()
@@ -34,7 +35,7 @@ func (*gameRepositoryMemory) Save(game *engine.Game) int {
 }
 
 //TODO deberia retornar una copia? si retorna un puntero puede dar problemas de concurrencia?
-func (*gameRepositoryMemory) Get(id int) *engine.Game {
+func (*gameRepositoryMemory) Get(id int) *minesweeper.Game {
 	gameStorageMap.RLock()
 	defer gameStorageMap.RUnlock()
 	if game, ok := gameStorageMap.m[id]; ok {

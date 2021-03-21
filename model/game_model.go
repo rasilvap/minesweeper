@@ -1,8 +1,6 @@
 package model
 
-import (
-	"minesweeper-API/minesweeper-service/engine"
-)
+import "github.com/obarra-dev/minesweeper"
 
 // GameRequest : ...
 type GameRequest struct {
@@ -48,7 +46,7 @@ type PlayResponse struct {
 
 // GameCompleteResponse : ...
 type GameCompleteResponse struct {
-	Game engine.Game
+	Game minesweeper.Game
 }
 
 type TileDTO struct {
