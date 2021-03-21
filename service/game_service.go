@@ -2,81 +2,60 @@ package service
 
 import (
 	"log"
-	"sync"
 
-	"minesweeper-API/minesweeper-service/engine"
+	"minesweeper-API/minesweeper-service/repository"
+
 	"minesweeper-API/minesweeper-service/model"
+
+	"github.com/obarra-dev/minesweeper"
 )
 
-var gameStorageMap = struct {
-	sync.RWMutex
-	m map[int]*engine.Game
-}{m: make(map[int]*engine.Game)}
-
-func GetOneGame(id int) (*model.GameResponse, error) {
-	gameStorageMap.RLock()
-	defer gameStorageMap.RUnlock()
-	if game, ok := gameStorageMap.m[id]; ok {
-		gameResponse := model.GameResponse{game.Rows, game.Columns, game.MineAmount}
-		return &gameResponse, nil
-	}
-	return nil, nil
+type GameService interface {
+	GetOneGame(id int) (*model.GameResponse, error)
+	CreateGame(rows, colums, mineAmount int) (int, error)
+	PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResponse, error)
 }
 
-func CreateGame(rows, colums, mineAmount int) (int, error) {
-	minedPointTile := engine.GenerateMinedPoints(mineAmount, rows, colums)
-	game := engine.BuildNewGame(rows, colums, minedPointTile)
-	log.Println(game)
+type service struct{}
 
-	gameStorageMap.Lock()
-	gameStorageMap.m[len(gameStorageMap.m)] = game
-	gameStorageMap.Unlock()
-	return len(gameStorageMap.m) - 1, nil
+var (
+	gameRepository repository.GameRepository
+	minesWeeper    MinesWeeperService
+)
+
+func NewGameService(gameMomoryRepository repository.GameRepository, minesWeeperService MinesWeeperService) GameService {
+	gameRepository = gameMomoryRepository
+	minesWeeper = minesWeeperService
+	return &service{}
 }
 
-func PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResponse, error) {
-	gameStorageMap.RLock()
-	defer gameStorageMap.RUnlock()
-	if game, ok := gameStorageMap.m[id]; ok {
-		log.Println(game.GetStates())
-		log.Println("PlayRequest", playRequest)
-		showableGame := game.Play(playRequest.Row, playRequest.Column, mapTypeMove(playRequest.Move))
-		log.Println("show: ", showableGame)
-		playResponse := buildPlayResponse(showableGame)
-
-		return &playResponse, nil
-	}
-	return nil, nil
+func (*service) GetOneGame(id int) (*model.GameResponse, error) {
+	game := gameRepository.Get(id)
+	gameResponse := model.GameResponse{game.Rows, game.Columns, game.MineAmount}
+	return &gameResponse, nil
 }
 
-func mapTypeMove(typeMove model.TypeMove) engine.TypeMove {
-	var move engine.TypeMove
-	switch typeMove {
-	case model.TypeMoveFlag:
-		move = engine.TypeMoveFlag
-	case model.TypeMoveQuestion:
-		move = engine.TypeMoveQuestion
-	case model.TypeMoveClean:
-		move = engine.TypeMoveClean
-	}
-
-	return move
+func (*service) CreateGame(rows, colums, mineAmount int) (int, error) {
+	game := minesWeeper.BuildGame(rows, colums, mineAmount)
+	id := gameRepository.Save(game)
+	return id, nil
 }
 
-func buildPlayResponse(showableGame engine.Game) model.PlayResponse {
-	var gameStateDTO string
-	switch showableGame.State {
-	case engine.StateGameRunning:
-		gameStateDTO = "RUNNING"
-	case engine.StateGameLost:
-		gameStateDTO = "LOST"
-	case engine.StateGameNew:
-		gameStateDTO = "NEW"
-	case engine.StateGameWon:
-		gameStateDTO = "WON"
-	default:
-		gameStateDTO = ""
-	}
+func (*service) PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResponse, error) {
+	game := gameRepository.Get(id)
+	log.Println("PlayRequest", playRequest)
+
+	showableGame := minesWeeper.Play(playRequest, game)
+	gameRepository.Save(game)
+
+	log.Println("show: ", showableGame)
+	playResponse := buildPlayResponse(showableGame)
+
+	return &playResponse, nil
+}
+
+func buildPlayResponse(showableGame minesweeper.Game) model.PlayResponse {
+	gameStateDTO := mapStateGame(showableGame.State)
 	row := len(showableGame.Board)
 	if row == 0 {
 		return model.PlayResponse{gameStateDTO,
@@ -90,23 +69,7 @@ func buildPlayResponse(showableGame engine.Game) model.PlayResponse {
 
 		for j := 0; j < column; j++ {
 			board := showableGame.Board[i][j]
-
-			var tileStateDTO string
-			switch board.State {
-			case engine.StateTileCovered:
-				tileStateDTO = "COVERED"
-			case engine.StateTileClear:
-				tileStateDTO = "CLEAR"
-			case engine.StateTileFlagged:
-				tileStateDTO = "FLAGGED"
-			case engine.StateTileNumberd:
-				tileStateDTO = "NUMBERED"
-			case engine.StateTileExploted:
-				tileStateDTO = "EXPLOTED"
-			default:
-				tileStateDTO = ""
-			}
-
+			tileStateDTO := mapTileState(board.State)
 			boardDTO[i][j] = model.TileDTO{tileStateDTO, board.Row, board.Column, board.SurroundingMineCount, board.IsMine, -1}
 		}
 	}

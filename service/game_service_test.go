@@ -1,17 +1,72 @@
 package service
 
 import (
-	"minesweeper-API/minesweeper-service/engine"
 	"testing"
+
+	"github.com/obarra-dev/minesweeper"
+	"github.com/stretchr/testify/mock"
 )
 
+type mockGameRepository struct {
+	mock.Mock
+}
+
+func (mock *mockGameRepository) Save(game *minesweeper.Game) int {
+	args := mock.Called(game)
+	result := args.Get(0)
+	return result.(int)
+}
+
+func (mock *mockGameRepository) Get(id int) *minesweeper.Game {
+	args := mock.Called(id)
+	result := args.Get(0)
+	return result.(*minesweeper.Game)
+}
+/*
+func TestGetOneGame(t *testing.T) {
+	mockRepo := new(mockGameRepository)
+	service := NewGameService(mockRepo)
+
+	minedPointTile := [][2]int{{1, 1}}
+	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
+	id := 1
+	mockRepo.On("Get", id).Return(game)
+
+	result, _ := service.GetOneGame(id)
+
+	//Mock assertion: Behavioral
+	mockRepo.AssertExpectations(t)
+
+	expected := model.GameResponse{3, 3, 1}
+	assert.Equal(t, expected, *result)
+}
+
+func TestCreateGame(t *testing.T) {
+	mockRepo := new(mockGameRepository)
+	service := NewGameService(mockRepo)
+
+	minedPointTile := [][2]int{{1, 1}}
+	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
+	id := 1
+	mockRepo.On("Save", game).Return(id)
+
+	result, _ := service.CreateGame(3, 3, 1)
+
+	//Mock assertion: Behavioral
+	mockRepo.AssertExpectations(t)
+
+	assert.Equal(t, id, result)
+}
+
+
+ */
 func TestMarkPlayWhenLost3x3(t *testing.T) {
 	//setup
 	minedPointTile := [][2]int{{1, 1}}
-	game := engine.BuildNewGame(3, 3, minedPointTile)
+	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
 
 	//execute
-	gameCopy := game.Play(1, 1, engine.TypeMoveClean)
+	gameCopy := game.Play(1, 1, minesweeper.TypeMoveClean)
 	res := buildPlayResponse(gameCopy)
 
 	//assert
@@ -24,10 +79,10 @@ func TestMarkPlayWhenLost3x3(t *testing.T) {
 func TestMarkPlayWhenWon3x3(t *testing.T) {
 	//setup
 	minedPointTile := [][2]int{{1, 1}}
-	game := engine.BuildNewGame(3, 3, minedPointTile)
+	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
 
 	//execute
-	gameCopy := game.Play(0, 0, engine.TypeMoveClean)
+	gameCopy := game.Play(0, 0, minesweeper.TypeMoveClean)
 	res := buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "RUNNING" {
@@ -35,7 +90,7 @@ func TestMarkPlayWhenWon3x3(t *testing.T) {
 	}
 
 	//execute
-	gameCopy = game.Play(0, 1, engine.TypeMoveClean)
+	gameCopy = game.Play(0, 1, minesweeper.TypeMoveClean)
 	res = buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "RUNNING" {
@@ -43,7 +98,7 @@ func TestMarkPlayWhenWon3x3(t *testing.T) {
 	}
 
 	//execute
-	gameCopy = game.Play(0, 2, engine.TypeMoveClean)
+	gameCopy = game.Play(0, 2, minesweeper.TypeMoveClean)
 	res = buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "RUNNING" {
@@ -51,7 +106,7 @@ func TestMarkPlayWhenWon3x3(t *testing.T) {
 	}
 
 	//execute
-	gameCopy = game.Play(1, 0, engine.TypeMoveClean)
+	gameCopy = game.Play(1, 0, minesweeper.TypeMoveClean)
 	res = buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "RUNNING" {
@@ -59,7 +114,7 @@ func TestMarkPlayWhenWon3x3(t *testing.T) {
 	}
 
 	//execute
-	gameCopy = game.Play(1, 2, engine.TypeMoveClean)
+	gameCopy = game.Play(1, 2, minesweeper.TypeMoveClean)
 	res = buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "RUNNING" {
@@ -67,7 +122,7 @@ func TestMarkPlayWhenWon3x3(t *testing.T) {
 	}
 
 	//execute
-	gameCopy = game.Play(2, 0, engine.TypeMoveClean)
+	gameCopy = game.Play(2, 0, minesweeper.TypeMoveClean)
 	res = buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "RUNNING" {
@@ -75,7 +130,7 @@ func TestMarkPlayWhenWon3x3(t *testing.T) {
 	}
 
 	//execute
-	gameCopy = game.Play(2, 1, engine.TypeMoveClean)
+	gameCopy = game.Play(2, 1, minesweeper.TypeMoveClean)
 	res = buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "RUNNING" {
@@ -83,7 +138,7 @@ func TestMarkPlayWhenWon3x3(t *testing.T) {
 	}
 
 	//execute
-	gameCopy = game.Play(2, 2, engine.TypeMoveClean)
+	gameCopy = game.Play(2, 2, minesweeper.TypeMoveClean)
 	res = buildPlayResponse(gameCopy)
 	//assert
 	if res.StateGame != "WON" {
@@ -94,10 +149,10 @@ func TestMarkPlayWhenWon3x3(t *testing.T) {
 func TestMarkPlayWhenRunning3X8(t *testing.T) {
 	//setup
 	minedPointTile := [][2]int{{1, 1}}
-	game := engine.BuildNewGame(3, 8, minedPointTile)
+	game := minesweeper.NewMinesweeper(3, 8, minedPointTile)
 
 	//execute
-	gameCopy := game.Play(0, 5, engine.TypeMoveClean)
+	gameCopy := game.Play(0, 5, minesweeper.TypeMoveClean)
 	game.ShowBoard()
 	res := buildPlayResponse(gameCopy)
 
