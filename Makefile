@@ -22,5 +22,5 @@ vet:
 lint:  check_format go_lint vet
 
 build:
-	go build -o ${BINARY} ./*.go
+	go build -o ${BINARY} ./cmd/web/*.go
 
