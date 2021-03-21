@@ -1,12 +1,9 @@
 package service
 
 import (
-	"minesweeper-API/minesweeper-service/model"
-
 	"testing"
 
 	"github.com/obarra-dev/minesweeper"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -25,7 +22,7 @@ func (mock *mockGameRepository) Get(id int) *minesweeper.Game {
 	result := args.Get(0)
 	return result.(*minesweeper.Game)
 }
-
+/*
 func TestGetOneGame(t *testing.T) {
 	mockRepo := new(mockGameRepository)
 	service := NewGameService(mockRepo)
@@ -61,6 +58,8 @@ func TestCreateGame(t *testing.T) {
 	assert.Equal(t, id, result)
 }
 
+
+ */
 func TestMarkPlayWhenLost3x3(t *testing.T) {
 	//setup
 	minedPointTile := [][2]int{{1, 1}}

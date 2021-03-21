@@ -23,8 +23,7 @@ var (
 	minesWeeper    MinesWeeperService
 )
 
-func NewGameService(gameMomoryRepository repository.GameRepository,
-	minesWeeperService MinesWeeperService) GameService {
+func NewGameService(gameMomoryRepository repository.GameRepository, minesWeeperService MinesWeeperService) GameService {
 	gameRepository = gameMomoryRepository
 	minesWeeper = minesWeeperService
 	return &service{}
