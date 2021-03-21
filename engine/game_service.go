@@ -58,8 +58,14 @@ func buildPlayResponse(game minesweeper.Game) model.PlayResponse {
 	gameStateDTO := mapStateGame(game.State)
 	row := len(game.Board)
 	if row == 0 {
-		return model.PlayResponse{gameStateDTO,
-			model.GameDTO{[][]model.TileDTO{}, game.Rows, game.Columns, game.FlagAmount}}
+		return model.PlayResponse{
+			StateGame: gameStateDTO,
+			Game: model.GameDTO{Board: [][]model.TileDTO{},
+				Rows:       game.Rows,
+				Columns:    game.Columns,
+				FlagAmount: game.FlagAmount,
+			},
+		}
 	}
 
 	boardDTO := make([][]model.TileDTO, row)
@@ -70,10 +76,24 @@ func buildPlayResponse(game minesweeper.Game) model.PlayResponse {
 		for j := 0; j < column; j++ {
 			board := game.Board[i][j]
 			tileStateDTO := mapTileState(board.State)
-			boardDTO[i][j] = model.TileDTO{tileStateDTO, board.Row, board.Column, board.SurroundingMineCount, board.IsMine, -1}
+			boardDTO[i][j] = model.TileDTO{
+				State:                tileStateDTO,
+				Row:                  board.Row,
+				Column:               board.Column,
+				SurroundingMineCount: board.SurroundingMineCount,
+				Mine:                 board.IsMine,
+
+				ValueTest: -1}
 		}
 	}
 
-	return model.PlayResponse{gameStateDTO,
-		model.GameDTO{boardDTO, game.Rows, game.Columns, game.FlagAmount}}
+	return model.PlayResponse{
+		StateGame: gameStateDTO,
+		Game: model.GameDTO{
+			Board:      boardDTO,
+			Rows:       game.Rows,
+			Columns:    game.Columns,
+			FlagAmount: game.FlagAmount,
+		},
+	}
 }
