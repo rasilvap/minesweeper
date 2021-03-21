@@ -75,25 +75,5 @@ type PlayRequestParamsWrapper struct {
 	GameId int64 `json:"id"`
 }
 
-// swagger:route POST /games/{id}/mark games markGameEndpoint
-// Marka a tile.
-// responses:
-//   200: ok
-//   200: accepted
-//	 400: badrequest Missing or invalid attributes in body
-//	 404: notfound Not Found
-//   500: internal Internal Server Errors
-// Game created OK.
 
-// Play attributes to set
-// swagger:parameters markGameEndpoint
-type MarkRequestParamsWrapper struct {
-	// The game's attributes to set.
-	// in:body
-	Body model.MarkRequest
 
-	// The game id
-	// required:true
-	// in:path
-	GameId int64 `json:"id"`
-}
