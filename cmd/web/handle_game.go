@@ -16,8 +16,18 @@ import (
 //TODO avoid global variables, and avoid interface segregation
 
 var (
-	gameService = engine.NewGameService(
-		datasource.NewMemoryRepository(),
+	ds, _ = datasource.NewDataSource(model.DbConfig{
+		Server:          "localhost",
+		Port:            5432,
+		User:            "obarra",
+		Password:        "obarra",
+		Database:        "minesweeper",
+		MaxOpenConn:     100,
+		MaxIdleConn:     50,
+		ConnMaxLifeTime: 0,
+	})
+
+	gameService = engine.NewGameService(ds,
 		engine.NewMinesWeeperService(),
 	)
 )

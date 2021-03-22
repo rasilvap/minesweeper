@@ -19,34 +19,34 @@ type GameService interface {
 type service struct{}
 
 var (
-	gameRepository datasource.GameRepository
+	gameRepository datasource.Spec
 	minesWeeper    MinesWeeperService
 )
 
-func NewGameService(gameRepositoryImp datasource.GameRepository, minesWeeperService MinesWeeperService) GameService {
+func NewGameService(gameRepositoryImp datasource.Spec, minesWeeperService MinesWeeperService) GameService {
 	gameRepository = gameRepositoryImp
 	minesWeeper = minesWeeperService
 	return &service{}
 }
 
 func (*service) GetOneGame(id int) (*model.GameResponse, error) {
-	game := gameRepository.Get(id)
+	game, _ := gameRepository.GetGame(id)
 	gameResponse := model.GameResponse{Rows: game.Rows, Columns: game.Columns, MineAmount: game.MineAmount}
 	return &gameResponse, nil
 }
 
 func (*service) CreateGame(rows, columns, mineAmount int) (int, error) {
 	game := minesWeeper.BuildGame(rows, columns, mineAmount)
-	id := gameRepository.Save(game)
+	id, _ := gameRepository.SaveGame(game)
 	return id, nil
 }
 
 func (*service) PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResponse, error) {
-	game := gameRepository.Get(id)
+	game, _ := gameRepository.GetGame(id)
 	log.Println("PlayRequest", playRequest)
 
 	visibleGame := minesWeeper.Play(playRequest, game)
-	gameRepository.Save(game)
+	gameRepository.SaveGame(game)
 
 	log.Println("show: ", visibleGame)
 	playResponse := buildPlayResponse(visibleGame)
