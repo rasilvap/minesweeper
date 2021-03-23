@@ -2,7 +2,6 @@ package datasource
 
 import (
 	"fmt"
-
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 
@@ -15,16 +14,14 @@ type Datasource struct {
 
 // New Datasource creation
 func NewDataSource(config model.DbConfig) (Spec, error) {
-	dbCs := fmt.Sprintf("%s:%s@tcp(%s:%v)/%s?parseTime=True",
-		config.User,
-		config.Password,
-		config.Server,
-		config.Port,
-		config.Database)
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		config.Server, config.Port, config.User, config.Password, config.Database)
 
-	db, err := sqlx.Connect("postgres", dbCs)
+	db, err := sqlx.Connect("postgres", psqlInfo)
 
 	if err != nil {
+
+		panic("error")
 		return nil, err
 	}
 

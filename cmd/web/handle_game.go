@@ -19,9 +19,9 @@ var (
 	ds, _ = datasource.NewDataSource(model.DbConfig{
 		Server:          "localhost",
 		Port:            5432,
-		User:            "obarra",
-		Password:        "obarra",
-		Database:        "minesweeper",
+		User:            "postgres",
+		Password:        "postgres",
+		Database:        "postgres",
 		MaxOpenConn:     100,
 		MaxIdleConn:     50,
 		ConnMaxLifeTime: 0,
