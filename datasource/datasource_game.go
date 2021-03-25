@@ -7,7 +7,7 @@ import (
 
 func (ds *Datasource) GetGame(id int) (*model.Game, error) {
 	var game model.Game
-	switch 	err := ds.db.Get(&game, `SELECT * FROM minesweeper.games WHERE game_id = $1`, id) ;err {
+	switch err := ds.db.Get(&game, `SELECT * FROM minesweeper.games WHERE game_id = $1`, id); err {
 	case nil, sql.ErrNoRows:
 		return &game, nil
 	default:

@@ -63,9 +63,7 @@ func (*service) PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResp
 		MineAmount: gameDS.MineAmount,
 		FlagAmount: gameDS.FlagAmount,
 		Board:      nil,
-
 	}
-
 
 	visibleGame := minesWeeper.Play(playRequest, &game)
 	gameRepository.SaveGame(gameDS)
