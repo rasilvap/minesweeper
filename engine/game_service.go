@@ -37,16 +37,38 @@ func (*service) GetOneGame(id int) (*model.GameResponse, error) {
 
 func (*service) CreateGame(rows, columns, mineAmount int) (int, error) {
 	game := minesWeeper.BuildGame(rows, columns, mineAmount)
-	id, _ := gameRepository.SaveGame(game)
+
+	gameDS := model.Game{
+		State:      string(game.State),
+		Columns:    game.Columns,
+		Rows:       game.Rows,
+		MineAmount: game.MineAmount,
+		FlagAmount: game.FlagAmount,
+		Board:      "",
+	}
+
+	id, _ := gameRepository.SaveGame(&gameDS)
 	return id, nil
 }
 
 func (*service) PlayMove(id int, playRequest model.PlayRequest) (*model.PlayResponse, error) {
-	game, _ := gameRepository.GetGame(id)
 	log.Println("PlayRequest", playRequest)
 
-	visibleGame := minesWeeper.Play(playRequest, game)
-	gameRepository.SaveGame(game)
+	gameDS, _ := gameRepository.GetGame(id)
+
+	game := minesweeper.Game{
+		State:      1,
+		Rows:       gameDS.Rows,
+		Columns:    gameDS.Columns,
+		MineAmount: gameDS.MineAmount,
+		FlagAmount: gameDS.FlagAmount,
+		Board:      nil,
+
+	}
+
+
+	visibleGame := minesWeeper.Play(playRequest, &game)
+	gameRepository.SaveGame(gameDS)
 
 	log.Println("show: ", visibleGame)
 	playResponse := buildPlayResponse(visibleGame)

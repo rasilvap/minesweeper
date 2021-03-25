@@ -1,6 +1,6 @@
 CREATE TABLE games
   (
-     game_id     INT PRIMARY KEY NOT NULL,
+     game_id     serial PRIMARY KEY,
      state       TEXT NOT NULL,
      columns     SMALLINT NOT NULL,
      rows        SMALLINT NOT NULL,

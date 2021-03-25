@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-
+	"log"
 	"minesweeper-API/minesweeper-service/model"
 )
 
@@ -20,8 +20,7 @@ func NewDataSource(config model.DbConfig) (Spec, error) {
 	db, err := sqlx.Connect("postgres", psqlInfo)
 
 	if err != nil {
-
-		panic("error")
+		log.Fatal("omar", err)
 		return nil, err
 	}
 

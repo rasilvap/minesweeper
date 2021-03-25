@@ -1,10 +1,10 @@
 package datasource
 
 import (
-	"github.com/obarra-dev/minesweeper"
+	"minesweeper-API/minesweeper-service/model"
 )
 
 type Spec interface {
-	GetGame(id int) (*minesweeper.Game, error)
-	SaveGame(g *minesweeper.Game) (int, error)
+	GetGame(id int) (*model.Game, error)
+	SaveGame(g *model.Game) (int, error)
 }

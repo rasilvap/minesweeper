@@ -2,42 +2,32 @@ package datasource
 
 import (
 	"database/sql"
-	"errors"
-	"github.com/obarra-dev/minesweeper"
+	"minesweeper-API/minesweeper-service/model"
 )
 
-func (ds *Datasource) GetGame(id int) (*minesweeper.Game, error) {
-	var game minesweeper.Game
-	var err = ds.db.Get(&game, `SELECT * FROM games WHERE id = ?`, id)
-
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return &game, errors.New("game not found")
-		} else {
-			return nil, errors.New("error")
-		}
+func (ds *Datasource) GetGame(id int) (*model.Game, error) {
+	var game model.Game
+	switch 	err := ds.db.Get(&game, `SELECT * FROM minesweeper.games WHERE game_id = $1`, id) ;err {
+	case nil, sql.ErrNoRows:
+		return &game, nil
+	default:
+		return nil, err
 	}
-
-	return &game, nil
 }
 
-func (ds *Datasource) SaveGame(g *minesweeper.Game) (int, error) {
-	t, err := ds.db.Begin()
+func (ds *Datasource) SaveGame(g *model.Game) (int, error) {
+	res, err := ds.db.NamedQuery(
+		`INSERT INTO minesweeper.games (state, columns, rows, mine_amount, flag_amount)
+ 		VALUES (:state, :columns, :rows, :mine_amount, :flag_amount) returning game_id`,
+		&g)
+
+	res.Next()
+	var id int
+	err = res.Scan(&id)
+
 	if err != nil {
 		return 0, err
 	}
 
-	_, err = t.Exec(`INSERT INTO games (id, status, status_detail, date_created, date_updated) 
-								VALUES (?,?,?,?,?,?)`, g.Columns, g.Columns)
-	if err != nil {
-		_ = t.Rollback()
-		return 0, err
-	}
-
-	err = t.Commit()
-	if err != nil {
-		return 0, err
-	}
-
-	return 1, nil
+	return id, nil
 }
