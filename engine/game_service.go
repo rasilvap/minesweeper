@@ -38,13 +38,49 @@ func (*service) GetOneGame(id int) (*model.GameResponse, error) {
 func (*service) CreateGame(rows, columns, mineAmount int) (int, error) {
 	game := minesWeeper.BuildGame(rows, columns, mineAmount)
 
+	tiles := [][]model.Tile{
+		{model.Tile{
+			State:                "der",
+			Row:                  1,
+			Column:               2,
+			SurroundingMineCount: 4,
+			IsMine:               true,
+		},
+			model.Tile{
+				State:                "dos",
+				Row:                  1,
+				Column:               2,
+				SurroundingMineCount: 4,
+				IsMine:               true,
+			},
+
+		},
+		{model.Tile{
+			State:                "der",
+			Row:                  1,
+			Column:               2,
+			SurroundingMineCount: 4,
+			IsMine:               true,
+		},
+			model.Tile{
+				State:                "dos",
+				Row:                  1,
+				Column:               2,
+				SurroundingMineCount: 4,
+				IsMine:               true,
+			},
+
+		},
+	}
+
+
 	gameDS := model.Game{
 		State:      string(game.State),
 		Columns:    game.Columns,
 		Rows:       game.Rows,
 		MineAmount: game.MineAmount,
 		FlagAmount: game.FlagAmount,
-		Board:      "",
+		Board: model.Board{ B: tiles},
 	}
 
 	id, _ := gameRepository.SaveGame(&gameDS)

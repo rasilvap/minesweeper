@@ -17,9 +17,13 @@ func (ds *Datasource) GetGame(id int) (*model.Game, error) {
 
 func (ds *Datasource) SaveGame(g *model.Game) (int, error) {
 	res, err := ds.db.NamedQuery(
-		`INSERT INTO minesweeper.games (state, columns, rows, mine_amount, flag_amount)
- 		VALUES (:state, :columns, :rows, :mine_amount, :flag_amount) returning game_id`,
+		`INSERT INTO minesweeper.games (state, columns, rows, mine_amount, flag_amount, board)
+ 		VALUES (:state, :columns, :rows, :mine_amount, :flag_amount, :board) returning game_id`,
 		&g)
+
+	if err != nil {
+		return 0, err
+	}
 
 	res.Next()
 	var id int

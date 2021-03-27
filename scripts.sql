@@ -6,5 +6,5 @@ CREATE TABLE games
      rows        SMALLINT NOT NULL,
      mine_amount SMALLINT NOT NULL,
      flag_amount SMALLINT NOT NULL,
-     board       JSON NOT NULL
+     board       JSONB NOT NULL
   );
