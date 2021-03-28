@@ -5,38 +5,33 @@ import (
 	"sync"
 )
 
-type memoryMap struct {
-	sync.RWMutex
-	m map[int]*model.Game
-}
-
 type memory struct {
-	memoryMap memoryMap
+	sync.RWMutex
+	cache map[int]*model.Game
 }
 
 func NewMemory() Spec {
 	return &memory{
-		memoryMap: memoryMap{
-			m: make(map[int]*model.Game),
-		},
+		cache: make(map[int]*model.Game),
 	}
 }
 
 //TODO deberia retornar una copia? si retorna un puntero puede dar problemas de concurrencia?
 func (m *memory) FindGame(id int) (*model.Game, error) {
-	m.memoryMap.RLock()
-	defer m.memoryMap.RUnlock()
-	if game, ok := m.memoryMap.m[id]; ok {
+	m.RLock()
+	defer m.RUnlock()
+	if game, ok := m.cache[id]; ok {
 		return game, nil
 	}
-	return nil, nil
+	return &model.Game{}, nil
 }
 
 func (m *memory) InsertGame(game *model.Game) (int, error) {
-	m.memoryMap.Lock()
-	m.memoryMap.m[len(m.memoryMap.m)] = game
-	m.memoryMap.Unlock()
-	return len(m.memoryMap.m) - 1, nil
+	m.Lock()
+	game.GameId = len(m.cache) + 1
+	m.cache[game.GameId] = game
+	m.Unlock()
+	return game.GameId, nil
 }
 
 func (m *memory) UpdateGame(g *model.Game) error {

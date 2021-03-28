@@ -16,6 +16,7 @@ import (
 //TODO avoid global variables, and avoid interface segregation
 
 var (
+	/**
 	ds, _ = datasource.NewDataSource(model.DbConfig{
 		Server:          "localhost",
 		Port:            5432,
@@ -27,9 +28,11 @@ var (
 		ConnMaxLifeTime: 0,
 	})
 
-	gameService = engine.NewGameService(ds,
-		engine.NewMinesWeeperService(),
-	)
+	 */
+
+	ds = datasource.NewMemory()
+
+	gameService = engine.NewGameService(ds, engine.NewMinesWeeperService())
 )
 
 func getOne(w http.ResponseWriter, r *http.Request) {
