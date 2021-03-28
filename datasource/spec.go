@@ -5,6 +5,7 @@ import (
 )
 
 type Spec interface {
-	GetGame(id int) (*model.Game, error)
+	FindGame(id int) (*model.Game, error)
 	SaveGame(g *model.Game) (int, error)
+	UpdateGame(g *model.Game) error
 }

@@ -5,7 +5,7 @@ import (
 	"minesweeper-API/minesweeper-service/model"
 )
 
-func (ds *Datasource) GetGame(id int) (*model.Game, error) {
+func (ds *Datasource) FindGame(id int) (*model.Game, error) {
 	var game model.Game
 	switch err := ds.db.Get(&game, `SELECT * FROM minesweeper.games WHERE game_id = $1`, id); err {
 	case nil, sql.ErrNoRows:
@@ -34,4 +34,14 @@ func (ds *Datasource) SaveGame(g *model.Game) (int, error) {
 	}
 
 	return id, nil
+}
+
+func (ds *Datasource) UpdateGame(g *model.Game) error {
+	_, err := ds.db.NamedQuery(
+		`UPDATE  minesweeper.games  SET state = :state, 
+                               columns = :columns, rows = :rows, mine_amount = :mine_amount, flag_amount = :flag_amount, 
+                               board = :board WHERE game_id = :game_id`,
+		&g)
+
+	return err
 }

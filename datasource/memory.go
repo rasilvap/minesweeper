@@ -7,6 +7,10 @@ import (
 
 type gameRepositoryMemory struct{}
 
+func (m *gameRepositoryMemory) UpdateGame(g *model.Game) error {
+	panic("implement me")
+}
+
 type gameMemoryMap struct {
 	sync.RWMutex
 	m map[int]*model.Game
@@ -29,7 +33,7 @@ func (*gameRepositoryMemory) SaveGame(game *model.Game) (int, error) {
 }
 
 //TODO deberia retornar una copia? si retorna un puntero puede dar problemas de concurrencia?
-func (*gameRepositoryMemory) GetGame(id int) (*model.Game, error) {
+func (*gameRepositoryMemory) FindGame(id int) (*model.Game, error) {
 	gameStorageMap.RLock()
 	defer gameStorageMap.RUnlock()
 	if game, ok := gameStorageMap.m[id]; ok {
