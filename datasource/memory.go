@@ -7,12 +7,12 @@ import (
 
 type memory struct {
 	sync.RWMutex
-	cache map[int]*model.Game
+	cache map[int]interface{}
 }
 
 func NewMemory() Spec {
 	return &memory{
-		cache: make(map[int]*model.Game),
+		cache: make(map[int]interface{}),
 	}
 }
 
@@ -21,7 +21,7 @@ func (m *memory) FindGame(id int) (*model.Game, error) {
 	m.RLock()
 	defer m.RUnlock()
 	if game, ok := m.cache[id]; ok {
-		return game, nil
+		return game.(*model.Game), nil
 	}
 	return &model.Game{}, nil
 }
@@ -35,6 +35,6 @@ func (m *memory) InsertGame(game *model.Game) (int, error) {
 }
 
 func (m *memory) UpdateGame(g *model.Game) error {
-	m.InsertGame(g)
+	_, _ = m.InsertGame(g)
 	return nil
 }
