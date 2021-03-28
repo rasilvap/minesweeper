@@ -33,7 +33,7 @@ func TestGetOneGame(t *testing.T) {
 	id := 1
 	mockRepo.On("Get", id).Return(game)
 
-	result, _ := engine.GetOneGame(id)
+	result, _ := engine.Get(id)
 
 	//Mock assertion: Behavioral
 	mockRepo.AssertExpectations(t)
@@ -51,7 +51,7 @@ func TestCreateGame(t *testing.T) {
 	id := 1
 	mockRepo.On("Save", game).Return(id)
 
-	result, _ := engine.CreateGame(3, 3, 1)
+	result, _ := engine.Create(3, 3, 1)
 
 	//Mock assertion: Behavioral
 	mockRepo.AssertExpectations(t)

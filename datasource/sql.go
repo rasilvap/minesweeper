@@ -2,8 +2,37 @@ package datasource
 
 import (
 	"database/sql"
+	"fmt"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
+	"log"
 	"minesweeper-API/minesweeper-service/model"
 )
+
+type Datasource struct {
+	db *sqlx.DB
+}
+
+// New Datasource creation
+func NewDataSource(config model.DbConfig) (Spec, error) {
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		config.Server, config.Port, config.User, config.Password, config.Database)
+
+	db, err := sqlx.Connect("postgres", psqlInfo)
+
+	if err != nil {
+		log.Fatal("omar", err)
+		return nil, err
+	}
+
+	db.SetMaxOpenConns(config.MaxOpenConn)
+	db.SetMaxIdleConns(config.MaxIdleConn)
+	db.SetConnMaxLifetime(config.ConnMaxLifeTime)
+
+	return &Datasource{
+		db: db,
+	}, err
+}
 
 func (ds *Datasource) FindGame(id int) (*model.Game, error) {
 	var game model.Game
@@ -15,7 +44,7 @@ func (ds *Datasource) FindGame(id int) (*model.Game, error) {
 	}
 }
 
-func (ds *Datasource) SaveGame(g *model.Game) (int, error) {
+func (ds *Datasource) InsertGame(g *model.Game) (int, error) {
 	res, err := ds.db.NamedQuery(
 		`INSERT INTO minesweeper.games (state, columns, rows, mine_amount, flag_amount, board)
  		VALUES (:state, :columns, :rows, :mine_amount, :flag_amount, :board) returning game_id`,

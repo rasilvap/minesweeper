@@ -40,7 +40,7 @@ func getOne(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	game, err := gameService.GetOneGame(id)
+	game, err := gameService.Get(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -71,7 +71,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	id, err := gameService.CreateGame(gameRequest.Rows, gameRequest.Columns, gameRequest.MineAmount)
+	id, err := gameService.Create(gameRequest.Rows, gameRequest.Columns, gameRequest.MineAmount)
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -110,7 +110,7 @@ func play(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	playResponse, err := gameService.PlayMove(id, playRequest)
+	playResponse, err := gameService.Play(id, playRequest)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
