@@ -1,7 +1,7 @@
 CREATE TABLE games
   (
      game_id     serial PRIMARY KEY,
-     state       TEXT NOT NULL,
+     state       int NOT NULL,
      columns     SMALLINT NOT NULL,
      rows        SMALLINT NOT NULL,
      mine_amount SMALLINT NOT NULL,

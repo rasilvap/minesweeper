@@ -53,6 +53,10 @@ func (s service) GetOneGame(id int) (*model.GameResponse, error) {
 		return nil, err
 	}
 
+	if g.GameId == 0 {
+		return nil, nil
+	}
+
 	return &model.GameResponse{
 			Rows:       g.Rows,
 			Columns:    g.Columns,
@@ -77,7 +81,7 @@ func (s *service) PlayMove(id int, playRequest model.PlayRequest) (*model.PlayRe
 	}
 
 	g := minesweeper.Game{
-		State:      1,
+		State:      minesweeper.StateGame(gameDS.State),
 		Rows:       gameDS.Rows,
 		Columns:    gameDS.Columns,
 		MineAmount: gameDS.MineAmount,
@@ -107,7 +111,7 @@ func buildGameDS(g *minesweeper.Game) (*model.Game, error) {
 	}
 
 	return &model.Game{
-			State:      string(g.State),
+			State:      int(g.State),
 			Columns:    g.Columns,
 			Rows:       g.Rows,
 			MineAmount: g.MineAmount,
