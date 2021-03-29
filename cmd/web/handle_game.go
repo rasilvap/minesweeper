@@ -16,10 +16,23 @@ import (
 //TODO avoid global variables, and avoid interface segregation
 
 var (
-	gameService = engine.NewGameService(
-		datasource.NewMemoryRepository(),
-		engine.NewMinesWeeperService(),
-	)
+	/**
+	ds, _ = datasource.NewDatasourceSQL(model.DbConfig{
+		Server:          "localhost",
+		Port:            5432,
+		User:            "postgres",
+		Password:        "postgres",
+		Database:        "postgres",
+		MaxOpenConn:     100,
+		MaxIdleConn:     50,
+		ConnMaxLifeTime: 0,
+	})
+
+	*/
+
+	ds = datasource.NewDatasourceMemory()
+
+	gameService = engine.NewGameService(ds, engine.NewMinesWeeperService())
 )
 
 func getOne(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +43,7 @@ func getOne(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	game, err := gameService.GetOneGame(id)
+	game, err := gameService.Get(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -61,7 +74,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	id, err := gameService.CreateGame(gameRequest.Rows, gameRequest.Columns, gameRequest.MineAmount)
+	id, err := gameService.Create(gameRequest.Rows, gameRequest.Columns, gameRequest.MineAmount)
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -85,8 +98,6 @@ func create(w http.ResponseWriter, r *http.Request) {
 }
 
 func play(w http.ResponseWriter, r *http.Request) {
-	log.Println("Playing")
-
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -102,7 +113,7 @@ func play(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	playResponse, err := gameService.PlayMove(id, playRequest)
+	playResponse, err := gameService.Play(id, playRequest)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
