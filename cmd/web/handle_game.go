@@ -17,7 +17,7 @@ import (
 
 var (
 	/**
-	ds, _ = datasource.NewDataSource(model.DbConfig{
+	ds, _ = datasource.NewDatasourceSQL(model.DbConfig{
 		Server:          "localhost",
 		Port:            5432,
 		User:            "postgres",
@@ -28,9 +28,9 @@ var (
 		ConnMaxLifeTime: 0,
 	})
 
-	 */
+	*/
 
-	ds = datasource.NewMemory()
+	ds = datasource.NewDatasourceMemory()
 
 	gameService = engine.NewGameService(ds, engine.NewMinesWeeperService())
 )

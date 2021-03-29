@@ -9,12 +9,12 @@ import (
 	"minesweeper-API/minesweeper-service/model"
 )
 
-type Datasource struct {
+type datasourceSQL struct {
 	db *sqlx.DB
 }
 
-// New Datasource creation
-func NewDataSource(config model.DbConfig) (Spec, error) {
+// New datasourceSQL creation
+func NewDatasourceSQL(config model.DbConfig) (Spec, error) {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		config.Server, config.Port, config.User, config.Password, config.Database)
 
@@ -29,12 +29,12 @@ func NewDataSource(config model.DbConfig) (Spec, error) {
 	db.SetMaxIdleConns(config.MaxIdleConn)
 	db.SetConnMaxLifetime(config.ConnMaxLifeTime)
 
-	return &Datasource{
+	return &datasourceSQL{
 		db: db,
 	}, err
 }
 
-func (ds *Datasource) FindGame(id int) (*model.Game, error) {
+func (ds *datasourceSQL) FindGame(id int) (*model.Game, error) {
 	var game model.Game
 	switch err := ds.db.Get(&game, `SELECT * FROM minesweeper.games WHERE game_id = $1`, id); err {
 	case nil, sql.ErrNoRows:
@@ -44,7 +44,7 @@ func (ds *Datasource) FindGame(id int) (*model.Game, error) {
 	}
 }
 
-func (ds *Datasource) InsertGame(g *model.Game) (int, error) {
+func (ds *datasourceSQL) InsertGame(g *model.Game) (int, error) {
 	res, err := ds.db.NamedQuery(
 		`INSERT INTO minesweeper.games (state, columns, rows, mine_amount, flag_amount, board)
  		VALUES (:state, :columns, :rows, :mine_amount, :flag_amount, :board) returning game_id`,
@@ -65,7 +65,7 @@ func (ds *Datasource) InsertGame(g *model.Game) (int, error) {
 	return id, nil
 }
 
-func (ds *Datasource) UpdateGame(g *model.Game) error {
+func (ds *datasourceSQL) UpdateGame(g *model.Game) error {
 	_, err := ds.db.NamedQuery(
 		`UPDATE  minesweeper.games  SET state = :state, 
                                columns = :columns, rows = :rows, mine_amount = :mine_amount, flag_amount = :flag_amount, 
