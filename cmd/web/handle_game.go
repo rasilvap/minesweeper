@@ -32,7 +32,7 @@ var (
 
 	ds = datasource.NewDatasourceMemory()
 
-	gameService = engine.NewGameService(ds, engine.NewMinesWeeperService())
+	gameService = engine.NewGame(ds, engine.NewMinesweeper())
 )
 
 func getOne(w http.ResponseWriter, r *http.Request) {

@@ -26,7 +26,7 @@ func (mock *mockGameRepository) Get(id int) *minesweeper.Game {
 /*
 func TestGetOneGame(t *testing.T) {
 	mockRepo := new(mockGameRepository)
-	engine := NewGameService(mockRepo)
+	engine := NewGame(mockRepo)
 
 	minedPointTile := [][2]int{{1, 1}}
 	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
@@ -44,7 +44,7 @@ func TestGetOneGame(t *testing.T) {
 
 func TestCreateGame(t *testing.T) {
 	mockRepo := new(mockGameRepository)
-	engine := NewGameService(mockRepo)
+	engine := NewGame(mockRepo)
 
 	minedPointTile := [][2]int{{1, 1}}
 	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
