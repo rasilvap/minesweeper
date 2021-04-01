@@ -7,7 +7,7 @@ import (
 	"minesweeper-API/minesweeper-service/model"
 )
 
-func CreateEngine() engine.GameService{
+func CreateEngine() engine.GameService {
 	var ds = createDataSourceSQL()
 	return engine.NewGame(ds, engine.NewMinesweeper())
 }
