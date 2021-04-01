@@ -27,7 +27,7 @@ func getPort() string {
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Println("Using default port :5000")
-		port = ":5001"
+		port = ":5000"
 	} else {
 		port = ":" + port
 		log.Println("Using port ", port)
