@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"log"
-	"minesweeper-API/minesweeper-service/datasource"
 	"minesweeper-API/minesweeper-service/engine"
 	"net/http"
 	"strconv"
@@ -13,29 +12,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-//TODO avoid global variables, and avoid interface segregation
-
-var (
-	/**
-	ds, _ = datasource.NewDatasourceSQL(model.DbConfig{
-		Server:          "localhost",
-		Port:            5432,
-		User:            "postgres",
-		Password:        "postgres",
-		Database:        "postgres",
-		MaxOpenConn:     100,
-		MaxIdleConn:     50,
-		ConnMaxLifeTime: 0,
-	})
-
-	*/
-
-	ds = datasource.NewDatasourceMemory()
-
-	gameService = engine.NewGame(ds, engine.NewMinesweeper())
-)
-
-func getOne(w http.ResponseWriter, r *http.Request) {
+func getOne(gameService engine.GameService, w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -66,7 +43,7 @@ func getOne(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func create(w http.ResponseWriter, r *http.Request) {
+func create(gameService engine.GameService, w http.ResponseWriter, r *http.Request) {
 	var gameRequest model.GameRequest
 	err := json.NewDecoder(r.Body).Decode(&gameRequest)
 	if err != nil {
@@ -97,7 +74,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func play(w http.ResponseWriter, r *http.Request) {
+func play(gameService engine.GameService, w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {

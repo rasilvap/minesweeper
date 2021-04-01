@@ -1,7 +1,9 @@
 package main
 
 import (
+	"github.com/gorilla/mux"
 	"log"
+	"minesweeper-API/minesweeper-service/container"
 	"net/http"
 	"os"
 
@@ -10,18 +12,22 @@ import (
 )
 
 func main() {
-	port := getPort()
+	e := container.CreateEngine()
+	r := createServer()
+	setupRoutes(r, e)
+	p := getPort()
+	log.Fatal(http.ListenAndServe(p, r))
+}
 
-	router := setupRoutes()
-
-	log.Fatal(http.ListenAndServe(port, router))
+func createServer() *mux.Router {
+	return mux.NewRouter()
 }
 
 func getPort() string {
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Println("Using default port :5000")
-		port = ":5000"
+		port = ":5001"
 	} else {
 		port = ":" + port
 		log.Println("Using port ", port)
