@@ -7,22 +7,13 @@ import (
 	"minesweeper-API/minesweeper-service/model"
 )
 
-func CreateEngine() engine.GameService {
-	var ds = createDataSourceSQL()
+func CreateEngine(c model.Config) engine.GameService {
+	var ds = createDataSourceSQL(c.Database)
 	return engine.NewGame(ds, engine.NewMinesweeper())
 }
 
-func createDataSourceSQL() datasource.Spec {
-	ds, err := datasource.NewDatasourceSQL(model.DbConfig{
-		Server:          "localhost",
-		Port:            5432,
-		User:            "postgres",
-		Password:        "postgres",
-		Database:        "postgres",
-		MaxOpenConn:     100,
-		MaxIdleConn:     50,
-		ConnMaxLifeTime: 0,
-	})
+func createDataSourceSQL(c model.DbConfig) datasource.Spec {
+	ds, err := datasource.NewDatasourceSQL(c)
 
 	if err != nil {
 		panic(fmt.Sprintf("can't start DatasourceSQL: %v", err))
