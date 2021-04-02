@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
@@ -13,7 +14,11 @@ import (
 )
 
 func main() {
-	c := config.BuildConfig("dev")
+	env := flag.String("env", "dev", "Execution environment")
+	flag.Parse()
+	log.Printf("Starting application server - %s", *env)
+
+	c := config.BuildConfig(*env)
 	e := container.CreateEngine(c)
 	r := createServer()
 	setupRoutes(r, e)

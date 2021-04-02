@@ -1,6 +1,6 @@
 {
   "server": {
-    "port": 8000
+    "port": 5000
   },
   "db": {
     "server": "localhost",

@@ -22,5 +22,5 @@ type DbConfig struct {
 
 // Config representation
 type ServerConfig struct {
-	Port    int    `json:"port"`
+	Port int `json:"port"`
 }
