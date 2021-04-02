@@ -14,7 +14,6 @@ func CreateEngine(c model.Config) engine.GameService {
 
 func createDataSourceSQL(c model.DbConfig) datasource.Spec {
 	ds, err := datasource.NewDatasourceSQL(c)
-
 	if err != nil {
 		panic(fmt.Sprintf("can't start DatasourceSQL: %v", err))
 	}
