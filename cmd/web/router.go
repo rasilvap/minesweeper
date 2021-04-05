@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
 	"minesweeper-API/engine"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func setupRoutes(router *mux.Router, e engine.Game) {

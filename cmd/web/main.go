@@ -3,14 +3,15 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/gorilla/mux"
-	_ "github.com/lib/pq"
-	_ "github.com/pdrum/swagger-automation/docs" // This line is necessary for go-swagger to find your docs!
 	"log"
 	"minesweeper-API/config"
 	"minesweeper-API/container"
 	"minesweeper-API/model"
 	"net/http"
+
+	"github.com/gorilla/mux"
+	_ "github.com/lib/pq"
+	_ "github.com/pdrum/swagger-automation/docs" // This line is necessary for go-swagger to find your docs!
 )
 
 func main() {

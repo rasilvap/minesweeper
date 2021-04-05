@@ -4,10 +4,9 @@ import (
 	"encoding/json"
 	"log"
 	"minesweeper-API/engine"
+	"minesweeper-API/model"
 	"net/http"
 	"strconv"
-
-	"minesweeper-API/model"
 
 	"github.com/gorilla/mux"
 )

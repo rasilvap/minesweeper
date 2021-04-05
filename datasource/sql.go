@@ -3,8 +3,9 @@ package datasource
 import (
 	"database/sql"
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	"minesweeper-API/model"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type datasourceSQL struct {
