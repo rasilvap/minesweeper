@@ -8,25 +8,25 @@ import (
 	"minesweeper-API/minesweeper-service/model"
 )
 
-type GameService interface {
+type Game interface {
 	Create(rows, columns, mineAmount int) (int, error)
 	Play(id int, playRequest model.PlayRequest) (*model.PlayResponse, error)
 	Get(id int) (*model.GameResponse, error)
 }
 
-type service struct {
+type game struct {
 	gameDS      datasource.Spec
-	minesWeeper MinesWeeperService
+	minesWeeper MinesWeeper
 }
 
-func NewGame(gameDSImp datasource.Spec, minesWeeperService MinesWeeperService) GameService {
-	return &service{
+func NewGame(gameDSImp datasource.Spec, minesWeeperService MinesWeeper) Game {
+	return &game{
 		gameDS:      gameDSImp,
 		minesWeeper: minesWeeperService,
 	}
 }
 
-func (s service) Create(rows, columns, mineAmount int) (int, error) {
+func (s game) Create(rows, columns, mineAmount int) (int, error) {
 	game, err := s.minesWeeper.BuildGame(rows, columns, mineAmount)
 	if err != nil {
 		log.Printf("Error building game, err: %v", err)
@@ -42,7 +42,7 @@ func (s service) Create(rows, columns, mineAmount int) (int, error) {
 	return id, nil
 }
 
-func (s service) Get(id int) (*model.GameResponse, error) {
+func (s game) Get(id int) (*model.GameResponse, error) {
 	g, err := s.gameDS.FindGame(id)
 	if err != nil {
 		log.Printf("Error finding game: %d, err: %v", id, err)
@@ -61,7 +61,7 @@ func (s service) Get(id int) (*model.GameResponse, error) {
 		nil
 }
 
-func (s *service) Play(id int, playRequest model.PlayRequest) (*model.PlayResponse, error) {
+func (s *game) Play(id int, playRequest model.PlayRequest) (*model.PlayResponse, error) {
 	log.Println("Playing game", playRequest)
 	game, err := s.gameDS.FindGame(id)
 	if err != nil {

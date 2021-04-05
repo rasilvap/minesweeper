@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func setupRoutes(router *mux.Router, e engine.GameService) {
+func setupRoutes(router *mux.Router, e engine.Game) {
 	router.HandleFunc("/", handleHealth).Methods(http.MethodGet)
 
 	router.HandleFunc("/v1/games/{id:[0-9]+}",

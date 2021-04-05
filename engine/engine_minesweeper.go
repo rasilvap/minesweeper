@@ -7,18 +7,18 @@ import (
 	"github.com/obarra-dev/minesweeper"
 )
 
-type MinesWeeperService interface {
+type MinesWeeper interface {
 	BuildGame(rows, columns, mineAmount int) (*model.Game, error)
 	Play(playRequest model.PlayRequest, game *model.Game) (*model.Game, *model.PlayResponse, error)
 }
 
-type minesWeeperService struct{}
+type minesWeeper struct{}
 
-func NewMinesweeper() MinesWeeperService {
-	return &minesWeeperService{}
+func NewMinesweeper() MinesWeeper {
+	return &minesWeeper{}
 }
 
-func (*minesWeeperService) BuildGame(rows, columns, mineAmount int) (*model.Game, error) {
+func (*minesWeeper) BuildGame(rows, columns, mineAmount int) (*model.Game, error) {
 	mines := minesweeper.GenerateMinedPoints(rows, columns, mineAmount)
 	minesweeper := minesweeper.NewMinesweeper(rows, columns, mines)
 	gameDS, err := buildGameDS(minesweeper)
@@ -28,7 +28,7 @@ func (*minesWeeperService) BuildGame(rows, columns, mineAmount int) (*model.Game
 	return gameDS, nil
 }
 
-func (*minesWeeperService) Play(playRequest model.PlayRequest, game *model.Game) (*model.Game, *model.PlayResponse, error) {
+func (*minesWeeper) Play(playRequest model.PlayRequest, game *model.Game) (*model.Game, *model.PlayResponse, error) {
 	var board [][]minesweeper.Tile
 	err := json.Unmarshal([]byte(game.Board), &board)
 	if err != nil {
