@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/jmoiron/sqlx"
-	"minesweeper-API/minesweeper-service/model"
+	"minesweeper-API/model"
 )
 
 type datasourceSQL struct {

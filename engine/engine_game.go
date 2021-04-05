@@ -3,9 +3,9 @@ package engine
 import (
 	"log"
 
-	"minesweeper-API/minesweeper-service/datasource"
+	"minesweeper-API/datasource"
 
-	"minesweeper-API/minesweeper-service/model"
+	"minesweeper-API/model"
 )
 
 type Game interface {

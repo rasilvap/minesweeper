@@ -2,7 +2,7 @@ package engine
 
 import (
 	"encoding/json"
-	"minesweeper-API/minesweeper-service/model"
+	"minesweeper-API/model"
 
 	"github.com/obarra-dev/minesweeper"
 )

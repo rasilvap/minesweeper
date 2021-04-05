@@ -1,7 +1,7 @@
 package datasource
 
 import (
-	"minesweeper-API/minesweeper-service/model"
+	"minesweeper-API/model"
 )
 
 type Spec interface {

@@ -24,7 +24,7 @@ definitions:
         type: integer
         x-go-name: Rows
     type: object
-    x-go-package: minesweeper-API/minesweeper-service/model
+    x-go-package: minesweeper-API/model
   GameRequest:
     properties:
       columns:
@@ -41,7 +41,7 @@ definitions:
         x-go-name: Rows
     title: 'GameRequest : ...'
     type: object
-    x-go-package: minesweeper-API/minesweeper-service/model
+    x-go-package: minesweeper-API/model
   GameResponse:
     properties:
       columns:
@@ -58,7 +58,7 @@ definitions:
         x-go-name: Rows
     title: 'GameResponse : ...'
     type: object
-    x-go-package: minesweeper-API/minesweeper-service/model
+    x-go-package: minesweeper-API/model
   GameSimpleResponse:
     properties:
       id:
@@ -67,7 +67,7 @@ definitions:
         x-go-name: Id
     title: 'GameResponse : ...'
     type: object
-    x-go-package: minesweeper-API/minesweeper-service/model
+    x-go-package: minesweeper-API/model
   MarkRequest:
     properties:
       column:
@@ -83,7 +83,7 @@ definitions:
         x-go-name: Row
     title: 'MarkRequest : ...'
     type: object
-    x-go-package: minesweeper-API/minesweeper-service/model
+    x-go-package: minesweeper-API/model
   PlayRequest:
     properties:
       column:
@@ -96,7 +96,7 @@ definitions:
         x-go-name: Row
     title: 'PlayRequest : ...'
     type: object
-    x-go-package: minesweeper-API/minesweeper-service/model
+    x-go-package: minesweeper-API/model
   PlayResponse:
     properties:
       game:
@@ -106,7 +106,7 @@ definitions:
         x-go-name: StateGame
     title: 'PlayResponse : ...'
     type: object
-    x-go-package: minesweeper-API/minesweeper-service/model
+    x-go-package: minesweeper-API/model
   TileDTO:
     properties:
       column:
@@ -132,7 +132,7 @@ definitions:
         type: integer
         x-go-name: ValueTest
     type: object
-    x-go-package: minesweeper-API/minesweeper-service/model
+    x-go-package: minesweeper-API/model
 host: minesweeper-service-ob.herokuapp.com
 info:
   description: The purpose of this API is to provide a Rest Api for game Minesweeper. It is developed in Golang.

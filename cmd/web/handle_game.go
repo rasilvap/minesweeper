@@ -3,11 +3,11 @@ package main
 import (
 	"encoding/json"
 	"log"
-	"minesweeper-API/minesweeper-service/engine"
+	"minesweeper-API/engine"
 	"net/http"
 	"strconv"
 
-	"minesweeper-API/minesweeper-service/model"
+	"minesweeper-API/model"
 
 	"github.com/gorilla/mux"
 )

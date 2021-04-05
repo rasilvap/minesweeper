@@ -2,9 +2,9 @@ package container
 
 import (
 	"fmt"
-	"minesweeper-API/minesweeper-service/datasource"
-	"minesweeper-API/minesweeper-service/engine"
-	"minesweeper-API/minesweeper-service/model"
+	"minesweeper-API/datasource"
+	"minesweeper-API/engine"
+	"minesweeper-API/model"
 )
 
 func CreateEngine(c model.Config) engine.Game {

@@ -3,7 +3,7 @@ package config
 import (
 	"encoding/json"
 	"fmt"
-	"minesweeper-API/minesweeper-service/model"
+	"minesweeper-API/model"
 	"os"
 )
 

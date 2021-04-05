@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gorilla/mux"
-	"minesweeper-API/minesweeper-service/engine"
+	"minesweeper-API/engine"
 	"net/http"
 )
 

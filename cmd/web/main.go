@@ -7,9 +7,9 @@ import (
 	_ "github.com/lib/pq"
 	_ "github.com/pdrum/swagger-automation/docs" // This line is necessary for go-swagger to find your docs!
 	"log"
-	"minesweeper-API/minesweeper-service/config"
-	"minesweeper-API/minesweeper-service/container"
-	"minesweeper-API/minesweeper-service/model"
+	"minesweeper-API/config"
+	"minesweeper-API/container"
+	"minesweeper-API/model"
 	"net/http"
 )
 
