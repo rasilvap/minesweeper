@@ -15,9 +15,9 @@ type DbConfig struct {
 	User            string        `json:"user"`
 	Password        string        `json:"password"`
 	Database        string        `json:"database"`
-	MaxOpenConn     int           `json:"-"`
-	MaxIdleConn     int           `json:"-"`
-	ConnMaxLifeTime time.Duration `json:"-"`
+	MaxOpenConn     int           `json:"maxOpenConnections"`
+	MaxIdleConn     int           `json:"maxIdleConnections"`
+	ConnMaxLifeTime time.Duration `json:"connectionMaxLifetime"`
 }
 
 // Config representation
