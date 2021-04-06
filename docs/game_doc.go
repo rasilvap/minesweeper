@@ -1,7 +1,7 @@
 package docs
 
 import (
-	"minesweeper-API/minesweeper-service/model"
+	"minesweeper-API/model"
 )
 
 // swagger:route GET /games/{id} games getGameEndpoint

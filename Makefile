@@ -24,3 +24,7 @@ lint:  check_format go_lint vet
 build:
 	go build -o ${BINARY} ./cmd/web/*.go
 
+web:
+	@clear
+	go build -o ${BINARY} cmd/web/*.go
+	./${BINARY} -env live

@@ -1,0 +1,15 @@
+{
+  "server": {
+    "port": 5000
+  },
+  "db": {
+    "server": "localhost",
+    "port": 5432,
+    "user": "postgres",
+    "password": "postgres",
+    "database": "postgres",
+    "maxOpenConnections":  100,
+    "maxIdleConnections": 50,
+    "connectionMaxLifetime": 0
+  }
+}

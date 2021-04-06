@@ -1,43 +1,39 @@
 package engine
 
 import (
-	"encoding/json"
 	"log"
 
-	"minesweeper-API/minesweeper-service/datasource"
+	"minesweeper-API/datasource"
 
-	"minesweeper-API/minesweeper-service/model"
-
-	"github.com/obarra-dev/minesweeper"
+	"minesweeper-API/model"
 )
 
-type GameService interface {
+type Game interface {
 	Create(rows, columns, mineAmount int) (int, error)
 	Play(id int, playRequest model.PlayRequest) (*model.PlayResponse, error)
 	Get(id int) (*model.GameResponse, error)
 }
 
-type service struct {
+type game struct {
 	gameDS      datasource.Spec
-	minesWeeper MinesWeeperService
+	minesWeeper MinesWeeper
 }
 
-func NewGameService(gameDSImp datasource.Spec, minesWeeperService MinesWeeperService) GameService {
-	return &service{
+func NewGame(gameDSImp datasource.Spec, minesWeeperService MinesWeeper) Game {
+	return &game{
 		gameDS:      gameDSImp,
 		minesWeeper: minesWeeperService,
 	}
 }
 
-func (s service) Create(rows, columns, mineAmount int) (int, error) {
-	g := s.minesWeeper.BuildGame(rows, columns, mineAmount)
-	gameDS, err := buildGameDS(g)
+func (s game) Create(rows, columns, mineAmount int) (int, error) {
+	game, err := s.minesWeeper.BuildGame(rows, columns, mineAmount)
 	if err != nil {
-		log.Printf("Error marshing board, err: %v", err)
+		log.Printf("Error building game, err: %v", err)
 		return 0, err
 	}
 
-	id, err := s.gameDS.InsertGame(gameDS)
+	id, err := s.gameDS.InsertGame(game)
 	if err != nil {
 		log.Printf("Error creating game, err: %v", err)
 		return 0, err
@@ -46,7 +42,7 @@ func (s service) Create(rows, columns, mineAmount int) (int, error) {
 	return id, nil
 }
 
-func (s service) Get(id int) (*model.GameResponse, error) {
+func (s game) Get(id int) (*model.GameResponse, error) {
 	g, err := s.gameDS.FindGame(id)
 	if err != nil {
 		log.Printf("Error finding game: %d, err: %v", id, err)
@@ -65,102 +61,21 @@ func (s service) Get(id int) (*model.GameResponse, error) {
 		nil
 }
 
-func (s *service) Play(id int, playRequest model.PlayRequest) (*model.PlayResponse, error) {
+func (s *game) Play(id int, playRequest model.PlayRequest) (*model.PlayResponse, error) {
 	log.Println("Playing game", playRequest)
-	gameDS, err := s.gameDS.FindGame(id)
+	game, err := s.gameDS.FindGame(id)
 	if err != nil {
 		log.Printf("Error finding g: %d, err: %v", id, err)
 		return nil, err
 	}
 
-	var board [][]minesweeper.Tile
-	err = json.Unmarshal([]byte(gameDS.Board), &board)
+	gameDS, playResponse, err := s.minesWeeper.Play(playRequest, game)
 	if err != nil {
-		log.Printf("Error unmarshaling board, err: %v", err)
-		return nil, err
-	}
-
-	g := minesweeper.Game{
-		State:      minesweeper.StateGame(gameDS.State),
-		Rows:       gameDS.Rows,
-		Columns:    gameDS.Columns,
-		MineAmount: gameDS.MineAmount,
-		FlagAmount: gameDS.FlagAmount,
-		Board:      board,
-	}
-
-	visibleGame := s.minesWeeper.Play(playRequest, &g)
-
-	gameDS, err = buildGameDS(&visibleGame)
-	if err != nil {
-		log.Printf("Error marshing board, err: %v", err)
+		log.Printf("Error playing game: %d, err: %v", id, err)
 		return nil, err
 	}
 
 	s.gameDS.UpdateGame(gameDS)
 
-	log.Println("show: ", visibleGame)
-	playResponse := buildPlayResponse(visibleGame)
-	return &playResponse, nil
-}
-
-func buildGameDS(g *minesweeper.Game) (*model.Game, error) {
-	j, err := json.Marshal(g.Board)
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.Game{
-			State:      int(g.State),
-			Columns:    g.Columns,
-			Rows:       g.Rows,
-			MineAmount: g.MineAmount,
-			FlagAmount: g.FlagAmount,
-			Board:      string(j),
-		},
-		nil
-}
-
-func buildPlayResponse(game minesweeper.Game) model.PlayResponse {
-	gameStateDTO := mapStateGame(game.State)
-	row := len(game.Board)
-	if row == 0 {
-		return model.PlayResponse{
-			StateGame: gameStateDTO,
-			Game: model.GameDTO{Board: [][]model.TileDTO{},
-				Rows:       game.Rows,
-				Columns:    game.Columns,
-				FlagAmount: game.FlagAmount,
-			},
-		}
-	}
-
-	boardDTO := make([][]model.TileDTO, row)
-	for i := 0; i < row; i++ {
-		column := len(game.Board[i])
-		boardDTO[i] = make([]model.TileDTO, column)
-
-		for j := 0; j < column; j++ {
-			board := game.Board[i][j]
-			tileStateDTO := mapTileState(board.State)
-			boardDTO[i][j] = model.TileDTO{
-				State:                tileStateDTO,
-				Row:                  board.Row,
-				Column:               board.Column,
-				SurroundingMineCount: board.SurroundingMineCount,
-				Mine:                 board.IsMine,
-
-				ValueTest: -1}
-		}
-	}
-
-	return model.PlayResponse{
-		StateGame: gameStateDTO,
-		Game: model.GameDTO{
-			Board:      boardDTO,
-			Rows:       game.Rows,
-			Columns:    game.Columns,
-			FlagAmount: game.FlagAmount,
-		},
-	}
+	return playResponse, nil
 }

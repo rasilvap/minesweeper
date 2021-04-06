@@ -12,4 +12,4 @@ RUN go build
 
 FROM scratch
 COPY --from=builder /Users/Usuario/all-repos/minesweeper-API .
-ENTRYPOINT [ "./minesweeper-service" ]
+ENTRYPOINT [ "." ]

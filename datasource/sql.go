@@ -3,9 +3,9 @@ package datasource
 import (
 	"database/sql"
 	"fmt"
+	"minesweeper-API/model"
+
 	"github.com/jmoiron/sqlx"
-	"log"
-	"minesweeper-API/minesweeper-service/model"
 )
 
 type datasourceSQL struct {
@@ -18,9 +18,7 @@ func NewDatasourceSQL(config model.DbConfig) (Spec, error) {
 		config.Server, config.Port, config.User, config.Password, config.Database)
 
 	db, err := sqlx.Connect("postgres", psqlInfo)
-
 	if err != nil {
-		log.Fatal("omar", err)
 		return nil, err
 	}
 
@@ -30,7 +28,7 @@ func NewDatasourceSQL(config model.DbConfig) (Spec, error) {
 
 	return &datasourceSQL{
 		db: db,
-	}, err
+	}, nil
 }
 
 func (ds *datasourceSQL) FindGame(id int) (*model.Game, error) {

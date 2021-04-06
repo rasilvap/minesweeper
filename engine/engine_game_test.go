@@ -26,14 +26,14 @@ func (mock *mockGameRepository) Get(id int) *minesweeper.Game {
 /*
 func TestGetOneGame(t *testing.T) {
 	mockRepo := new(mockGameRepository)
-	engine := NewGameService(mockRepo)
+	game := NewGame(mockRepo)
 
 	minedPointTile := [][2]int{{1, 1}}
 	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
 	id := 1
 	mockRepo.On("Get", id).Return(game)
 
-	result, _ := engine.Get(id)
+	result, _ := game.Get(id)
 
 	//Mock assertion: Behavioral
 	mockRepo.AssertExpectations(t)
@@ -44,14 +44,14 @@ func TestGetOneGame(t *testing.T) {
 
 func TestCreateGame(t *testing.T) {
 	mockRepo := new(mockGameRepository)
-	engine := NewGameService(mockRepo)
+	game := NewGame(mockRepo)
 
 	minedPointTile := [][2]int{{1, 1}}
 	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
 	id := 1
 	mockRepo.On("Save", game).Return(id)
 
-	result, _ := engine.Create(3, 3, 1)
+	result, _ := game.Create(3, 3, 1)
 
 	//Mock assertion: Behavioral
 	mockRepo.AssertExpectations(t)
