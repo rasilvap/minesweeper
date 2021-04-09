@@ -7,7 +7,6 @@ import (
 	"github.com/obarra-dev/minesweeper"
 )
 
-
 type minesWeeper struct{}
 
 func NewMinesweeper() MinesWeeper {
