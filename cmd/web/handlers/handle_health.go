@@ -1,11 +1,11 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
 	"net/http"
 )
 
-func handleHealth(w http.ResponseWriter, r *http.Request) {
+func HandleHealth(w http.ResponseWriter, r *http.Request) {
 	js, err := json.Marshal(map[string]interface{}{
 		"name": "minesweeperAPI",
 		"info": "It is ok",

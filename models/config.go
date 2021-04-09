@@ -1,7 +1,8 @@
-package model
+package models
 
 import "time"
 
+// TODO set version with commit
 type Config struct {
 	Env      string       `json:"-"`
 	Version  string       `json:"string"`

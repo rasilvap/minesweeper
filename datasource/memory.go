@@ -1,32 +1,20 @@
 package datasource
 
 import (
-	"minesweeper-API/model"
-	"sync"
+	"minesweeper-API/models"
 )
 
-type datasourceMemory struct {
-	sync.RWMutex
-	cache map[int]interface{}
-}
-
-func NewDatasourceMemory() Spec {
-	return &datasourceMemory{
-		cache: make(map[int]interface{}),
-	}
-}
-
 //TODO deberia retornar una copia? si retorna un puntero puede dar problemas de concurrencia?
-func (ds *datasourceMemory) FindGame(id int) (*model.Game, error) {
+func (ds datasourceMemory) Find(id int) (*models.Game, error) {
 	ds.RLock()
 	defer ds.RUnlock()
 	if game, ok := ds.cache[id]; ok {
-		return game.(*model.Game), nil
+		return game.(*models.Game), nil
 	}
-	return &model.Game{}, nil
+	return &models.Game{}, nil
 }
 
-func (ds *datasourceMemory) InsertGame(game *model.Game) (int, error) {
+func (ds datasourceMemory) Insert(game *models.Game) (int, error) {
 	ds.Lock()
 	game.GameId = len(ds.cache) + 1
 	ds.cache[game.GameId] = game
@@ -34,7 +22,7 @@ func (ds *datasourceMemory) InsertGame(game *model.Game) (int, error) {
 	return game.GameId, nil
 }
 
-func (ds *datasourceMemory) UpdateGame(g *model.Game) error {
-	_, _ = ds.InsertGame(g)
+func (ds datasourceMemory) Update(g *models.Game) error {
+	_, _ = ds.Insert(g)
 	return nil
 }

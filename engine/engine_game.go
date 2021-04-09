@@ -5,35 +5,30 @@ import (
 
 	"minesweeper-API/datasource"
 
-	"minesweeper-API/model"
+	"minesweeper-API/models"
 )
 
-type Game interface {
-	Create(rows, columns, mineAmount int) (int, error)
-	Play(id int, playRequest model.PlayRequest) (*model.PlayResponse, error)
-	Get(id int) (*model.GameResponse, error)
-}
-
 type game struct {
-	gameDS      datasource.Spec
-	minesWeeper MinesWeeper
+	gameDS            datasource.Game
+	minesWeeperEngine MinesWeeper
 }
 
-func NewGame(gameDSImp datasource.Spec, minesWeeperService MinesWeeper) Game {
-	return &game{
-		gameDS:      gameDSImp,
-		minesWeeper: minesWeeperService,
+//TODO validate with pprof this with pointer
+func NewGame(gameDS datasource.Game, minesWeeperEngine MinesWeeper) Game {
+	return game{
+		gameDS:            gameDS,
+		minesWeeperEngine: minesWeeperEngine,
 	}
 }
 
-func (s game) Create(rows, columns, mineAmount int) (int, error) {
-	game, err := s.minesWeeper.BuildGame(rows, columns, mineAmount)
+func (e game) Create(rows, columns, mineAmount int) (int, error) {
+	g, err := e.minesWeeperEngine.BuildGame(rows, columns, mineAmount)
 	if err != nil {
 		log.Printf("Error building game, err: %v", err)
 		return 0, err
 	}
 
-	id, err := s.gameDS.InsertGame(game)
+	id, err := e.gameDS.Insert(g)
 	if err != nil {
 		log.Printf("Error creating game, err: %v", err)
 		return 0, err
@@ -42,8 +37,8 @@ func (s game) Create(rows, columns, mineAmount int) (int, error) {
 	return id, nil
 }
 
-func (s game) Get(id int) (*model.GameResponse, error) {
-	g, err := s.gameDS.FindGame(id)
+func (e game) Get(id int) (*models.GameResponse, error) {
+	g, err := e.gameDS.Find(id)
 	if err != nil {
 		log.Printf("Error finding game: %d, err: %v", id, err)
 		return nil, err
@@ -53,7 +48,7 @@ func (s game) Get(id int) (*model.GameResponse, error) {
 		return nil, nil
 	}
 
-	return &model.GameResponse{
+	return &models.GameResponse{
 			Rows:       g.Rows,
 			Columns:    g.Columns,
 			MineAmount: g.MineAmount,
@@ -61,21 +56,21 @@ func (s game) Get(id int) (*model.GameResponse, error) {
 		nil
 }
 
-func (s *game) Play(id int, playRequest model.PlayRequest) (*model.PlayResponse, error) {
+func (e game) Play(id int, playRequest models.PlayRequest) (*models.PlayResponse, error) {
 	log.Println("Playing game", playRequest)
-	game, err := s.gameDS.FindGame(id)
+	g, err := e.gameDS.Find(id)
 	if err != nil {
 		log.Printf("Error finding g: %d, err: %v", id, err)
 		return nil, err
 	}
 
-	gameDS, playResponse, err := s.minesWeeper.Play(playRequest, game)
+	gameDS, playResponse, err := e.minesWeeperEngine.Play(playRequest, g)
 	if err != nil {
 		log.Printf("Error playing game: %d, err: %v", id, err)
 		return nil, err
 	}
 
-	s.gameDS.UpdateGame(gameDS)
+	e.gameDS.Update(gameDS)
 
 	return playResponse, nil
 }

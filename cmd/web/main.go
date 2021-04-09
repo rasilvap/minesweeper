@@ -6,7 +6,7 @@ import (
 	"log"
 	"minesweeper-API/config"
 	"minesweeper-API/container"
-	"minesweeper-API/model"
+	"minesweeper-API/models"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -19,19 +19,19 @@ func main() {
 	flag.Parse()
 	log.Printf("Starting application server - %s", *env)
 
-	c := config.BuildConfig(*env)
-	e := container.CreateEngine(c)
-	r := createServer()
-	setupRoutes(r, e)
+	cfg := config.BuildConfig(*env)
+	c := container.New(cfg)
 
-	log.Fatal(http.ListenAndServe(getPort(c.Server), r))
+	r := createServer()
+	setupRoutes(r, c.GameHandler)
+	log.Fatal(http.ListenAndServe(getPort(cfg.Server), r))
 }
 
 func createServer() *mux.Router {
 	return mux.NewRouter()
 }
 
-func getPort(c model.ServerConfig) string {
+func getPort(c models.ServerConfig) string {
 	log.Println("Using port ", c.Port)
 	return fmt.Sprintf(":%d", c.Port)
 }

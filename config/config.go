@@ -3,12 +3,12 @@ package config
 import (
 	"encoding/json"
 	"fmt"
-	"minesweeper-API/model"
+	"minesweeper-API/models"
 	"os"
 )
 
-func BuildConfig(env string) model.Config {
-	var c model.Config
+func BuildConfig(env string) models.Config {
+	var c models.Config
 	err := readEnvJSON(env, &c)
 	if err != nil {
 		panic(fmt.Sprintf("can't read config: %v", err))

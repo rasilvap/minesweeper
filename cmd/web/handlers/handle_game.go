@@ -1,17 +1,25 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
 	"log"
 	"minesweeper-API/engine"
-	"minesweeper-API/model"
+	"minesweeper-API/models"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
 )
 
-func getOne(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
+type game struct {
+	gameEngine engine.Game
+}
+
+func NewGame(gameEngine engine.Game) Game {
+	return game{gameEngine: gameEngine}
+}
+
+func (h game) Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -19,16 +27,16 @@ func getOne(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	game, err := gameService.Get(id)
+	g, err := h.gameEngine.Get(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	if game == nil {
+	if g == nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	j, err := json.Marshal(game)
+	j, err := json.Marshal(g)
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -42,22 +50,22 @@ func getOne(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func create(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
-	var gameRequest model.GameRequest
+func (h game) Create(w http.ResponseWriter, r *http.Request) {
+	var gameRequest models.GameRequest
 	err := json.NewDecoder(r.Body).Decode(&gameRequest)
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	id, err := gameService.Create(gameRequest.Rows, gameRequest.Columns, gameRequest.MineAmount)
+	id, err := h.gameEngine.Create(gameRequest.Rows, gameRequest.Columns, gameRequest.MineAmount)
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	j, err := json.Marshal(model.GameSimpleResponse{GameId: id})
+	j, err := json.Marshal(models.GameSimpleResponse{GameId: id})
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -73,7 +81,7 @@ func create(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func play(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
+func (h game) Play(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -81,7 +89,7 @@ func play(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var playRequest model.PlayRequest
+	var playRequest models.PlayRequest
 	err = json.NewDecoder(r.Body).Decode(&playRequest)
 	if err != nil {
 		log.Print(err)
@@ -89,7 +97,7 @@ func play(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	playResponse, err := gameService.Play(id, playRequest)
+	playResponse, err := h.gameEngine.Play(id, playRequest)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
