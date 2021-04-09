@@ -15,12 +15,12 @@ type Game interface {
 }
 
 type game struct {
-	gameDS            datasource.Spec
+	gameDS            datasource.Game
 	minesWeeperEngine MinesWeeper
 }
 
 //TODO validate with pprof this with pointer
-func NewGame(gameDS datasource.Spec, minesWeeperEngine MinesWeeper) Game {
+func NewGame(gameDS datasource.Game, minesWeeperEngine MinesWeeper) Game {
 	return game{
 		gameDS:            gameDS,
 		minesWeeperEngine: minesWeeperEngine,
@@ -34,7 +34,7 @@ func (e game) Create(rows, columns, mineAmount int) (int, error) {
 		return 0, err
 	}
 
-	id, err := e.gameDS.InsertGame(g)
+	id, err := e.gameDS.Insert(g)
 	if err != nil {
 		log.Printf("Error creating game, err: %v", err)
 		return 0, err
@@ -44,7 +44,7 @@ func (e game) Create(rows, columns, mineAmount int) (int, error) {
 }
 
 func (e game) Get(id int) (*models.GameResponse, error) {
-	g, err := e.gameDS.FindGame(id)
+	g, err := e.gameDS.Find(id)
 	if err != nil {
 		log.Printf("Error finding game: %d, err: %v", id, err)
 		return nil, err
@@ -64,7 +64,7 @@ func (e game) Get(id int) (*models.GameResponse, error) {
 
 func (e game) Play(id int, playRequest models.PlayRequest) (*models.PlayResponse, error) {
 	log.Println("Playing game", playRequest)
-	g, err := e.gameDS.FindGame(id)
+	g, err := e.gameDS.Find(id)
 	if err != nil {
 		log.Printf("Error finding g: %d, err: %v", id, err)
 		return nil, err
@@ -76,7 +76,7 @@ func (e game) Play(id int, playRequest models.PlayRequest) (*models.PlayResponse
 		return nil, err
 	}
 
-	e.gameDS.UpdateGame(gameDS)
+	e.gameDS.Update(gameDS)
 
 	return playResponse, nil
 }
