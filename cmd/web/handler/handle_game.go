@@ -21,11 +21,11 @@ type gameHandler struct {
 	gameEngine engine.Game
 }
 
-func NewGameHandler(gameEngine engine.Game)  GameHandler {
+func NewGameHandler(gameEngine engine.Game) GameHandler {
 	return gameHandler{gameEngine: gameEngine}
 }
 
-func (h gameHandler)Get(w http.ResponseWriter, r *http.Request) {
+func (h gameHandler) Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -56,7 +56,7 @@ func (h gameHandler)Get(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h gameHandler)Create(w http.ResponseWriter, r *http.Request) {
+func (h gameHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var gameRequest model.GameRequest
 	err := json.NewDecoder(r.Body).Decode(&gameRequest)
 	if err != nil {
@@ -87,7 +87,7 @@ func (h gameHandler)Create(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h gameHandler)Play(w http.ResponseWriter, r *http.Request) {
+func (h gameHandler) Play(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
