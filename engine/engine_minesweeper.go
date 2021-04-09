@@ -7,10 +7,6 @@ import (
 	"github.com/obarra-dev/minesweeper"
 )
 
-type MinesWeeper interface {
-	BuildGame(rows, columns, mineAmount int) (*models.Game, error)
-	Play(playRequest models.PlayRequest, game *models.Game) (*models.Game, *models.PlayResponse, error)
-}
 
 type minesWeeper struct{}
 

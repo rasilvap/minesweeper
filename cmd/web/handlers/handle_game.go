@@ -11,12 +11,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type Game interface {
-	Get(w http.ResponseWriter, r *http.Request)
-	Create(w http.ResponseWriter, r *http.Request)
-	Play(w http.ResponseWriter, r *http.Request)
-}
-
 type game struct {
 	gameEngine engine.Game
 }

@@ -19,12 +19,12 @@ func main() {
 	flag.Parse()
 	log.Printf("Starting application server - %s", *env)
 
-	c := config.BuildConfig(*env)
-	h := container.CreateHandler(c)
-	r := createServer()
-	setupRoutes(r, h)
+	cfg := config.BuildConfig(*env)
+	c := container.New(cfg)
 
-	log.Fatal(http.ListenAndServe(getPort(c.Server), r))
+	r := createServer()
+	setupRoutes(r, c.GameHandler)
+	log.Fatal(http.ListenAndServe(getPort(cfg.Server), r))
 }
 
 func createServer() *mux.Router {

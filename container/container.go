@@ -8,11 +8,20 @@ import (
 	"minesweeper-API/models"
 )
 
+type container struct {
+	GameHandler handlers.Game
+}
+
 //TODO return a generic container
-func CreateHandler(c models.Config) handlers.Game {
+func New(c models.Config) container {
 	var ds = createDataSourceSQL(c.Database)
-	e := engine.NewGame(ds, engine.NewMinesweeper())
-	return handlers.NewGame(e)
+	var mw = engine.NewMinesweeper()
+
+	e := engine.NewGame(ds, mw)
+
+	return container{
+		GameHandler: handlers.NewGame(e),
+	}
 }
 
 func createDataSourceSQL(c models.DbConfig) datasource.Game {
