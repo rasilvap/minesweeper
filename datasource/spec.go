@@ -9,3 +9,4 @@ type Spec interface {
 	InsertGame(g *models.Game) (int, error)
 	UpdateGame(g *models.Game) error
 }
+

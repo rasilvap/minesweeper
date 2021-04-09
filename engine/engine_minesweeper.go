@@ -15,10 +15,10 @@ type MinesWeeper interface {
 type minesWeeper struct{}
 
 func NewMinesweeper() MinesWeeper {
-	return &minesWeeper{}
+	return minesWeeper{}
 }
 
-func (*minesWeeper) BuildGame(rows, columns, mineAmount int) (*models.Game, error) {
+func (minesWeeper) BuildGame(rows, columns, mineAmount int) (*models.Game, error) {
 	mines := minesweeper.GenerateMinedPoints(rows, columns, mineAmount)
 	minesweeper := minesweeper.NewMinesweeper(rows, columns, mines)
 	gameDS, err := buildGameDS(minesweeper)
@@ -28,7 +28,7 @@ func (*minesWeeper) BuildGame(rows, columns, mineAmount int) (*models.Game, erro
 	return gameDS, nil
 }
 
-func (*minesWeeper) Play(playRequest models.PlayRequest, game *models.Game) (*models.Game, *models.PlayResponse, error) {
+func (minesWeeper) Play(playRequest models.PlayRequest, game *models.Game) (*models.Game, *models.PlayResponse, error) {
 	var board [][]minesweeper.Tile
 	err := json.Unmarshal([]byte(game.Board), &board)
 	if err != nil {

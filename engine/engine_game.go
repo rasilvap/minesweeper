@@ -19,8 +19,9 @@ type game struct {
 	minesWeeperEngine MinesWeeper
 }
 
+//TODO validate with pprof this with pointer
 func NewGame(gameDS datasource.Spec, minesWeeperEngine MinesWeeper) Game {
-	return &game{
+	return game{
 		gameDS:            gameDS,
 		minesWeeperEngine: minesWeeperEngine,
 	}
