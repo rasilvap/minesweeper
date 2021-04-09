@@ -28,7 +28,6 @@ func NewDatasourceSQL(config models.DbConfig) (*datasourceSQL, error) {
 	return &datasourceSQL{db}, nil
 }
 
-
 type datasourceMemory struct {
 	sync.RWMutex
 	cache map[int]interface{}

@@ -5,12 +5,11 @@ import (
 	"minesweeper-API/models"
 )
 
-
 type gameSql struct {
 	*datasourceSQL
 }
 
-func NewGameSQl(ds *datasourceSQL) Game{
+func NewGameSQl(ds *datasourceSQL) Game {
 	return gameSql{ds}
 }
 

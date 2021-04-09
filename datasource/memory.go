@@ -4,7 +4,6 @@ import (
 	"minesweeper-API/models"
 )
 
-
 //TODO deberia retornar una copia? si retorna un puntero puede dar problemas de concurrencia?
 func (ds datasourceMemory) Find(id int) (*models.Game, error) {
 	ds.RLock()
