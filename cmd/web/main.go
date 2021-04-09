@@ -20,9 +20,9 @@ func main() {
 	log.Printf("Starting application server - %s", *env)
 
 	c := config.BuildConfig(*env)
-	e := container.CreateEngine(c)
+	h := container.CreateHandler(c)
 	r := createServer()
-	setupRoutes(r, e)
+	setupRoutes(r, h)
 
 	log.Fatal(http.ListenAndServe(getPort(c.Server), r))
 }

@@ -2,14 +2,16 @@ package container
 
 import (
 	"fmt"
+	"minesweeper-API/cmd/web/handler"
 	"minesweeper-API/datasource"
 	"minesweeper-API/engine"
 	"minesweeper-API/model"
 )
 
-func CreateEngine(c model.Config) engine.Game {
+func CreateHandler(c model.Config) handler.GameHandler {
 	var ds = createDataSourceSQL(c.Database)
-	return engine.NewGame(ds, engine.NewMinesweeper())
+	e := engine.NewGame(ds, engine.NewMinesweeper())
+	return handler.NewGameHandler(e)
 }
 
 func createDataSourceSQL(c model.DbConfig) datasource.Spec {

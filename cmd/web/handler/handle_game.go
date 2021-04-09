@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"encoding/json"
@@ -11,7 +11,21 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func getOne(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
+type GameHandler interface {
+	Get(w http.ResponseWriter, r *http.Request)
+	Create(w http.ResponseWriter, r *http.Request)
+	Play(w http.ResponseWriter, r *http.Request)
+}
+
+type gameHandler struct {
+	gameEngine engine.Game
+}
+
+func NewGameHandler(gameEngine engine.Game)  GameHandler {
+	return gameHandler{gameEngine: gameEngine}
+}
+
+func (h gameHandler)Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -19,7 +33,7 @@ func getOne(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	game, err := gameService.Get(id)
+	game, err := h.gameEngine.Get(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -42,7 +56,7 @@ func getOne(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func create(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
+func (h gameHandler)Create(w http.ResponseWriter, r *http.Request) {
 	var gameRequest model.GameRequest
 	err := json.NewDecoder(r.Body).Decode(&gameRequest)
 	if err != nil {
@@ -50,7 +64,7 @@ func create(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	id, err := gameService.Create(gameRequest.Rows, gameRequest.Columns, gameRequest.MineAmount)
+	id, err := h.gameEngine.Create(gameRequest.Rows, gameRequest.Columns, gameRequest.MineAmount)
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -73,7 +87,7 @@ func create(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func play(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
+func (h gameHandler)Play(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -89,7 +103,7 @@ func play(gameService engine.Game, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	playResponse, err := gameService.Play(id, playRequest)
+	playResponse, err := h.gameEngine.Play(id, playRequest)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
