@@ -12,7 +12,6 @@ type container struct {
 	GameHandler handlers.Game
 }
 
-//TODO return a generic container
 func New(c models.Config) container {
 	var ds = createDataSourceSQL(c.Database)
 	var mw = engine.NewMinesweeper()
