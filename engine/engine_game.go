@@ -15,25 +15,25 @@ type Game interface {
 }
 
 type game struct {
-	gameDS      datasource.Spec
-	minesWeeper MinesWeeper
+	gameDS            datasource.Spec
+	minesWeeperEngine MinesWeeper
 }
 
-func NewGame(gameDSImp datasource.Spec, minesWeeperService MinesWeeper) Game {
+func NewGame(gameDS datasource.Spec, minesWeeperEngine MinesWeeper) Game {
 	return &game{
-		gameDS:      gameDSImp,
-		minesWeeper: minesWeeperService,
+		gameDS:            gameDS,
+		minesWeeperEngine: minesWeeperEngine,
 	}
 }
 
-func (s game) Create(rows, columns, mineAmount int) (int, error) {
-	game, err := s.minesWeeper.BuildGame(rows, columns, mineAmount)
+func (e game) Create(rows, columns, mineAmount int) (int, error) {
+	g, err := e.minesWeeperEngine.BuildGame(rows, columns, mineAmount)
 	if err != nil {
 		log.Printf("Error building game, err: %v", err)
 		return 0, err
 	}
 
-	id, err := s.gameDS.InsertGame(game)
+	id, err := e.gameDS.InsertGame(g)
 	if err != nil {
 		log.Printf("Error creating game, err: %v", err)
 		return 0, err
@@ -42,8 +42,8 @@ func (s game) Create(rows, columns, mineAmount int) (int, error) {
 	return id, nil
 }
 
-func (s game) Get(id int) (*models.GameResponse, error) {
-	g, err := s.gameDS.FindGame(id)
+func (e game) Get(id int) (*models.GameResponse, error) {
+	g, err := e.gameDS.FindGame(id)
 	if err != nil {
 		log.Printf("Error finding game: %d, err: %v", id, err)
 		return nil, err
@@ -61,21 +61,21 @@ func (s game) Get(id int) (*models.GameResponse, error) {
 		nil
 }
 
-func (s *game) Play(id int, playRequest models.PlayRequest) (*models.PlayResponse, error) {
+func (e game) Play(id int, playRequest models.PlayRequest) (*models.PlayResponse, error) {
 	log.Println("Playing game", playRequest)
-	game, err := s.gameDS.FindGame(id)
+	g, err := e.gameDS.FindGame(id)
 	if err != nil {
 		log.Printf("Error finding g: %d, err: %v", id, err)
 		return nil, err
 	}
 
-	gameDS, playResponse, err := s.minesWeeper.Play(playRequest, game)
+	gameDS, playResponse, err := e.minesWeeperEngine.Play(playRequest, g)
 	if err != nil {
 		log.Printf("Error playing game: %d, err: %v", id, err)
 		return nil, err
 	}
 
-	s.gameDS.UpdateGame(gameDS)
+	e.gameDS.UpdateGame(gameDS)
 
 	return playResponse, nil
 }

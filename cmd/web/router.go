@@ -7,12 +7,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func setupRoutes(router *mux.Router, h handlers.GameHandler) {
+func setupRoutes(router *mux.Router, h handlers.Game) {
 	router.HandleFunc("/", handlers.HandleHealth).Methods(http.MethodGet)
 	setupRoutesGameHandler(router, h)
 }
 
-func setupRoutesGameHandler(router *mux.Router, h handlers.GameHandler) {
+func setupRoutesGameHandler(router *mux.Router, h handlers.Game) {
 	router.HandleFunc("/v1/games/{id:[0-9]+}", h.Get).Methods(http.MethodGet)
 	router.HandleFunc("/v1/games", h.Create).Methods(http.MethodPost)
 	router.HandleFunc("/v1/games/{id:[0-9]+}/play", h.Play).Methods(http.MethodPost)

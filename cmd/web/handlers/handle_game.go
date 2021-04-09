@@ -11,21 +11,21 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type GameHandler interface {
+type Game interface {
 	Get(w http.ResponseWriter, r *http.Request)
 	Create(w http.ResponseWriter, r *http.Request)
 	Play(w http.ResponseWriter, r *http.Request)
 }
 
-type gameHandler struct {
+type game struct {
 	gameEngine engine.Game
 }
 
-func NewGameHandler(gameEngine engine.Game) GameHandler {
-	return gameHandler{gameEngine: gameEngine}
+func NewGame(gameEngine engine.Game) Game {
+	return game{gameEngine: gameEngine}
 }
 
-func (h gameHandler) Get(w http.ResponseWriter, r *http.Request) {
+func (h game) Get(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -33,16 +33,16 @@ func (h gameHandler) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	game, err := h.gameEngine.Get(id)
+	g, err := h.gameEngine.Get(id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	if game == nil {
+	if g == nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	j, err := json.Marshal(game)
+	j, err := json.Marshal(g)
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -56,7 +56,7 @@ func (h gameHandler) Get(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h gameHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (h game) Create(w http.ResponseWriter, r *http.Request) {
 	var gameRequest models.GameRequest
 	err := json.NewDecoder(r.Body).Decode(&gameRequest)
 	if err != nil {
@@ -87,7 +87,7 @@ func (h gameHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h gameHandler) Play(w http.ResponseWriter, r *http.Request) {
+func (h game) Play(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {

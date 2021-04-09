@@ -7,11 +7,11 @@ import (
 	"minesweeper-API/engine"
 	"minesweeper-API/models"
 )
-
-func CreateHandler(c models.Config) handlers.GameHandler {
+//TODO return a generic container
+func CreateHandler(c models.Config) handlers.Game {
 	var ds = createDataSourceSQL(c.Database)
 	e := engine.NewGame(ds, engine.NewMinesweeper())
-	return handlers.NewGameHandler(e)
+	return handlers.NewGame(e)
 }
 
 func createDataSourceSQL(c models.DbConfig) datasource.Spec {
