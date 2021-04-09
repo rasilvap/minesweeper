@@ -1,11 +1,11 @@
 package datasource
 
 import (
-	"minesweeper-API/model"
+	"minesweeper-API/models"
 )
 
 type Spec interface {
-	FindGame(id int) (*model.Game, error)
-	InsertGame(g *model.Game) (int, error)
-	UpdateGame(g *model.Game) error
+	FindGame(id int) (*models.Game, error)
+	InsertGame(g *models.Game) (int, error)
+	UpdateGame(g *models.Game) error
 }

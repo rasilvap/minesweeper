@@ -1,7 +1,7 @@
 package datasource
 
 import (
-	"minesweeper-API/model"
+	"minesweeper-API/models"
 	"sync"
 )
 
@@ -17,16 +17,16 @@ func NewDatasourceMemory() Spec {
 }
 
 //TODO deberia retornar una copia? si retorna un puntero puede dar problemas de concurrencia?
-func (ds *datasourceMemory) FindGame(id int) (*model.Game, error) {
+func (ds *datasourceMemory) FindGame(id int) (*models.Game, error) {
 	ds.RLock()
 	defer ds.RUnlock()
 	if game, ok := ds.cache[id]; ok {
-		return game.(*model.Game), nil
+		return game.(*models.Game), nil
 	}
-	return &model.Game{}, nil
+	return &models.Game{}, nil
 }
 
-func (ds *datasourceMemory) InsertGame(game *model.Game) (int, error) {
+func (ds *datasourceMemory) InsertGame(game *models.Game) (int, error) {
 	ds.Lock()
 	game.GameId = len(ds.cache) + 1
 	ds.cache[game.GameId] = game
@@ -34,7 +34,7 @@ func (ds *datasourceMemory) InsertGame(game *model.Game) (int, error) {
 	return game.GameId, nil
 }
 
-func (ds *datasourceMemory) UpdateGame(g *model.Game) error {
+func (ds *datasourceMemory) UpdateGame(g *models.Game) error {
 	_, _ = ds.InsertGame(g)
 	return nil
 }

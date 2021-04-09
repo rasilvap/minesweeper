@@ -5,13 +5,13 @@ import (
 
 	"minesweeper-API/datasource"
 
-	"minesweeper-API/model"
+	"minesweeper-API/models"
 )
 
 type Game interface {
 	Create(rows, columns, mineAmount int) (int, error)
-	Play(id int, playRequest model.PlayRequest) (*model.PlayResponse, error)
-	Get(id int) (*model.GameResponse, error)
+	Play(id int, playRequest models.PlayRequest) (*models.PlayResponse, error)
+	Get(id int) (*models.GameResponse, error)
 }
 
 type game struct {
@@ -42,7 +42,7 @@ func (s game) Create(rows, columns, mineAmount int) (int, error) {
 	return id, nil
 }
 
-func (s game) Get(id int) (*model.GameResponse, error) {
+func (s game) Get(id int) (*models.GameResponse, error) {
 	g, err := s.gameDS.FindGame(id)
 	if err != nil {
 		log.Printf("Error finding game: %d, err: %v", id, err)
@@ -53,7 +53,7 @@ func (s game) Get(id int) (*model.GameResponse, error) {
 		return nil, nil
 	}
 
-	return &model.GameResponse{
+	return &models.GameResponse{
 			Rows:       g.Rows,
 			Columns:    g.Columns,
 			MineAmount: g.MineAmount,
@@ -61,7 +61,7 @@ func (s game) Get(id int) (*model.GameResponse, error) {
 		nil
 }
 
-func (s *game) Play(id int, playRequest model.PlayRequest) (*model.PlayResponse, error) {
+func (s *game) Play(id int, playRequest models.PlayRequest) (*models.PlayResponse, error) {
 	log.Println("Playing game", playRequest)
 	game, err := s.gameDS.FindGame(id)
 	if err != nil {

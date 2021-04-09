@@ -1,10 +1,10 @@
-package handler
+package handlers
 
 import (
 	"encoding/json"
 	"log"
 	"minesweeper-API/engine"
-	"minesweeper-API/model"
+	"minesweeper-API/models"
 	"net/http"
 	"strconv"
 
@@ -57,7 +57,7 @@ func (h gameHandler) Get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h gameHandler) Create(w http.ResponseWriter, r *http.Request) {
-	var gameRequest model.GameRequest
+	var gameRequest models.GameRequest
 	err := json.NewDecoder(r.Body).Decode(&gameRequest)
 	if err != nil {
 		log.Print(err)
@@ -71,7 +71,7 @@ func (h gameHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	j, err := json.Marshal(model.GameSimpleResponse{GameId: id})
+	j, err := json.Marshal(models.GameSimpleResponse{GameId: id})
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -95,7 +95,7 @@ func (h gameHandler) Play(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var playRequest model.PlayRequest
+	var playRequest models.PlayRequest
 	err = json.NewDecoder(r.Body).Decode(&playRequest)
 	if err != nil {
 		log.Print(err)

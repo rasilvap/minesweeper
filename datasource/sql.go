@@ -3,7 +3,7 @@ package datasource
 import (
 	"database/sql"
 	"fmt"
-	"minesweeper-API/model"
+	"minesweeper-API/models"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -13,7 +13,7 @@ type datasourceSQL struct {
 }
 
 // New datasourceSQL creation
-func NewDatasourceSQL(config model.DbConfig) (Spec, error) {
+func NewDatasourceSQL(config models.DbConfig) (Spec, error) {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		config.Server, config.Port, config.User, config.Password, config.Database)
 
@@ -31,8 +31,8 @@ func NewDatasourceSQL(config model.DbConfig) (Spec, error) {
 	}, nil
 }
 
-func (ds *datasourceSQL) FindGame(id int) (*model.Game, error) {
-	var game model.Game
+func (ds *datasourceSQL) FindGame(id int) (*models.Game, error) {
+	var game models.Game
 	switch err := ds.db.Get(&game, `SELECT * FROM minesweeper.games WHERE game_id = $1`, id); err {
 	case nil, sql.ErrNoRows:
 		return &game, nil
@@ -41,7 +41,7 @@ func (ds *datasourceSQL) FindGame(id int) (*model.Game, error) {
 	}
 }
 
-func (ds *datasourceSQL) InsertGame(g *model.Game) (int, error) {
+func (ds *datasourceSQL) InsertGame(g *models.Game) (int, error) {
 	res, err := ds.db.NamedQuery(
 		`INSERT INTO minesweeper.games (state, columns, rows, mine_amount, flag_amount, board)
  		VALUES (:state, :columns, :rows, :mine_amount, :flag_amount, :board) returning game_id`,
@@ -62,7 +62,7 @@ func (ds *datasourceSQL) InsertGame(g *model.Game) (int, error) {
 	return id, nil
 }
 
-func (ds *datasourceSQL) UpdateGame(g *model.Game) error {
+func (ds *datasourceSQL) UpdateGame(g *models.Game) error {
 	_, err := ds.db.NamedQuery(
 		`UPDATE  minesweeper.games  SET state = :state, 
                                columns = :columns, rows = :rows, mine_amount = :mine_amount, flag_amount = :flag_amount, 

@@ -2,14 +2,14 @@ package engine
 
 import (
 	"encoding/json"
-	"minesweeper-API/model"
+	"minesweeper-API/models"
 
 	"github.com/obarra-dev/minesweeper"
 )
 
 type MinesWeeper interface {
-	BuildGame(rows, columns, mineAmount int) (*model.Game, error)
-	Play(playRequest model.PlayRequest, game *model.Game) (*model.Game, *model.PlayResponse, error)
+	BuildGame(rows, columns, mineAmount int) (*models.Game, error)
+	Play(playRequest models.PlayRequest, game *models.Game) (*models.Game, *models.PlayResponse, error)
 }
 
 type minesWeeper struct{}
@@ -18,7 +18,7 @@ func NewMinesweeper() MinesWeeper {
 	return &minesWeeper{}
 }
 
-func (*minesWeeper) BuildGame(rows, columns, mineAmount int) (*model.Game, error) {
+func (*minesWeeper) BuildGame(rows, columns, mineAmount int) (*models.Game, error) {
 	mines := minesweeper.GenerateMinedPoints(rows, columns, mineAmount)
 	minesweeper := minesweeper.NewMinesweeper(rows, columns, mines)
 	gameDS, err := buildGameDS(minesweeper)
@@ -28,7 +28,7 @@ func (*minesWeeper) BuildGame(rows, columns, mineAmount int) (*model.Game, error
 	return gameDS, nil
 }
 
-func (*minesWeeper) Play(playRequest model.PlayRequest, game *model.Game) (*model.Game, *model.PlayResponse, error) {
+func (*minesWeeper) Play(playRequest models.PlayRequest, game *models.Game) (*models.Game, *models.PlayResponse, error) {
 	var board [][]minesweeper.Tile
 	err := json.Unmarshal([]byte(game.Board), &board)
 	if err != nil {
@@ -56,13 +56,13 @@ func (*minesWeeper) Play(playRequest model.PlayRequest, game *model.Game) (*mode
 	return gamedDS, &playResponse, nil
 }
 
-func buildGameDS(g *minesweeper.Game) (*model.Game, error) {
+func buildGameDS(g *minesweeper.Game) (*models.Game, error) {
 	j, err := json.Marshal(g.Board)
 	if err != nil {
 		return nil, err
 	}
 
-	return &model.Game{
+	return &models.Game{
 			State:      int(g.State),
 			Columns:    g.Columns,
 			Rows:       g.Rows,
@@ -73,13 +73,13 @@ func buildGameDS(g *minesweeper.Game) (*model.Game, error) {
 		nil
 }
 
-func buildPlayResponse(game minesweeper.Game) model.PlayResponse {
+func buildPlayResponse(game minesweeper.Game) models.PlayResponse {
 	gameStateDTO := mapStateGame(game.State)
 	row := len(game.Board)
 	if row == 0 {
-		return model.PlayResponse{
+		return models.PlayResponse{
 			StateGame: gameStateDTO,
-			Game: model.GameDTO{Board: [][]model.TileDTO{},
+			Game: models.GameDTO{Board: [][]models.TileDTO{},
 				Rows:       game.Rows,
 				Columns:    game.Columns,
 				FlagAmount: game.FlagAmount,
@@ -87,15 +87,15 @@ func buildPlayResponse(game minesweeper.Game) model.PlayResponse {
 		}
 	}
 
-	boardDTO := make([][]model.TileDTO, row)
+	boardDTO := make([][]models.TileDTO, row)
 	for i := 0; i < row; i++ {
 		column := len(game.Board[i])
-		boardDTO[i] = make([]model.TileDTO, column)
+		boardDTO[i] = make([]models.TileDTO, column)
 
 		for j := 0; j < column; j++ {
 			board := game.Board[i][j]
 			tileStateDTO := mapTileState(board.State)
-			boardDTO[i][j] = model.TileDTO{
+			boardDTO[i][j] = models.TileDTO{
 				State:                tileStateDTO,
 				Row:                  board.Row,
 				Column:               board.Column,
@@ -106,9 +106,9 @@ func buildPlayResponse(game minesweeper.Game) model.PlayResponse {
 		}
 	}
 
-	return model.PlayResponse{
+	return models.PlayResponse{
 		StateGame: gameStateDTO,
-		Game: model.GameDTO{
+		Game: models.GameDTO{
 			Board:      boardDTO,
 			Rows:       game.Rows,
 			Columns:    game.Columns,

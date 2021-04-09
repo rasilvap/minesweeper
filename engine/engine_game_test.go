@@ -38,7 +38,7 @@ func TestGetOneGame(t *testing.T) {
 	//Mock assertion: Behavioral
 	mockRepo.AssertExpectations(t)
 
-	expected := model.GameResponse{3, 3, 1}
+	expected := models.GameResponse{3, 3, 1}
 	assert.Equal(t, expected, *result)
 }
 
