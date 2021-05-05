@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func HandleHealth(w http.ResponseWriter, r *http.Request) {
+func HandleHealth(w http.ResponseWriter, _ *http.Request) {
 	js, err := json.Marshal(map[string]interface{}{
 		"name": "minesweeperAPI",
 		"info": "It is ok",

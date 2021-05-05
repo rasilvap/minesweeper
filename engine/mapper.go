@@ -6,8 +6,7 @@ import (
 	"github.com/obarra-dev/minesweeper"
 )
 
-func mapTypeMove(typeMove models.TypeMove) minesweeper.TypeMove {
-	var move minesweeper.TypeMove
+func mapTypeMove(typeMove models.TypeMove) (move minesweeper.TypeMove) {
 	switch typeMove {
 	case models.TypeMoveFlag:
 		move = minesweeper.TypeMoveFlag
@@ -16,8 +15,7 @@ func mapTypeMove(typeMove models.TypeMove) minesweeper.TypeMove {
 	case models.TypeMoveClean:
 		move = minesweeper.TypeMoveClean
 	}
-
-	return move
+	return
 }
 
 func mapStateGame(stateGame minesweeper.StateGame) string {
