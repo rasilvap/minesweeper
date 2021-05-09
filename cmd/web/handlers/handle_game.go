@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"minesweeper-API/engine"
-	"minesweeper-API/models"
+	"minesweeper-API/models/dto"
 	"net/http"
 	"strconv"
 
@@ -51,7 +51,7 @@ func (h game) Get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h game) Create(w http.ResponseWriter, r *http.Request) {
-	var gameRequest models.GameRequest
+	var gameRequest dto.GameRequest
 	err := json.NewDecoder(r.Body).Decode(&gameRequest)
 	if err != nil {
 		log.Print(err)
@@ -65,7 +65,7 @@ func (h game) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	j, err := json.Marshal(models.GameSimpleResponse{GameId: id})
+	j, err := json.Marshal(dto.GameSimpleResponse{GameId: id})
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -89,7 +89,7 @@ func (h game) Play(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var playRequest models.PlayRequest
+	var playRequest dto.PlayRequest
 	err = json.NewDecoder(r.Body).Decode(&playRequest)
 	if err != nil {
 		log.Print(err)

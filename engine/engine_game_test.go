@@ -1,165 +1,335 @@
 package engine
 
 import (
+	"errors"
+	"minesweeper-API/models/dto"
 	"testing"
 
-	"github.com/obarra-dev/minesweeper"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+
+	"minesweeper-API/models"
 )
 
-type mockGameRepository struct {
+type gameDSMock struct {
 	mock.Mock
 }
 
-func (mock *mockGameRepository) Save(game *minesweeper.Game) int {
-	args := mock.Called(game)
-	result := args.Get(0)
-	return result.(int)
-}
-
-func (mock *mockGameRepository) Get(id int) *minesweeper.Game {
+func (mock *gameDSMock) Find(id int) (*models.Game, error) {
 	args := mock.Called(id)
-	result := args.Get(0)
-	return result.(*minesweeper.Game)
+
+	if r := args.Error(1); r != nil {
+		return nil, r
+	}
+
+	return args.Get(0).(*models.Game), nil
 }
 
-/*
-func TestGetOneGame(t *testing.T) {
-	mockRepo := new(mockGameRepository)
-	game := NewGame(mockRepo)
-
-	minedPointTile := [][2]int{{1, 1}}
-	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
-	id := 1
-	mockRepo.On("Get", id).Return(game)
-
-	result, _ := game.Get(id)
-
-	//Mock assertion: Behavioral
-	mockRepo.AssertExpectations(t)
-
-	expected := models.GameResponse{3, 3, 1}
-	assert.Equal(t, expected, *result)
+func (mock *gameDSMock) Insert(g *models.Game) (int, error) {
+	args := mock.Called(g)
+	return args.Int(0), args.Error(1)
 }
 
-func TestCreateGame(t *testing.T) {
-	mockRepo := new(mockGameRepository)
-	game := NewGame(mockRepo)
-
-	minedPointTile := [][2]int{{1, 1}}
-	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
-	id := 1
-	mockRepo.On("Save", game).Return(id)
-
-	result, _ := game.Create(3, 3, 1)
-
-	//Mock assertion: Behavioral
-	mockRepo.AssertExpectations(t)
-
-	assert.Equal(t, id, result)
+func (mock *gameDSMock) Update(g *models.Game) error {
+	args := mock.Called(g)
+	return args.Error(0)
 }
 
-
-*/
-func TestMarkPlayWhenLost3x3(t *testing.T) {
-	//setup
-	minedPointTile := [][2]int{{1, 1}}
-	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
-
-	//execute
-	gameCopy := game.Play(1, 1, minesweeper.TypeMoveClean)
-	res := buildPlayResponse(gameCopy)
-
-	//assert
-	if res.StateGame != "LOST" || res.Game.Columns != 3 || res.Game.Rows != 3 ||
-		len(res.Game.Board) != res.Game.Rows || len(res.Game.Board[0]) != res.Game.Columns {
-		t.Error("Error", res, len(res.Game.Board), len(res.Game.Board[0]))
-	}
+type minesWeeperMock struct {
+	mock.Mock
 }
 
-func TestMarkPlayWhenWon3x3(t *testing.T) {
-	//setup
-	minedPointTile := [][2]int{{1, 1}}
-	game := minesweeper.NewMinesweeper(3, 3, minedPointTile)
-
-	//execute
-	gameCopy := game.Play(0, 0, minesweeper.TypeMoveClean)
-	res := buildPlayResponse(gameCopy)
-	//assert
-	if res.StateGame != "RUNNING" {
-		t.Error("Error", res, len(res.Game.Board))
+func (mock *minesWeeperMock) BuildGame(rows, columns, mineAmount int) (*models.Game, error) {
+	args := mock.Called(rows, columns, mineAmount)
+	if r := args.Error(1); r != nil {
+		return nil, r
 	}
 
-	//execute
-	gameCopy = game.Play(0, 1, minesweeper.TypeMoveClean)
-	res = buildPlayResponse(gameCopy)
-	//assert
-	if res.StateGame != "RUNNING" {
-		t.Error("Error", res)
-	}
-
-	//execute
-	gameCopy = game.Play(0, 2, minesweeper.TypeMoveClean)
-	res = buildPlayResponse(gameCopy)
-	//assert
-	if res.StateGame != "RUNNING" {
-		t.Error("Error", res)
-	}
-
-	//execute
-	gameCopy = game.Play(1, 0, minesweeper.TypeMoveClean)
-	res = buildPlayResponse(gameCopy)
-	//assert
-	if res.StateGame != "RUNNING" {
-		t.Error("Error", res, len(res.Game.Board))
-	}
-
-	//execute
-	gameCopy = game.Play(1, 2, minesweeper.TypeMoveClean)
-	res = buildPlayResponse(gameCopy)
-	//assert
-	if res.StateGame != "RUNNING" {
-		t.Error("Error", res, len(res.Game.Board))
-	}
-
-	//execute
-	gameCopy = game.Play(2, 0, minesweeper.TypeMoveClean)
-	res = buildPlayResponse(gameCopy)
-	//assert
-	if res.StateGame != "RUNNING" {
-		t.Error("Error", res, len(res.Game.Board))
-	}
-
-	//execute
-	gameCopy = game.Play(2, 1, minesweeper.TypeMoveClean)
-	res = buildPlayResponse(gameCopy)
-	//assert
-	if res.StateGame != "RUNNING" {
-		t.Error("Error", res, len(res.Game.Board))
-	}
-
-	//execute
-	gameCopy = game.Play(2, 2, minesweeper.TypeMoveClean)
-	res = buildPlayResponse(gameCopy)
-	//assert
-	if res.StateGame != "WON" {
-		t.Error("Error", res, len(res.Game.Board))
-	}
+	return args.Get(0).(*models.Game), nil
 }
 
-func TestMarkPlayWhenRunning3X8(t *testing.T) {
-	//setup
-	minedPointTile := [][2]int{{1, 1}}
-	game := minesweeper.NewMinesweeper(3, 8, minedPointTile)
+func (mock *minesWeeperMock) Play(playRequest dto.PlayRequest, game *models.Game) (*models.Game, *dto.PlayResponse, error) {
+	args := mock.Called(playRequest, game)
 
-	//execute
-	gameCopy := game.Play(0, 5, minesweeper.TypeMoveClean)
-	game.ShowBoard()
-	res := buildPlayResponse(gameCopy)
-
-	//assert
-	if res.StateGame != "RUNNING" || res.Game.Rows != 3 || res.Game.Columns != 8 ||
-		len(res.Game.Board) != 3 || len(res.Game.Board[0]) != 6 {
-		t.Error("Error", res, len(res.Game.Board), len(res.Game.Board[0]))
+	if r := args.Error(2); r != nil {
+		return nil, nil, r
 	}
+
+	resultGame := args.Get(0).(*models.Game)
+	resultPlayResponse := args.Get(1).(*dto.PlayResponse)
+	return resultGame, resultPlayResponse, nil
+}
+
+func Test_Create(t *testing.T) {
+	t.Run("OK", func(t *testing.T) {
+		minesWeeper := new(minesWeeperMock)
+		gameDS := new(gameDSMock)
+		game := NewGame(gameDS, minesWeeper)
+		g := models.Game{
+			GameId:     0,
+			State:      1,
+			Columns:    3,
+			Rows:       3,
+			MineAmount: 1,
+			FlagAmount: 0,
+			Board:      "",
+		}
+		minesWeeper.On("BuildGame", 3, 3, 1).Return(&g, nil)
+
+		gameDS.On("Insert", &g).Return(123, nil)
+
+		//act
+		got, err := game.Create(3, 3, 1)
+
+		gameDS.AssertExpectations(t)
+		minesWeeper.AssertExpectations(t)
+		assert.Equal(t, 123, got)
+		assert.Nil(t, err)
+
+	})
+
+	t.Run("error when build", func(t *testing.T) {
+		minesWeeper := new(minesWeeperMock)
+		gameDS := new(gameDSMock)
+		game := NewGame(gameDS, minesWeeper)
+
+		minesWeeper.On("BuildGame", 3, 3, 1).Return(nil, errors.New("some error"))
+
+		//act
+		got, err := game.Create(3, 3, 1)
+
+		gameDS.AssertExpectations(t)
+		minesWeeper.AssertExpectations(t)
+		assert.Zero(t, got)
+		assert.Error(t, err)
+	})
+
+	t.Run("error when insert", func(t *testing.T) {
+		minesWeeper := new(minesWeeperMock)
+		gameDS := new(gameDSMock)
+		game := NewGame(gameDS, minesWeeper)
+
+		g := models.Game{
+			GameId:     0,
+			State:      1,
+			Columns:    3,
+			Rows:       3,
+			MineAmount: 1,
+			FlagAmount: 0,
+			Board:      "",
+		}
+		minesWeeper.On("BuildGame", 3, 3, 1).Return(&g, nil)
+		gameDS.On("Insert", &g).Return(0, errors.New("some error"))
+
+		//act
+		got, err := game.Create(3, 3, 1)
+
+		gameDS.AssertExpectations(t)
+		minesWeeper.AssertExpectations(t)
+		assert.Zero(t, got)
+		assert.Error(t, err)
+	})
+}
+
+func Test_Get(t *testing.T) {
+	t.Run("OK", func(t *testing.T) {
+		minesWeeper := new(minesWeeperMock)
+		gameDS := new(gameDSMock)
+		game := NewGame(gameDS, minesWeeper)
+		g := models.Game{
+			GameId:     123,
+			State:      1,
+			Columns:    3,
+			Rows:       3,
+			MineAmount: 1,
+			FlagAmount: 0,
+			Board:      "",
+		}
+
+		gameDS.On("Find", 123).Return(&g, nil)
+
+		//act
+		got, err := game.Get(123)
+
+		gameDS.AssertExpectations(t)
+		minesWeeper.AssertExpectations(t)
+		assert.Equal(t, &dto.GameResponse{
+			Rows:       3,
+			Columns:    3,
+			MineAmount: 1,
+		}, got)
+		assert.Nil(t, err)
+	})
+
+	t.Run("Not found", func(t *testing.T) {
+		minesWeeper := new(minesWeeperMock)
+		gameDS := new(gameDSMock)
+		game := NewGame(gameDS, minesWeeper)
+		gameDS.On("Find", 123).Return(&models.Game{}, nil)
+
+		//act
+		got, err := game.Get(123)
+
+		gameDS.AssertExpectations(t)
+		minesWeeper.AssertExpectations(t)
+		assert.Nil(t, got)
+		assert.Nil(t, err)
+	})
+
+	t.Run("Error when find", func(t *testing.T) {
+		minesWeeper := new(minesWeeperMock)
+		gameDS := new(gameDSMock)
+		game := NewGame(gameDS, minesWeeper)
+		gameDS.On("Find", 123).Return(nil, errors.New("some error"))
+
+		//act
+		got, err := game.Get(123)
+
+		gameDS.AssertExpectations(t)
+		minesWeeper.AssertExpectations(t)
+		assert.Nil(t, got)
+		assert.Error(t, err)
+	})
+}
+
+func Test_Play(t *testing.T) {
+	t.Run("OK", func(t *testing.T) {
+		minesWeeper := new(minesWeeperMock)
+		gameDS := new(gameDSMock)
+		game := NewGame(gameDS, minesWeeper)
+		g := models.Game{
+			GameId:     123,
+			State:      1,
+			Columns:    3,
+			Rows:       3,
+			MineAmount: 1,
+			FlagAmount: 0,
+			Board:      "",
+		}
+		req := dto.PlayRequest{
+			Row:    0,
+			Column: 0,
+			Move:   "CLEAN",
+		}
+
+		res := dto.PlayResponse{
+			StateGame: "ACTIVE",
+			Game: dto.GameDTO{
+				Board:      nil,
+				Rows:       3,
+				Columns:    3,
+				FlagAmount: 0,
+			},
+		}
+
+		gPlayed := g
+		gPlayed.State = 2
+		gameDS.On("Find", 123).Return(&g, nil)
+		minesWeeper.On("Play", req, &g).Return(&gPlayed, &res, nil)
+		gameDS.On("Update", &gPlayed).Return(nil)
+
+		//act
+		got, err := game.Play(123, req)
+
+		gameDS.AssertExpectations(t)
+		minesWeeper.AssertExpectations(t)
+		assert.Equal(t, &res, got)
+		assert.Nil(t, err)
+	})
+
+	t.Run("error when find", func(t *testing.T) {
+		minesWeeper := new(minesWeeperMock)
+		gameDS := new(gameDSMock)
+		game := NewGame(gameDS, minesWeeper)
+
+		req := dto.PlayRequest{
+			Row:    0,
+			Column: 0,
+			Move:   "CLEAN",
+		}
+		gameDS.On("Find", 123).Return(nil, errors.New("some error"))
+
+		//act
+		got, err := game.Play(123, req)
+
+		gameDS.AssertExpectations(t)
+		minesWeeper.AssertExpectations(t)
+		assert.Nil(t, got)
+		assert.Error(t, err)
+	})
+
+	t.Run("error when play", func(t *testing.T) {
+		minesWeeper := new(minesWeeperMock)
+		gameDS := new(gameDSMock)
+		game := NewGame(gameDS, minesWeeper)
+		g := models.Game{
+			GameId:     123,
+			State:      1,
+			Columns:    3,
+			Rows:       3,
+			MineAmount: 1,
+			FlagAmount: 0,
+			Board:      "",
+		}
+		req := dto.PlayRequest{
+			Row:    0,
+			Column: 0,
+			Move:   "CLEAN",
+		}
+
+		gameDS.On("Find", 123).Return(&g, nil)
+		minesWeeper.On("Play", req, &g).Return(nil, nil, errors.New("some error"))
+
+		//act
+		got, err := game.Play(123, req)
+
+		gameDS.AssertExpectations(t)
+		minesWeeper.AssertExpectations(t)
+		assert.Nil(t, got)
+		assert.Error(t, err)
+	})
+
+	t.Run("error when update", func(t *testing.T) {
+		minesWeeper := new(minesWeeperMock)
+		gameDS := new(gameDSMock)
+		game := NewGame(gameDS, minesWeeper)
+		g := models.Game{
+			GameId:     123,
+			State:      1,
+			Columns:    3,
+			Rows:       3,
+			MineAmount: 1,
+			FlagAmount: 0,
+			Board:      "",
+		}
+		req := dto.PlayRequest{
+			Row:    0,
+			Column: 0,
+			Move:   "CLEAN",
+		}
+
+		res := dto.PlayResponse{
+			StateGame: "ACTIVE",
+			Game: dto.GameDTO{
+				Board:      nil,
+				Rows:       3,
+				Columns:    3,
+				FlagAmount: 0,
+			},
+		}
+
+		gPlayed := g
+		gPlayed.State = 2
+		gameDS.On("Find", 123).Return(&g, nil)
+		minesWeeper.On("Play", req, &g).Return(&gPlayed, &res, nil)
+		gameDS.On("Update", &gPlayed).Return(errors.New("some error"))
+
+		//act
+		got, err := game.Play(123, req)
+
+		gameDS.AssertExpectations(t)
+		minesWeeper.AssertExpectations(t)
+		assert.Nil(t, got)
+		assert.Error(t, err)
+	})
 }

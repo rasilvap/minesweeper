@@ -1,7 +1,7 @@
 package docs
 
 import (
-	"minesweeper-API/models"
+	"minesweeper-API/models/dto"
 )
 
 // swagger:route GET /games/{id} games getGameEndpoint
@@ -14,7 +14,7 @@ import (
 // swagger:response gameResponseResponseWrapper
 type GameResponseResponseWrapper struct {
 	// in:body
-	Body models.GameResponse
+	Body dto.GameResponse
 }
 
 // Game attributes to set
@@ -37,7 +37,7 @@ type GameRequestParamsWrapper struct {
 // swagger:response gameSimpleResponseResponse
 type gameSimpleResponseResponseWrapper struct {
 	// in:body
-	Body models.GameSimpleResponse
+	Body dto.GameSimpleResponse
 }
 
 // Game attributes to set
@@ -45,7 +45,7 @@ type gameSimpleResponseResponseWrapper struct {
 type gameParamsWrapper struct {
 	// The game's attributes to set.
 	// in:body
-	Body models.GameRequest
+	Body dto.GameRequest
 }
 
 // swagger:route POST /games/{id}/play games playGameEndpoint
@@ -59,7 +59,7 @@ type gameParamsWrapper struct {
 // swagger:response playResponseResponseWrapper
 type PlayResponseResponseWrapper struct {
 	// in:body
-	Body models.PlayResponse
+	Body dto.PlayResponse
 }
 
 // Play attributes to set
@@ -67,7 +67,7 @@ type PlayResponseResponseWrapper struct {
 type PlayRequestParamsWrapper struct {
 	// The game's attributes to set.
 	// in:body
-	Body models.PlayRequest
+	Body dto.PlayRequest
 
 	// The game id
 	// required:true

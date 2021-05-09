@@ -1,23 +1,21 @@
 package engine
 
 import (
-	"minesweeper-API/models"
+	"minesweeper-API/models/dto"
 
 	"github.com/obarra-dev/minesweeper"
 )
 
-func mapTypeMove(typeMove models.TypeMove) minesweeper.TypeMove {
-	var move minesweeper.TypeMove
+func mapTypeMove(typeMove dto.TypeMove) (move minesweeper.TypeMove) {
 	switch typeMove {
-	case models.TypeMoveFlag:
+	case dto.TypeMoveFlag:
 		move = minesweeper.TypeMoveFlag
-	case models.TypeMoveQuestion:
+	case dto.TypeMoveQuestion:
 		move = minesweeper.TypeMoveQuestion
-	case models.TypeMoveClean:
+	case dto.TypeMoveClean:
 		move = minesweeper.TypeMoveClean
 	}
-
-	return move
+	return
 }
 
 func mapStateGame(stateGame minesweeper.StateGame) string {
