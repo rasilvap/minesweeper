@@ -70,7 +70,11 @@ func (e game) Play(id int, playRequest models.PlayRequest) (*models.PlayResponse
 		return nil, err
 	}
 
-	e.gameDS.Update(gameDS)
+	err = e.gameDS.Update(gameDS)
+	if err != nil {
+		log.Printf("Error updating g: %d, err: %v", id, err)
+		return nil, err
+	}
 
 	return playResponse, nil
 }
