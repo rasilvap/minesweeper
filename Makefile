@@ -1,9 +1,9 @@
 BINARY=minesweeper-API
 
-test:
+local_test:
 	go test -v -cover ./...
 
-report:
+test:
 	go test -json > report.json -cover -coverprofile=coverage.out -race ./...
 
 format:

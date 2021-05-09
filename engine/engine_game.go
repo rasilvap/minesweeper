@@ -2,10 +2,9 @@ package engine
 
 import (
 	"log"
+	"minesweeper-API/models/dto"
 
 	"minesweeper-API/datasource"
-
-	"minesweeper-API/models"
 )
 
 type game struct {
@@ -37,7 +36,7 @@ func (e game) Create(rows, columns, mineAmount int) (int, error) {
 	return id, nil
 }
 
-func (e game) Get(id int) (*models.GameResponse, error) {
+func (e game) Get(id int) (*dto.GameResponse, error) {
 	g, err := e.gameDS.Find(id)
 	if err != nil {
 		log.Printf("Error finding game: %d, err: %v", id, err)
@@ -48,7 +47,7 @@ func (e game) Get(id int) (*models.GameResponse, error) {
 		return nil, nil
 	}
 
-	return &models.GameResponse{
+	return &dto.GameResponse{
 			Rows:       g.Rows,
 			Columns:    g.Columns,
 			MineAmount: g.MineAmount,
@@ -56,7 +55,7 @@ func (e game) Get(id int) (*models.GameResponse, error) {
 		nil
 }
 
-func (e game) Play(id int, playRequest models.PlayRequest) (*models.PlayResponse, error) {
+func (e game) Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, error) {
 	log.Println("Playing game", playRequest)
 	g, err := e.gameDS.Find(id)
 	if err != nil {

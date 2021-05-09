@@ -2,6 +2,7 @@ package engine
 
 import (
 	"errors"
+	"minesweeper-API/models/dto"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -47,7 +48,7 @@ func (mock *minesWeeperMock) BuildGame(rows, columns, mineAmount int) (*models.G
 	return args.Get(0).(*models.Game), nil
 }
 
-func (mock *minesWeeperMock) Play(playRequest models.PlayRequest, game *models.Game) (*models.Game, *models.PlayResponse, error) {
+func (mock *minesWeeperMock) Play(playRequest dto.PlayRequest, game *models.Game) (*models.Game, *dto.PlayResponse, error) {
 	args := mock.Called(playRequest, game)
 
 	if r := args.Error(2); r != nil {
@@ -55,7 +56,7 @@ func (mock *minesWeeperMock) Play(playRequest models.PlayRequest, game *models.G
 	}
 
 	resultGame := args.Get(0).(*models.Game)
-	resultPlayResponse := args.Get(1).(*models.PlayResponse)
+	resultPlayResponse := args.Get(1).(*dto.PlayResponse)
 	return resultGame, resultPlayResponse, nil
 }
 
@@ -152,7 +153,7 @@ func Test_Get(t *testing.T) {
 
 		gameDS.AssertExpectations(t)
 		minesWeeper.AssertExpectations(t)
-		assert.Equal(t, &models.GameResponse{
+		assert.Equal(t, &dto.GameResponse{
 			Rows:       3,
 			Columns:    3,
 			MineAmount: 1,
@@ -205,15 +206,15 @@ func Test_Play(t *testing.T) {
 			FlagAmount: 0,
 			Board:      "",
 		}
-		req := models.PlayRequest{
+		req := dto.PlayRequest{
 			Row:    0,
 			Column: 0,
 			Move:   "CLEAN",
 		}
 
-		res := models.PlayResponse{
+		res := dto.PlayResponse{
 			StateGame: "ACTIVE",
-			Game: models.GameDTO{
+			Game: dto.GameDTO{
 				Board:      nil,
 				Rows:       3,
 				Columns:    3,
@@ -241,7 +242,7 @@ func Test_Play(t *testing.T) {
 		gameDS := new(gameDSMock)
 		game := NewGame(gameDS, minesWeeper)
 
-		req := models.PlayRequest{
+		req := dto.PlayRequest{
 			Row:    0,
 			Column: 0,
 			Move:   "CLEAN",
@@ -270,7 +271,7 @@ func Test_Play(t *testing.T) {
 			FlagAmount: 0,
 			Board:      "",
 		}
-		req := models.PlayRequest{
+		req := dto.PlayRequest{
 			Row:    0,
 			Column: 0,
 			Move:   "CLEAN",
@@ -301,15 +302,15 @@ func Test_Play(t *testing.T) {
 			FlagAmount: 0,
 			Board:      "",
 		}
-		req := models.PlayRequest{
+		req := dto.PlayRequest{
 			Row:    0,
 			Column: 0,
 			Move:   "CLEAN",
 		}
 
-		res := models.PlayResponse{
+		res := dto.PlayResponse{
 			StateGame: "ACTIVE",
-			Game: models.GameDTO{
+			Game: dto.GameDTO{
 				Board:      nil,
 				Rows:       3,
 				Columns:    3,

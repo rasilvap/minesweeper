@@ -3,6 +3,7 @@ package engine
 import (
 	"encoding/json"
 	"minesweeper-API/models"
+	"minesweeper-API/models/dto"
 
 	"github.com/obarra-dev/minesweeper"
 )
@@ -23,7 +24,7 @@ func (minesWeeper) BuildGame(rows, columns, mineAmount int) (*models.Game, error
 	return gameDS, nil
 }
 
-func (minesWeeper) Play(playRequest models.PlayRequest, game *models.Game) (*models.Game, *models.PlayResponse, error) {
+func (minesWeeper) Play(playRequest dto.PlayRequest, game *models.Game) (*models.Game, *dto.PlayResponse, error) {
 	var board [][]minesweeper.Tile
 	err := json.Unmarshal([]byte(game.Board), &board)
 	if err != nil {
@@ -68,13 +69,13 @@ func buildGameDS(g *minesweeper.Game) (*models.Game, error) {
 		nil
 }
 
-func buildPlayResponse(game minesweeper.Game) models.PlayResponse {
+func buildPlayResponse(game minesweeper.Game) dto.PlayResponse {
 	gameStateDTO := mapStateGame(game.State)
 	row := len(game.Board)
 	if row == 0 {
-		return models.PlayResponse{
+		return dto.PlayResponse{
 			StateGame: gameStateDTO,
-			Game: models.GameDTO{Board: [][]models.TileDTO{},
+			Game: dto.GameDTO{Board: [][]dto.TileDTO{},
 				Rows:       game.Rows,
 				Columns:    game.Columns,
 				FlagAmount: game.FlagAmount,
@@ -82,15 +83,15 @@ func buildPlayResponse(game minesweeper.Game) models.PlayResponse {
 		}
 	}
 
-	boardDTO := make([][]models.TileDTO, row)
+	boardDTO := make([][]dto.TileDTO, row)
 	for i := 0; i < row; i++ {
 		column := len(game.Board[i])
-		boardDTO[i] = make([]models.TileDTO, column)
+		boardDTO[i] = make([]dto.TileDTO, column)
 
 		for j := 0; j < column; j++ {
 			board := game.Board[i][j]
 			tileStateDTO := mapTileState(board.State)
-			boardDTO[i][j] = models.TileDTO{
+			boardDTO[i][j] = dto.TileDTO{
 				State:                tileStateDTO,
 				Row:                  board.Row,
 				Column:               board.Column,
@@ -101,9 +102,9 @@ func buildPlayResponse(game minesweeper.Game) models.PlayResponse {
 		}
 	}
 
-	return models.PlayResponse{
+	return dto.PlayResponse{
 		StateGame: gameStateDTO,
-		Game: models.GameDTO{
+		Game: dto.GameDTO{
 			Board:      boardDTO,
 			Rows:       game.Rows,
 			Columns:    game.Columns,

@@ -8,7 +8,6 @@ import (
 	"github.com/obarra-dev/minesweeper"
 )
 
-
 func Test_buildPlayResponse(t *testing.T) {
 	t.Run("in board 3x8 when running", func(t *testing.T) {
 		mines := [][2]int{{1, 1}}
@@ -43,6 +42,7 @@ func Test_buildPlayResponse(t *testing.T) {
 		})
 
 		t.Run("when lost and play again", func(t *testing.T) {
+			t.Skip()
 			mwNew := minesweeper.NewMinesweeper(3, 3, mines)
 
 			mw := mwNew.Play(0, 0, minesweeper.TypeMoveClean)
