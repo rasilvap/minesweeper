@@ -52,8 +52,8 @@ func (mock *minesWeeperMock) Play(playRequest models.PlayRequest, game *models.G
 	return resultGame, resultPlayResponse, args.Error(2)
 }
 
-func Test_CreateGame(t *testing.T) {
-	t.Run("Crete ok", func(t *testing.T) {
+func Test_Create(t *testing.T) {
+	t.Run("OK", func(t *testing.T) {
 		minesWeeper := new(minesWeeperMock)
 		gameDS := new(gameDSMock)
 		game := NewGame(gameDS, minesWeeper)
@@ -80,7 +80,7 @@ func Test_CreateGame(t *testing.T) {
 
 	})
 
-	t.Run("when build with error", func(t *testing.T) {
+	t.Run("error when build", func(t *testing.T) {
 		minesWeeper := new(minesWeeperMock)
 		gameDS := new(gameDSMock)
 		game := NewGame(gameDS, minesWeeper)
@@ -96,7 +96,7 @@ func Test_CreateGame(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("when insert with error", func(t *testing.T) {
+	t.Run("error when insert", func(t *testing.T) {
 		minesWeeper := new(minesWeeperMock)
 		gameDS := new(gameDSMock)
 		game := NewGame(gameDS, minesWeeper)
@@ -119,6 +119,67 @@ func Test_CreateGame(t *testing.T) {
 		gameDS.AssertExpectations(t)
 		minesWeeper.AssertExpectations(t)
 		assert.Zero(t, got)
+		assert.Error(t, err)
+	})
+}
+
+func Test_Get(t *testing.T) {
+	t.Run("OK", func(t *testing.T) {
+		minesWeeper := new(minesWeeperMock)
+		gameDS := new(gameDSMock)
+		game := NewGame(gameDS, minesWeeper)
+		g := models.Game{
+			GameId:     123,
+			State:      1,
+			Columns:    3,
+			Rows:       3,
+			MineAmount: 1,
+			FlagAmount: 0,
+			Board:      "",
+		}
+
+		gameDS.On("Find", 123).Return(&g, nil)
+
+		//act
+		got, err := game.Get(123)
+
+		gameDS.AssertExpectations(t)
+		minesWeeper.AssertExpectations(t)
+		assert.Equal(t, &models.GameResponse{
+			Rows:       3,
+			Columns:    3,
+			MineAmount: 1,
+		}, got)
+		assert.Nil(t, err)
+	})
+
+	t.Run("Not found", func(t *testing.T) {
+		minesWeeper := new(minesWeeperMock)
+		gameDS := new(gameDSMock)
+		game := NewGame(gameDS, minesWeeper)
+		gameDS.On("Find", 123).Return(&models.Game{}, nil)
+
+		//act
+		got, err := game.Get(123)
+
+		gameDS.AssertExpectations(t)
+		minesWeeper.AssertExpectations(t)
+		assert.Nil(t, got)
+		assert.Nil(t, err)
+	})
+
+	t.Run("Error when find", func(t *testing.T) {
+		minesWeeper := new(minesWeeperMock)
+		gameDS := new(gameDSMock)
+		game := NewGame(gameDS, minesWeeper)
+		gameDS.On("Find", 123).Return(nil, errors.New("some error"))
+
+		//act
+		got, err := game.Get(123)
+
+		gameDS.AssertExpectations(t)
+		minesWeeper.AssertExpectations(t)
+		assert.Nil(t, got)
 		assert.Error(t, err)
 	})
 
