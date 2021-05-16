@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"minesweeper-API/cmd/web/handlers"
 	"minesweeper-API/config"
 	"minesweeper-API/container"
 	"minesweeper-API/models"
@@ -33,7 +34,7 @@ func main() {
 	c := container.New(cfg)
 
 	r := createServer()
-	setupRoutes(r, c.GameHandler)
+	handlers.SetupRoutes(r, c.GameHandler)
 	log.Fatal(http.ListenAndServe(getPort(cfg.Server), r))
 }
 
