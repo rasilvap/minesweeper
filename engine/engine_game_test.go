@@ -81,11 +81,12 @@ func Test_Create(t *testing.T) {
 		//act
 		got, err := game.Create(3, 3, 1)
 
-		gameDS.AssertExpectations(t)
+		minesWeeper.AssertNumberOfCalls(t, "BuildGame", 1)
 		minesWeeper.AssertExpectations(t)
+		gameDS.AssertExpectations(t)
+		gameDS.AssertNumberOfCalls(t, "Insert", 1)
 		assert.Equal(t, 123, got)
-		assert.Nil(t, err)
-
+		assert.NoError(t, err)
 	})
 
 	t.Run("error when build", func(t *testing.T) {
@@ -158,7 +159,7 @@ func Test_Get(t *testing.T) {
 			Columns:    3,
 			MineAmount: 1,
 		}, got)
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 	})
 
 	t.Run("Not found", func(t *testing.T) {
@@ -173,7 +174,7 @@ func Test_Get(t *testing.T) {
 		gameDS.AssertExpectations(t)
 		minesWeeper.AssertExpectations(t)
 		assert.Nil(t, got)
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 	})
 
 	t.Run("Error when find", func(t *testing.T) {
@@ -234,7 +235,7 @@ func Test_Play(t *testing.T) {
 		gameDS.AssertExpectations(t)
 		minesWeeper.AssertExpectations(t)
 		assert.Equal(t, &res, got)
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 	})
 
 	t.Run("error when find", func(t *testing.T) {
