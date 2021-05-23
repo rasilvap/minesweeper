@@ -15,8 +15,8 @@ func NewMinesweeper() MinesWeeper {
 }
 
 func (minesWeeper) BuildGame(rows, columns, mineAmount int) (*models.Game, error) {
-	mines := minesweeper.GenerateMinedPoints(rows, columns, mineAmount)
-	minesweeper := minesweeper.NewMinesweeper(rows, columns, mines)
+	mines := minesweeper.GenerateMines(rows, columns, mineAmount)
+	minesweeper := minesweeper.New(rows, columns, mines)
 	gameDS, err := buildGameDS(minesweeper)
 	if err != nil {
 		return nil, err
@@ -36,7 +36,6 @@ func (minesWeeper) Play(playRequest dto.PlayRequest, game *models.Game) (*models
 		Rows:       game.Rows,
 		Columns:    game.Columns,
 		MineAmount: game.MineAmount,
-		FlagAmount: game.FlagAmount,
 		Board:      board,
 	}
 
@@ -63,7 +62,6 @@ func buildGameDS(g *minesweeper.Game) (*models.Game, error) {
 			Columns:    g.Columns,
 			Rows:       g.Rows,
 			MineAmount: g.MineAmount,
-			FlagAmount: g.FlagAmount,
 			Board:      string(j),
 		},
 		nil
@@ -78,7 +76,6 @@ func buildPlayResponse(game minesweeper.Game) dto.PlayResponse {
 			Game: dto.GameDTO{Board: [][]dto.TileDTO{},
 				Rows:       game.Rows,
 				Columns:    game.Columns,
-				FlagAmount: game.FlagAmount,
 			},
 		}
 	}
@@ -108,7 +105,6 @@ func buildPlayResponse(game minesweeper.Game) dto.PlayResponse {
 			Board:      boardDTO,
 			Rows:       game.Rows,
 			Columns:    game.Columns,
-			FlagAmount: game.FlagAmount,
 		},
 	}
 }

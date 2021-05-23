@@ -21,8 +21,8 @@ github.com/mattn/go-isatty v0.0.8 h1:HLtExJ+uU2HOZ+wI0Tt5DtUDrx8yhUqDcp7fYERX4CE
 github.com/mattn/go-isatty v0.0.8/go.mod h1:Iq45c/XA43vh69/j3iqttzPXn0bhXyGjM0Hdxcsrc5s=
 github.com/mattn/go-sqlite3 v1.14.6 h1:dNPt6NO46WmLVt2DLNpwczCmdV5boIZ6g/tlDrlRUbg=
 github.com/mattn/go-sqlite3 v1.14.6/go.mod h1:NyWgC/yNuGj7Q9rpYnZvas74GogHl5/Z4A/KQRfk6bU=
-github.com/obarra-dev/minesweeper v0.0.2 h1:l1Vzq9wDivrowWSb3zxw2maYaI0kVfwfPVMbErFMMFk=
-github.com/obarra-dev/minesweeper v0.0.2/go.mod h1:FKhIGyqAYz5AtOpparmYn32Gg3uxh2z8km+u+PCfVUQ=
+github.com/obarra-dev/minesweeper v0.0.3 h1:XAogti9tHGeBWanMARgGZpmIGdJa8NBdmJErvE7b2lM=
+github.com/obarra-dev/minesweeper v0.0.3/go.mod h1:FKhIGyqAYz5AtOpparmYn32Gg3uxh2z8km+u+PCfVUQ=
 github.com/pdrum/swagger-automation v0.0.0-20190629163613-c8c7c80ba858 h1:lgbJiJQx8bXo+eM88AFdd0VxUvaTLzCBXpK+H9poJ+Y=
 github.com/pdrum/swagger-automation v0.0.0-20190629163613-c8c7c80ba858/go.mod h1:y02HeaN0visd95W6cEX2NXDv5sCwyqfzucWTdDGEwYY=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
