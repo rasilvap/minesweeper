@@ -43,7 +43,7 @@ func (e game) Get(id int) (*dto.GameResponse, error) {
 		return nil, err
 	}
 
-	if g.GameId == 0 {
+	if g.GameID == 0 {
 		return nil, nil
 	}
 

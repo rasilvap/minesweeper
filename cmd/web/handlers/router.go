@@ -1,18 +1,17 @@
-package main
+package handlers
 
 import (
-	"minesweeper-API/cmd/web/handlers"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
-func setupRoutes(router *mux.Router, h handlers.Game) {
-	router.HandleFunc("/", handlers.HandleHealth).Methods(http.MethodGet)
+func SetupRoutes(router *mux.Router, h Game) {
+	router.HandleFunc("/", HandleHealth).Methods(http.MethodGet)
 	setupRoutesGameHandler(router, h)
 }
 
-func setupRoutesGameHandler(router *mux.Router, h handlers.Game) {
+func setupRoutesGameHandler(router *mux.Router, h Game) {
 	router.HandleFunc("/v1/games/{id:[0-9]+}", h.Get).Methods(http.MethodGet)
 	router.HandleFunc("/v1/games", h.Create).Methods(http.MethodPost)
 	router.HandleFunc("/v1/games/{id:[0-9]+}/play", h.Play).Methods(http.MethodPost)

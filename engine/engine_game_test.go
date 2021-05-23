@@ -1,7 +1,8 @@
-package engine
+package engine_test
 
 import (
 	"errors"
+	"minesweeper-API/engine"
 	"minesweeper-API/models/dto"
 	"testing"
 
@@ -64,9 +65,9 @@ func Test_Create(t *testing.T) {
 	t.Run("OK", func(t *testing.T) {
 		minesWeeper := new(minesWeeperMock)
 		gameDS := new(gameDSMock)
-		game := NewGame(gameDS, minesWeeper)
+		game := engine.NewGame(gameDS, minesWeeper)
 		g := models.Game{
-			GameId:     0,
+			GameID:     0,
 			State:      1,
 			Columns:    3,
 			Rows:       3,
@@ -81,17 +82,18 @@ func Test_Create(t *testing.T) {
 		//act
 		got, err := game.Create(3, 3, 1)
 
-		gameDS.AssertExpectations(t)
+		minesWeeper.AssertNumberOfCalls(t, "BuildGame", 1)
 		minesWeeper.AssertExpectations(t)
+		gameDS.AssertExpectations(t)
+		gameDS.AssertNumberOfCalls(t, "Insert", 1)
 		assert.Equal(t, 123, got)
-		assert.Nil(t, err)
-
+		assert.NoError(t, err)
 	})
 
 	t.Run("error when build", func(t *testing.T) {
 		minesWeeper := new(minesWeeperMock)
 		gameDS := new(gameDSMock)
-		game := NewGame(gameDS, minesWeeper)
+		game := engine.NewGame(gameDS, minesWeeper)
 
 		minesWeeper.On("BuildGame", 3, 3, 1).Return(nil, errors.New("some error"))
 
@@ -107,10 +109,10 @@ func Test_Create(t *testing.T) {
 	t.Run("error when insert", func(t *testing.T) {
 		minesWeeper := new(minesWeeperMock)
 		gameDS := new(gameDSMock)
-		game := NewGame(gameDS, minesWeeper)
+		game := engine.NewGame(gameDS, minesWeeper)
 
 		g := models.Game{
-			GameId:     0,
+			GameID:     0,
 			State:      1,
 			Columns:    3,
 			Rows:       3,
@@ -135,9 +137,9 @@ func Test_Get(t *testing.T) {
 	t.Run("OK", func(t *testing.T) {
 		minesWeeper := new(minesWeeperMock)
 		gameDS := new(gameDSMock)
-		game := NewGame(gameDS, minesWeeper)
+		game := engine.NewGame(gameDS, minesWeeper)
 		g := models.Game{
-			GameId:     123,
+			GameID:     123,
 			State:      1,
 			Columns:    3,
 			Rows:       3,
@@ -158,13 +160,13 @@ func Test_Get(t *testing.T) {
 			Columns:    3,
 			MineAmount: 1,
 		}, got)
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 	})
 
 	t.Run("Not found", func(t *testing.T) {
 		minesWeeper := new(minesWeeperMock)
 		gameDS := new(gameDSMock)
-		game := NewGame(gameDS, minesWeeper)
+		game := engine.NewGame(gameDS, minesWeeper)
 		gameDS.On("Find", 123).Return(&models.Game{}, nil)
 
 		//act
@@ -173,13 +175,13 @@ func Test_Get(t *testing.T) {
 		gameDS.AssertExpectations(t)
 		minesWeeper.AssertExpectations(t)
 		assert.Nil(t, got)
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 	})
 
 	t.Run("Error when find", func(t *testing.T) {
 		minesWeeper := new(minesWeeperMock)
 		gameDS := new(gameDSMock)
-		game := NewGame(gameDS, minesWeeper)
+		game := engine.NewGame(gameDS, minesWeeper)
 		gameDS.On("Find", 123).Return(nil, errors.New("some error"))
 
 		//act
@@ -196,9 +198,9 @@ func Test_Play(t *testing.T) {
 	t.Run("OK", func(t *testing.T) {
 		minesWeeper := new(minesWeeperMock)
 		gameDS := new(gameDSMock)
-		game := NewGame(gameDS, minesWeeper)
+		game := engine.NewGame(gameDS, minesWeeper)
 		g := models.Game{
-			GameId:     123,
+			GameID:     123,
 			State:      1,
 			Columns:    3,
 			Rows:       3,
@@ -234,13 +236,13 @@ func Test_Play(t *testing.T) {
 		gameDS.AssertExpectations(t)
 		minesWeeper.AssertExpectations(t)
 		assert.Equal(t, &res, got)
-		assert.Nil(t, err)
+		assert.NoError(t, err)
 	})
 
 	t.Run("error when find", func(t *testing.T) {
 		minesWeeper := new(minesWeeperMock)
 		gameDS := new(gameDSMock)
-		game := NewGame(gameDS, minesWeeper)
+		game := engine.NewGame(gameDS, minesWeeper)
 
 		req := dto.PlayRequest{
 			Row:    0,
@@ -261,9 +263,9 @@ func Test_Play(t *testing.T) {
 	t.Run("error when play", func(t *testing.T) {
 		minesWeeper := new(minesWeeperMock)
 		gameDS := new(gameDSMock)
-		game := NewGame(gameDS, minesWeeper)
+		game := engine.NewGame(gameDS, minesWeeper)
 		g := models.Game{
-			GameId:     123,
+			GameID:     123,
 			State:      1,
 			Columns:    3,
 			Rows:       3,
@@ -292,9 +294,9 @@ func Test_Play(t *testing.T) {
 	t.Run("error when update", func(t *testing.T) {
 		minesWeeper := new(minesWeeperMock)
 		gameDS := new(gameDSMock)
-		game := NewGame(gameDS, minesWeeper)
+		game := engine.NewGame(gameDS, minesWeeper)
 		g := models.Game{
-			GameId:     123,
+			GameID:     123,
 			State:      1,
 			Columns:    3,
 			Rows:       3,

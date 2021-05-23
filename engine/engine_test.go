@@ -10,8 +10,8 @@ import (
 
 func Test_buildPlayResponse(t *testing.T) {
 	t.Run("in board 3x8 when running", func(t *testing.T) {
-		mines := [][2]int{{1, 1}}
-		mwNew := minesweeper.NewMinesweeper(3, 8, mines)
+		mines := []minesweeper.Mine{{Row: 1, Column: 1}}
+		mwNew := minesweeper.New(3, 8, mines)
 		mw := mwNew.Play(0, 5, minesweeper.TypeMoveClean)
 
 		//ect
@@ -21,14 +21,14 @@ func Test_buildPlayResponse(t *testing.T) {
 		assert.Equal(t, 8, got.Game.Columns)
 		assert.Equal(t, 3, got.Game.Rows)
 		assert.Equal(t, got.Game.Rows, len(got.Game.Board))
-		assert.Equal(t, 6, len(got.Game.Board[0]))
+		assert.Equal(t, 8, len(got.Game.Board[0]))
 	})
 
 	t.Run("in board 3x3", func(t *testing.T) {
-		mines := [][2]int{{1, 1}}
+		mines := []minesweeper.Mine{{Row: 1, Column: 1}}
 
 		t.Run("when lost", func(t *testing.T) {
-			mwNew := minesweeper.NewMinesweeper(3, 3, mines)
+			mwNew := minesweeper.New(3, 3, mines)
 			mw := mwNew.Play(1, 1, minesweeper.TypeMoveClean)
 
 			//ect
@@ -42,8 +42,7 @@ func Test_buildPlayResponse(t *testing.T) {
 		})
 
 		t.Run("when lost and play again", func(t *testing.T) {
-			t.Skip()
-			mwNew := minesweeper.NewMinesweeper(3, 3, mines)
+			mwNew := minesweeper.New(3, 3, mines)
 
 			mw := mwNew.Play(0, 0, minesweeper.TypeMoveClean)
 			got := buildPlayResponse(mw)
@@ -53,14 +52,13 @@ func Test_buildPlayResponse(t *testing.T) {
 			got = buildPlayResponse(mw)
 			assert.Equal(t, "LOST", got.StateGame)
 
-			//TODO Bug
 			mw = mwNew.Play(0, 2, minesweeper.TypeMoveClean)
 			got = buildPlayResponse(mw)
 			assert.Equal(t, "LOST", got.StateGame)
 		})
 
 		t.Run("when won", func(t *testing.T) {
-			mwNew := minesweeper.NewMinesweeper(3, 3, mines)
+			mwNew := minesweeper.New(3, 3, mines)
 
 			mw := mwNew.Play(0, 0, minesweeper.TypeMoveClean)
 			got := buildPlayResponse(mw)

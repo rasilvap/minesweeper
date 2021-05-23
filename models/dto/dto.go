@@ -11,7 +11,7 @@ type GameRequest struct {
 
 // GameSimpleResponse : ...
 type GameSimpleResponse struct {
-	GameId int `json:"gameId"`
+	GameID int `json:"gameID"`
 }
 
 // GameResponse : ...

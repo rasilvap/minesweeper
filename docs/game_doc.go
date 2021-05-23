@@ -24,7 +24,7 @@ type GameRequestParamsWrapper struct {
 	// The game id
 	// required:true
 	// in:path
-	GameId int64 `json:"id"`
+	GameID int64 `json:"id"`
 }
 
 // swagger:route POST /games games createGameEndpoint
@@ -72,5 +72,5 @@ type PlayRequestParamsWrapper struct {
 	// The game id
 	// required:true
 	// in:path
-	GameId int64 `json:"id"`
+	GameID int64 `json:"id"`
 }
