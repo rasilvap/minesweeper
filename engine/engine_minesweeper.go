@@ -74,8 +74,8 @@ func buildPlayResponse(game minesweeper.Game) dto.PlayResponse {
 		return dto.PlayResponse{
 			StateGame: gameStateDTO,
 			Game: dto.GameDTO{Board: [][]dto.TileDTO{},
-				Rows:       game.Rows,
-				Columns:    game.Columns,
+				Rows:    game.Rows,
+				Columns: game.Columns,
 			},
 		}
 	}
@@ -102,9 +102,9 @@ func buildPlayResponse(game minesweeper.Game) dto.PlayResponse {
 	return dto.PlayResponse{
 		StateGame: gameStateDTO,
 		Game: dto.GameDTO{
-			Board:      boardDTO,
-			Rows:       game.Rows,
-			Columns:    game.Columns,
+			Board:   boardDTO,
+			Rows:    game.Rows,
+			Columns: game.Columns,
 		},
 	}
 }
