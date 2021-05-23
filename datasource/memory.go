@@ -4,25 +4,33 @@ import (
 	"minesweeper-API/models"
 )
 
+type gameMemory struct {
+	*datasourceMemory
+}
+
+func NewGameMemory(ds *datasourceMemory) Game {
+	return &gameMemory{ds}
+}
+
 //TODO deberia retornar una copia? si retorna un puntero puede dar problemas de concurrencia?
-func (ds datasourceMemory) Find(id int) (*models.Game, error) {
-	ds.RLock()
-	defer ds.RUnlock()
-	if game, ok := ds.cache[id]; ok {
+func (gm *gameMemory) Find(id int) (*models.Game, error) {
+	gm.RLock()
+	defer gm.RUnlock()
+	if game, ok := gm.cache[id]; ok {
 		return game.(*models.Game), nil
 	}
 	return &models.Game{}, nil
 }
 
-func (ds datasourceMemory) Insert(game *models.Game) (int, error) {
-	ds.Lock()
-	game.GameId = len(ds.cache) + 1
-	ds.cache[game.GameId] = game
-	ds.Unlock()
-	return game.GameId, nil
+func (gm *gameMemory) Insert(game *models.Game) (int, error) {
+	gm.Lock()
+	game.GameID = len(gm.cache) + 1
+	gm.cache[game.GameID] = game
+	gm.Unlock()
+	return game.GameID, nil
 }
 
-func (ds datasourceMemory) Update(g *models.Game) error {
-	_, _ = ds.Insert(g)
+func (gm *gameMemory) Update(g *models.Game) error {
+	_, _ = gm.Insert(g)
 	return nil
 }

@@ -5,17 +5,17 @@ import (
 	"minesweeper-API/models"
 )
 
-type gameSql struct {
+type gameSQL struct {
 	*datasourceSQL
 }
 
-func NewGameSQl(ds *datasourceSQL) Game {
-	return gameSql{ds}
+func NewGameSQL(ds *datasourceSQL) Game {
+	return gameSQL{ds}
 }
 
-func (ds gameSql) Find(id int) (*models.Game, error) {
+func (gs gameSQL) Find(id int) (*models.Game, error) {
 	var game models.Game
-	switch err := ds.Get(&game, `SELECT * FROM minesweeper.games WHERE game_id = $1`, id); err {
+	switch err := gs.Get(&game, `SELECT * FROM minesweeper.games WHERE game_id = $1`, id); err {
 	case nil, sql.ErrNoRows:
 		return &game, nil
 	default:
@@ -23,8 +23,8 @@ func (ds gameSql) Find(id int) (*models.Game, error) {
 	}
 }
 
-func (ds gameSql) Insert(g *models.Game) (int, error) {
-	res, err := ds.NamedQuery(
+func (gs gameSQL) Insert(g *models.Game) (int, error) {
+	res, err := gs.NamedQuery(
 		`INSERT INTO minesweeper.games (state, columns, rows, mine_amount, flag_amount, board)
  		VALUES (:state, :columns, :rows, :mine_amount, :flag_amount, :board) returning game_id`,
 		&g)
@@ -44,8 +44,8 @@ func (ds gameSql) Insert(g *models.Game) (int, error) {
 	return id, nil
 }
 
-func (ds gameSql) Update(g *models.Game) error {
-	_, err := ds.NamedQuery(
+func (gs gameSQL) Update(g *models.Game) error {
+	_, err := gs.NamedQuery(
 		`UPDATE  minesweeper.games  SET state = :state, 
                                columns = :columns, rows = :rows, mine_amount = :mine_amount, flag_amount = :flag_amount, 
                                board = :board WHERE game_id = :game_id`,

@@ -67,7 +67,7 @@ func Test_Create(t *testing.T) {
 		gameDS := new(gameDSMock)
 		game := engine.NewGame(gameDS, minesWeeper)
 		g := models.Game{
-			GameId:     0,
+			GameID:     0,
 			State:      1,
 			Columns:    3,
 			Rows:       3,
@@ -112,7 +112,7 @@ func Test_Create(t *testing.T) {
 		game := engine.NewGame(gameDS, minesWeeper)
 
 		g := models.Game{
-			GameId:     0,
+			GameID:     0,
 			State:      1,
 			Columns:    3,
 			Rows:       3,
@@ -139,7 +139,7 @@ func Test_Get(t *testing.T) {
 		gameDS := new(gameDSMock)
 		game := engine.NewGame(gameDS, minesWeeper)
 		g := models.Game{
-			GameId:     123,
+			GameID:     123,
 			State:      1,
 			Columns:    3,
 			Rows:       3,
@@ -200,7 +200,7 @@ func Test_Play(t *testing.T) {
 		gameDS := new(gameDSMock)
 		game := engine.NewGame(gameDS, minesWeeper)
 		g := models.Game{
-			GameId:     123,
+			GameID:     123,
 			State:      1,
 			Columns:    3,
 			Rows:       3,
@@ -265,7 +265,7 @@ func Test_Play(t *testing.T) {
 		gameDS := new(gameDSMock)
 		game := engine.NewGame(gameDS, minesWeeper)
 		g := models.Game{
-			GameId:     123,
+			GameID:     123,
 			State:      1,
 			Columns:    3,
 			Rows:       3,
@@ -296,7 +296,7 @@ func Test_Play(t *testing.T) {
 		gameDS := new(gameDSMock)
 		game := engine.NewGame(gameDS, minesWeeper)
 		g := models.Game{
-			GameId:     123,
+			GameID:     123,
 			State:      1,
 			Columns:    3,
 			Rows:       3,

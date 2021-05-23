@@ -1,7 +1,7 @@
 package models
 
 type Game struct {
-	GameId     int `db:"game_id"`
+	GameID     int `db:"game_id"`
 	State      int
 	Columns    int
 	Rows       int

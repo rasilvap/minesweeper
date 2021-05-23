@@ -29,9 +29,10 @@ func createDataSourceSQL(c models.DbConfig) datasource.Game {
 		panic(fmt.Sprintf("can't start DatasourceSQL: %v", err))
 	}
 
-	return datasource.NewGameSQl(ds)
+	return datasource.NewGameSQL(ds)
 }
 
 func createDataSourceMemory() datasource.Game {
-	return datasource.NewDatasourceMemory()
+	ds := datasource.NewDatasourceMemory()
+	return datasource.NewGameMemory(ds)
 }

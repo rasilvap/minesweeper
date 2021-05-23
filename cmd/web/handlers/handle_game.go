@@ -65,7 +65,7 @@ func (h game) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	j, err := json.Marshal(dto.GameSimpleResponse{GameId: id})
+	j, err := json.Marshal(dto.GameSimpleResponse{GameID: id})
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)

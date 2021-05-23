@@ -33,8 +33,8 @@ type datasourceMemory struct {
 	cache map[int]interface{}
 }
 
-func NewDatasourceMemory() datasourceMemory {
-	return datasourceMemory{
+func NewDatasourceMemory() *datasourceMemory {
+	return &datasourceMemory{
 		cache: make(map[int]interface{}),
 	}
 }
