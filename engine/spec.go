@@ -8,7 +8,7 @@ import (
 type Game interface {
 	Create(rows, columns, mineAmount int) (int, error)
 	Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, error)
-	Get(id int) (*dto.GameResponse, error)
+	Get(id int) (*dto.GetGameResponse, error)
 }
 
 type MinesWeeper interface {

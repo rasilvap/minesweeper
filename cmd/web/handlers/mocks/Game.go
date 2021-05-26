@@ -35,15 +35,15 @@ func (_m *Game) Create(rows int, columns int, mineAmount int) (int, error) {
 }
 
 // Get provides a mock function with given fields: id
-func (_m *Game) Get(id int) (*dto.GameResponse, error) {
+func (_m *Game) Get(id int) (*dto.GetGameResponse, error) {
 	ret := _m.Called(id)
 
-	var r0 *dto.GameResponse
-	if rf, ok := ret.Get(0).(func(int) *dto.GameResponse); ok {
+	var r0 *dto.GetGameResponse
+	if rf, ok := ret.Get(0).(func(int) *dto.GetGameResponse); ok {
 		r0 = rf(id)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*dto.GameResponse)
+			r0 = ret.Get(0).(*dto.GetGameResponse)
 		}
 	}
 

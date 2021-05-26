@@ -14,7 +14,7 @@ import (
 // swagger:response gameResponseResponseWrapper
 type GameResponseResponseWrapper struct {
 	// in:body
-	Body dto.GameResponse
+	Body dto.GetGameResponse
 }
 
 // Game attributes to set
@@ -37,7 +37,7 @@ type GameRequestParamsWrapper struct {
 // swagger:response gameSimpleResponseResponse
 type gameSimpleResponseResponseWrapper struct {
 	// in:body
-	Body dto.GameSimpleResponse
+	Body dto.CreateGameResponse
 }
 
 // Game attributes to set
@@ -45,7 +45,7 @@ type gameSimpleResponseResponseWrapper struct {
 type gameParamsWrapper struct {
 	// The game's attributes to set.
 	// in:body
-	Body dto.GameRequest
+	Body dto.CreateGameRequest
 }
 
 // swagger:route POST /games/{id}/play games playGameEndpoint

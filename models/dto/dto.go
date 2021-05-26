@@ -1,41 +1,33 @@
 package dto
 
-import "github.com/obarra-dev/minesweeper"
-
-// GameRequest : ...
-type GameRequest struct {
-	Rows       int `json:"rows"`
-	Columns    int `json:"columns"`
-	MineAmount int `json:"mineAmount"`
-}
-
-// GameSimpleResponse : ...
-type GameSimpleResponse struct {
-	GameID int `json:"gameID"`
-}
-
-// GameResponse : ...
-type GameResponse struct {
-	Rows       int `json:"rows"`
-	Columns    int `json:"columns"`
-	MineAmount int `json:"mineAmount"`
-}
-
-type TypeMove string
-
-const (
-	TypeMoveClean          TypeMove = "CLEAN"
-	TypeMoveFlag           TypeMove = "FLAG"
-	TypeMoveQuestion       TypeMove = "QUESTION"
-	TypeMoveRevertQuestion TypeMove = "REVERT_QUESTION"
-	TypeMoveRevertFlag     TypeMove = "REVERT_FLAG"
+import (
+	"github.com/obarra-dev/minesweeper"
 )
+
+// CreateGameRequest : ...
+type CreateGameRequest struct {
+	Rows       int `json:"rows"`
+	Columns    int `json:"columns"`
+	MineAmount int `json:"mineAmount"`
+}
+
+// CreateGameResponse : ...
+type CreateGameResponse struct {
+	GameID int `json:"id"`
+}
+
+// GetGameResponse : ...
+type GetGameResponse struct {
+	Rows       int `json:"rows"`
+	Columns    int `json:"columns"`
+	MineAmount int `json:"mineAmount"`
+}
 
 // PlayRequest : ...
 type PlayRequest struct {
 	Row    int      `json:"row"`
 	Column int      `json:"column"`
-	Move   TypeMove `json:"move"`
+	Move   MoveType `json:"move"`
 }
 
 // PlayResponse : ...

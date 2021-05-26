@@ -6,7 +6,7 @@ import (
 	"github.com/obarra-dev/minesweeper"
 )
 
-func mapTypeMove(typeMove dto.TypeMove) (move minesweeper.TypeMove) {
+func mapTypeMove(typeMove dto.MoveType) (move minesweeper.TypeMove) {
 	switch typeMove {
 	case dto.TypeMoveFlag:
 		move = minesweeper.TypeMoveFlag

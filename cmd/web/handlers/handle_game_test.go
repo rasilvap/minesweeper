@@ -23,7 +23,7 @@ func createGETTest(t *testing.T, url string) (*http.Request, *httptest.ResponseR
 func Test_Get(t *testing.T) {
 	t.Run("OK", func(t *testing.T) {
 		e := new(mocks.Game)
-		e.On("Get", 123).Return(&dto.GameResponse{
+		e.On("Get", 123).Return(&dto.GetGameResponse{
 			Rows:       3,
 			Columns:    3,
 			MineAmount: 1,

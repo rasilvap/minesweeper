@@ -19,7 +19,7 @@ func (gm *gameMemory) Find(id int) (*models.Game, error) {
 	if game, ok := gm.cache[id]; ok {
 		return game.(*models.Game), nil
 	}
-	return &models.Game{}, nil
+	return nil, nil
 }
 
 func (gm *gameMemory) Insert(game *models.Game) (int, error) {
@@ -31,6 +31,6 @@ func (gm *gameMemory) Insert(game *models.Game) (int, error) {
 }
 
 func (gm *gameMemory) Update(g *models.Game) error {
-	_, _ = gm.Insert(g)
-	return nil
+	_, err := gm.Insert(g)
+	return err
 }
