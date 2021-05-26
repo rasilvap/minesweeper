@@ -215,12 +215,11 @@ func Test_Play(t *testing.T) {
 		}
 
 		res := dto.PlayResponse{
-			StateGame: "ACTIVE",
 			Game: dto.GameDTO{
-				Board:      nil,
-				Rows:       3,
-				Columns:    3,
-				FlagAmount: 0,
+				State:   "ACTIVE",
+				Board:   nil,
+				Rows:    3,
+				Columns: 3,
 			},
 		}
 
@@ -311,12 +310,11 @@ func Test_Play(t *testing.T) {
 		}
 
 		res := dto.PlayResponse{
-			StateGame: "ACTIVE",
 			Game: dto.GameDTO{
-				Board:      nil,
-				Rows:       3,
-				Columns:    3,
-				FlagAmount: 0,
+				State:   "ACTIVE",
+				Board:   nil,
+				Rows:    3,
+				Columns: 3,
 			},
 		}
 

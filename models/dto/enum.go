@@ -6,10 +6,10 @@ type MoveType string
 
 const (
 	TypeMoveClean          MoveType = "CLEAN"
-	TypeMoveFlag                    = "FLAG"
-	TypeMoveQuestion                = "QUESTION"
-	TypeMoveRevertQuestion          = "REVERT_QUESTION"
-	TypeMoveRevertFlag              = "REVERT_FLAG"
+	TypeMoveFlag           MoveType = "FLAG"
+	TypeMoveQuestion       MoveType = "QUESTION"
+	TypeMoveRevertQuestion MoveType = "REVERT_QUESTION"
+	TypeMoveRevertFlag     MoveType = "REVERT_FLAG"
 )
 
 func (mt MoveType) IsValid() error {
@@ -24,17 +24,17 @@ type GameState string
 
 const (
 	GameStateRunning GameState = "RUNNING"
-	GameStateLost              = "LOST"
-	GameStateWon               = "WON"
-	GameStateNew               = "NEW"
+	GameStateLost    GameState = "LOST"
+	GameStateWon     GameState = "WON"
+	GameStateNew     GameState = "NEW"
 )
 
 type TileState string
 
 const (
 	TileStateCovered   TileState = "COVERED"
-	TileStateClear               = "CLEAR"
-	TileStateFlagged             = "FLAGGED"
-	TileStateNumbered            = "NUMBERED"
-	TileStateExploited           = "EXPLOITED"
+	TileStateClear     TileState = "CLEAR"
+	TileStateFlagged   TileState = "FLAGGED"
+	TileStateNumbered  TileState = "NUMBERED"
+	TileStateExploited TileState = "EXPLOITED"
 )

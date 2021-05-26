@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"minesweeper-API/models/dto"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -17,11 +18,10 @@ func Test_buildPlayResponse(t *testing.T) {
 		//ect
 		got := buildPlayResponse(mw)
 
-		assert.Equal(t, "RUNNING", got.StateGame)
+		assert.Equal(t, dto.GameStateRunning, got.Game.State)
 		assert.Equal(t, 8, got.Game.Columns)
 		assert.Equal(t, 3, got.Game.Rows)
-		assert.Equal(t, got.Game.Rows, len(got.Game.Board))
-		assert.Equal(t, 8, len(got.Game.Board[0]))
+		assert.Equal(t, got.Game.Rows*got.Game.Columns, len(got.Game.Board))
 	})
 
 	t.Run("in board 3x3", func(t *testing.T) {
@@ -34,11 +34,10 @@ func Test_buildPlayResponse(t *testing.T) {
 			//ect
 			got := buildPlayResponse(mw)
 
-			assert.Equal(t, "LOST", got.StateGame)
+			assert.Equal(t, dto.GameStateLost, got.Game.State)
 			assert.Equal(t, 3, got.Game.Columns)
 			assert.Equal(t, 3, got.Game.Rows)
-			assert.Equal(t, got.Game.Rows, len(got.Game.Board))
-			assert.Equal(t, got.Game.Columns, len(got.Game.Board[0]))
+			assert.Equal(t, got.Game.Rows*got.Game.Columns, len(got.Game.Board))
 		})
 
 		t.Run("when lost and play again", func(t *testing.T) {
@@ -46,15 +45,15 @@ func Test_buildPlayResponse(t *testing.T) {
 
 			mw := mwNew.Play(0, 0, minesweeper.TypeMoveClean)
 			got := buildPlayResponse(mw)
-			assert.Equal(t, got.StateGame, "RUNNING")
+			assert.Equal(t, got.Game.State, dto.GameStateRunning)
 
 			mw = mwNew.Play(1, 1, minesweeper.TypeMoveClean)
 			got = buildPlayResponse(mw)
-			assert.Equal(t, "LOST", got.StateGame)
+			assert.Equal(t, dto.GameStateLost, got.Game.State)
 
 			mw = mwNew.Play(0, 2, minesweeper.TypeMoveClean)
 			got = buildPlayResponse(mw)
-			assert.Equal(t, "LOST", got.StateGame)
+			assert.Equal(t, dto.GameStateLost, got.Game.State)
 		})
 
 		t.Run("when won", func(t *testing.T) {
@@ -62,35 +61,35 @@ func Test_buildPlayResponse(t *testing.T) {
 
 			mw := mwNew.Play(0, 0, minesweeper.TypeMoveClean)
 			got := buildPlayResponse(mw)
-			assert.Equal(t, got.StateGame, "RUNNING")
+			assert.Equal(t, got.Game.State, dto.GameStateRunning)
 
 			mw = mwNew.Play(0, 1, minesweeper.TypeMoveClean)
 			got = buildPlayResponse(mw)
-			assert.Equal(t, "RUNNING", got.StateGame)
+			assert.Equal(t, dto.GameStateRunning, got.Game.State)
 
 			mw = mwNew.Play(0, 2, minesweeper.TypeMoveClean)
 			got = buildPlayResponse(mw)
-			assert.Equal(t, "RUNNING", got.StateGame)
+			assert.Equal(t, dto.GameStateRunning, got.Game.State)
 
 			mw = mwNew.Play(1, 0, minesweeper.TypeMoveClean)
 			got = buildPlayResponse(mw)
-			assert.Equal(t, "RUNNING", got.StateGame)
+			assert.Equal(t, dto.GameStateRunning, got.Game.State)
 
 			mw = mwNew.Play(1, 2, minesweeper.TypeMoveClean)
 			got = buildPlayResponse(mw)
-			assert.Equal(t, "RUNNING", got.StateGame)
+			assert.Equal(t, dto.GameStateRunning, got.Game.State)
 
 			mw = mwNew.Play(2, 0, minesweeper.TypeMoveClean)
 			got = buildPlayResponse(mw)
-			assert.Equal(t, "RUNNING", got.StateGame)
+			assert.Equal(t, dto.GameStateRunning, got.Game.State)
 
 			mw = mwNew.Play(2, 1, minesweeper.TypeMoveClean)
 			got = buildPlayResponse(mw)
-			assert.Equal(t, "RUNNING", got.StateGame)
+			assert.Equal(t, dto.GameStateRunning, got.Game.State)
 
 			mw = mwNew.Play(2, 2, minesweeper.TypeMoveClean)
 			got = buildPlayResponse(mw)
-			assert.Equal(t, "WON", got.StateGame)
+			assert.Equal(t, dto.GameStateWon, got.Game.State)
 		})
 	})
 }
