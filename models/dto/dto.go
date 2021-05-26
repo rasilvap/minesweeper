@@ -41,16 +41,16 @@ type GameCompleteResponse struct {
 }
 
 type TileDTO struct {
-	State                string `json:"state"`
-	Row                  int    `json:"row"`
-	Column               int    `json:"column"`
-	SurroundingMineCount int    `json:"surroundingMineCount"`
-	Mine                 bool   `json:"mine"`
+	State                TileState `json:"state"`
+	Row                  int       `json:"row"`
+	Column               int       `json:"column"`
+	SurroundingMineCount int       `json:"surroundingMineCount"`
+	Mine                 bool      `json:"mine"`
 }
 
 type GameDTO struct {
-	StateGame string    `json:"stateGame"`
-	Rows      int       `json:"rows"`
-	Columns   int       `json:"columns"`
-	Board     []TileDTO `json:"board"`
+	State   GameState `json:"state"`
+	Rows    int       `json:"rows"`
+	Columns int       `json:"columns"`
+	Board   []TileDTO `json:"board"`
 }

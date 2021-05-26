@@ -72,7 +72,7 @@ func buildPlayResponse(game minesweeper.Game) dto.PlayResponse {
 	for r := 0; r < game.Rows; r++ {
 		for c := 0; c < game.Columns; c++ {
 			tile := game.Board[r][c]
-			tileStateDTO := mapTileState(tile.State)
+			tileStateDTO := mapToTileStateDTO(tile.State)
 			board = append(board, dto.TileDTO{
 				State:                tileStateDTO,
 				Row:                  tile.Row,
@@ -83,13 +83,13 @@ func buildPlayResponse(game minesweeper.Game) dto.PlayResponse {
 		}
 	}
 
-	gameStateDTO := mapStateGame(game.State)
+	gameStateDTO := mapToStateGameDTO(game.State)
 	return dto.PlayResponse{
 		Game: dto.GameDTO{
-			StateGame: gameStateDTO,
-			Rows:      game.Rows,
-			Columns:   game.Columns,
-			Board:     board,
+			State:   gameStateDTO,
+			Rows:    game.Rows,
+			Columns: game.Columns,
+			Board:   board,
 		},
 	}
 }

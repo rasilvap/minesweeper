@@ -19,3 +19,22 @@ func (mt MoveType) IsValid() error {
 	}
 	return errors.New("invalid move type")
 }
+
+type GameState string
+
+const (
+	GameStateRunning GameState = "RUNNING"
+	GameStateLost              = "LOST"
+	GameStateWon               = "WON"
+	GameStateNew               = "NEW"
+)
+
+type TileState string
+
+const (
+	TileStateCovered   TileState = "COVERED"
+	TileStateClear               = "CLEAR"
+	TileStateFlagged             = "FLAGGED"
+	TileStateNumbered            = "NUMBERED"
+	TileStateExploited           = "EXPLOITED"
+)
