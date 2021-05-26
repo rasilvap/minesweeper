@@ -68,43 +68,28 @@ func buildGameDS(g *minesweeper.Game) (*models.Game, error) {
 }
 
 func buildPlayResponse(game minesweeper.Game) dto.PlayResponse {
-	gameStateDTO := mapStateGame(game.State)
-	row := len(game.Board)
-	if row == 0 {
-		return dto.PlayResponse{
-			StateGame: gameStateDTO,
-			Game: dto.GameDTO{Board: [][]dto.TileDTO{},
-				Rows:    game.Rows,
-				Columns: game.Columns,
-			},
-		}
-	}
-
-	boardDTO := make([][]dto.TileDTO, row)
-	for i := 0; i < row; i++ {
-		column := len(game.Board[i])
-		boardDTO[i] = make([]dto.TileDTO, column)
-
-		for j := 0; j < column; j++ {
-			board := game.Board[i][j]
-			tileStateDTO := mapTileState(board.State)
-			boardDTO[i][j] = dto.TileDTO{
+	var board []dto.TileDTO
+	for r := 0; r < game.Rows; r++ {
+		for c := 0; c < game.Columns; c++ {
+			tile := game.Board[r][c]
+			tileStateDTO := mapTileState(tile.State)
+			board = append(board, dto.TileDTO{
 				State:                tileStateDTO,
-				Row:                  board.Row,
-				Column:               board.Column,
-				SurroundingMineCount: board.SurroundingMineCount,
-				Mine:                 board.IsMine,
-
-				ValueTest: -1}
+				Row:                  tile.Row,
+				Column:               tile.Column,
+				SurroundingMineCount: tile.SurroundingMineCount,
+				Mine:                 tile.IsMine,
+			})
 		}
 	}
 
+	gameStateDTO := mapStateGame(game.State)
 	return dto.PlayResponse{
-		StateGame: gameStateDTO,
 		Game: dto.GameDTO{
-			Board:   boardDTO,
-			Rows:    game.Rows,
-			Columns: game.Columns,
+			StateGame: gameStateDTO,
+			Rows:      game.Rows,
+			Columns:   game.Columns,
+			Board:     board,
 		},
 	}
 }

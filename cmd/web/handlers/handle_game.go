@@ -106,7 +106,7 @@ func (g game) Play(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if request.Column <= 0 || request.Row <= 0 {
+	if request.Column < 0 || request.Row < 0 {
 		log.Println("request invalid")
 		w.WriteHeader(http.StatusBadRequest)
 		return
