@@ -36,7 +36,7 @@ func (e game) Create(rows, columns, mineAmount int) (int, error) {
 	return id, nil
 }
 
-func (e game) Get(id int) (*dto.GameResponse, error) {
+func (e game) Get(id int) (*dto.GetGameResponse, error) {
 	g, err := e.gameDS.Find(id)
 	if err != nil {
 		log.Printf("Error finding game: %d, err: %v", id, err)
@@ -47,7 +47,7 @@ func (e game) Get(id int) (*dto.GameResponse, error) {
 		return nil, nil
 	}
 
-	return &dto.GameResponse{
+	return &dto.GetGameResponse{
 			Rows:       g.Rows,
 			Columns:    g.Columns,
 			MineAmount: g.MineAmount,
@@ -61,6 +61,10 @@ func (e game) Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, erro
 	if err != nil {
 		log.Printf("Error finding g: %d, err: %v", id, err)
 		return nil, err
+	}
+
+	if g == nil {
+		return nil, nil
 	}
 
 	gameDS, playResponse, err := e.minesWeeperEngine.Play(playRequest, g)

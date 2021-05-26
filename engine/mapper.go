@@ -6,7 +6,7 @@ import (
 	"github.com/obarra-dev/minesweeper"
 )
 
-func mapTypeMove(typeMove dto.TypeMove) (move minesweeper.TypeMove) {
+func mapTypeMove(typeMove dto.MoveType) (move minesweeper.TypeMove) {
 	switch typeMove {
 	case dto.TypeMoveFlag:
 		move = minesweeper.TypeMoveFlag
@@ -18,38 +18,32 @@ func mapTypeMove(typeMove dto.TypeMove) (move minesweeper.TypeMove) {
 	return
 }
 
-func mapStateGame(stateGame minesweeper.StateGame) string {
-	var gameStateDTO string
+func mapToStateGameDTO(stateGame minesweeper.StateGame) (state dto.GameState) {
 	switch stateGame {
 	case minesweeper.StateGameRunning:
-		gameStateDTO = "RUNNING"
+		state = dto.GameStateRunning
 	case minesweeper.StateGameLost:
-		gameStateDTO = "LOST"
+		state = dto.GameStateLost
 	case minesweeper.StateGameNew:
-		gameStateDTO = "NEW"
+		state = dto.GameStateNew
 	case minesweeper.StateGameWon:
-		gameStateDTO = "WON"
-	default:
-		gameStateDTO = ""
+		state = dto.GameStateWon
 	}
-	return gameStateDTO
+	return
 }
 
-func mapTileState(tileState minesweeper.StateTile) string {
-	var tileStateDTO string
+func mapToTileStateDTO(tileState minesweeper.StateTile) (state dto.TileState) {
 	switch tileState {
 	case minesweeper.StateTileCovered:
-		tileStateDTO = "COVERED"
+		state = dto.TileStateCovered
 	case minesweeper.StateTileClear:
-		tileStateDTO = "CLEAR"
+		state = dto.TileStateClear
 	case minesweeper.StateTileFlagged:
-		tileStateDTO = "FLAGGED"
+		state = dto.TileStateFlagged
 	case minesweeper.StateTileNumbered:
-		tileStateDTO = "NUMBERED"
+		state = dto.TileStateNumbered
 	case minesweeper.StateTileExploited:
-		tileStateDTO = "EXPLOITED"
-	default:
-		tileStateDTO = ""
+		state = dto.TileStateExploited
 	}
-	return tileStateDTO
+	return state
 }

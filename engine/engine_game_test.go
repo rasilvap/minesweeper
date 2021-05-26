@@ -155,7 +155,7 @@ func Test_Get(t *testing.T) {
 
 		gameDS.AssertExpectations(t)
 		minesWeeper.AssertExpectations(t)
-		assert.Equal(t, &dto.GameResponse{
+		assert.Equal(t, &dto.GetGameResponse{
 			Rows:       3,
 			Columns:    3,
 			MineAmount: 1,

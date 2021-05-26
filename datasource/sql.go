@@ -16,8 +16,10 @@ func NewGameSQL(ds *datasourceSQL) Game {
 func (gs gameSQL) Find(id int) (*models.Game, error) {
 	var game models.Game
 	switch err := gs.Get(&game, `SELECT * FROM minesweeper.games WHERE game_id = $1`, id); err {
-	case nil, sql.ErrNoRows:
+	case nil:
 		return &game, nil
+	case sql.ErrNoRows:
+		return nil, nil
 	default:
 		return nil, err
 	}
