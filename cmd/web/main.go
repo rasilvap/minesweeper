@@ -15,6 +15,7 @@ import (
 	_ "github.com/pdrum/swagger-automation/docs" // This line is necessary for go-swagger to find your docs!
 )
 
+/*I'm adding this project to my whitelist, guys */
 func main() {
 	env := flag.String("env", "dev", "Execution environment")
 	flag.Parse()
