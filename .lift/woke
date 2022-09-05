@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# dir=$1 but it is not needed
+commit=$2
+cmd=$3 
+
+IFS=':' # string delimiter
+
+function version() {
+    echo 1
+}
+
+# always applicable
+function applicable() {
+    echo "true"
+}
+
+function run() {
+    installTool
+
+    firstResult=1
+
+    echo "["
+    ./woke --output simple | while read -ra result ; do
+	if [ $firstResult -eq 1 ]
+        then
+	    firstResult=0
+	else
+            echo ","
+	fi
+
+        echo "{ \"type\": \"Woke\", \
+            \"message\": \"${result[3]}\", \
+            \"file\": \"${result[0]}\", \
+            \"line\": ${result[1]}, \
+            \"details_url\": \"https://docs.getwoke.tech\" \
+          }"
+    done
+    echo "]"
+}
+
+# Add result of output to install-output.txt
+function installTool() {
+    curl -sSfL https://git.io/getwoke | bash -s -- -b . &> install-output.txt
+}
+
+if [[ "$cmd" = "run" ]] ; then 
+    run 
+fi 
+if [[ "$cmd" = "applicable" ]] ; then 
+    applicable 
+fi 
+if [[ "$cmd" = "version" ]] ; then 
+    version 
+fi
