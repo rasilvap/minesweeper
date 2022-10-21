@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"fmt"
 	"log"
 	"minesweeper-API/models/dto"
 
@@ -21,11 +22,9 @@ func NewGame(gameDS datasource.Game, minesWeeperEngine MinesWeeper) Game {
 }
 
 func (e game) Create(rows, columns, mineAmount int) (int, error) {
-	g, err := e.minesWeeperEngine.BuildGame(rows, columns, mineAmount)
-	if err != nil {
-		log.Printf("Error building game, err: %v", err)
-		return 0, err
-	}
+	g, _ := e.minesWeeperEngine.BuildGame(rows, columns, mineAmount)
+
+	fmt.Println("mimmamam")
 
 	id, err := e.gameDS.Insert(g)
 	if err != nil {
