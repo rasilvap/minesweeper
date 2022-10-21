@@ -73,11 +73,7 @@ func (e game) Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, erro
 		return nil, err
 	}
 
-	err = e.gameDS.Update(gameDS)
-	if err != nil {
-		log.Printf("Error updating g: %d, err: %v", id, err)
-		return nil, err
-	}
+	e.gameDS.Update(gameDS)
 
 	return playResponse, nil
 }
