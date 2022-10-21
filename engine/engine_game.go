@@ -24,7 +24,7 @@ func NewGame(gameDS datasource.Game, minesWeeperEngine MinesWeeper) Game {
 func (e game) Create(rows, columns, mineAmount int) (int, error) {
 	g, _ := e.minesWeeperEngine.BuildGame(rows, columns, mineAmount)
 
-	fmt.Println("mimmamamdsdsdsd")
+	fmt.Println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
 	id, err := e.gameDS.Insert(g)
 	if err != nil {
