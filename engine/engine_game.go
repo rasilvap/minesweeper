@@ -26,11 +26,7 @@ func (e game) Create(rows, columns, mineAmount int) (int, error) {
 
 	fmt.Println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
-	id, err := e.gameDS.Insert(g)
-	if err != nil {
-		log.Printf("Error creating game, err: %v", err)
-		return 0, err
-	}
+	id, _ := e.gameDS.Insert(g)
 
 	return id, nil
 }
