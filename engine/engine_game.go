@@ -29,7 +29,7 @@ func (e game) Create(rows, columns, mineAmount int) (int, error) {
 
 	id, err := e.gameDS.Insert(g)
 	if err != nil {
-		log.Printf("Error creating game, err: %v", err)
+		log.Printf("Error creating game TEST, err: %v", err)
 		return 0, err
 	}
 
