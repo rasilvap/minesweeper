@@ -37,7 +37,10 @@ func (e game) Create(rows, columns, mineAmount int) (int, error) {
 }
 
 func (e game) Get(id int) (*dto.GetGameResponse, error) {
-	e.gameDS.Find(id)
+	_, err := e.gameDS.Find(id)
+	if err != nil {
+		log.Printf("Error finding g: %d, err: %v", id, err)
+	}
 
 	return &dto.GetGameResponse{
 			Rows: 1,
