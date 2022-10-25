@@ -40,6 +40,7 @@ func (e game) Get(id int) (*dto.GetGameResponse, error) {
 	_, err := e.gameDS.Find(id)
 	if err != nil {
 		log.Printf("Error finding g: %d, err: %v", id, err)
+		return nil, err
 	}
 
 	return &dto.GetGameResponse{
@@ -62,11 +63,15 @@ func (e game) Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, erro
 
 	gameDS, playResponse, err := e.minesWeeperEngine.Play(playRequest, g)
 	if err != nil {
-		log.Printf("Error playing game: %d, err: %v", id, err)
+		log.Printf("Error playing gameXX: %d, err: %v", id, err)
 		return nil, err
 	}
 
-	e.gameDS.Update(gameDS)
+	err = e.gameDS.Update(gameDS)
+	if err != nil {
+		log.Printf("Error updating game: %d, err: %v", id, err)
+		return nil, err
+	}
 
 	return playResponse, nil
 }
