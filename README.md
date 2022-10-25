@@ -22,7 +22,6 @@
 * When a cell with no adjacent mines is revealed, all adjacent squares will be revealed (and repeat)
 * Ability to 'flag' a cell with a question mark or red flag
 * Detect when game is over
-* TEST
 
 
 ## Technologies 
