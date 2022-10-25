@@ -27,13 +27,9 @@ func (e game) Create(rows, columns, mineAmount int) (int, error) {
 		return 0, err
 	}
 
-	id, err := e.gameDS.Insert(g)
-	if err != nil {
-		log.Printf("Error creating game , err: %v", err)
-		return 0, err
-	}
+	e.gameDS.Insert(g)
 
-	return id, nil
+	return 2, nil
 }
 
 func (e game) Get(id int) (*dto.GetGameResponse, error) {
@@ -63,7 +59,7 @@ func (e game) Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, erro
 
 	gameDS, playResponse, err := e.minesWeeperEngine.Play(playRequest, g)
 	if err != nil {
-		log.Printf("Error playing game: %d, err: %v", id, err)
+		log.Printf("Error playing gameXX: %d, err: %v", id, err)
 		return nil, err
 	}
 
