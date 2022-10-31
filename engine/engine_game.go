@@ -29,7 +29,7 @@ func (e game) Create(rows, columns, mineAmount int) (int, error) {
 
 	id, err := e.gameDS.Insert(g)
 	if err != nil {
-		log.Printf("Error creating game , err: %v", err)
+		log.Printf("Error creating game, err: %v", err)
 		return 0, err
 	}
 
@@ -37,19 +37,26 @@ func (e game) Create(rows, columns, mineAmount int) (int, error) {
 }
 
 func (e game) Get(id int) (*dto.GetGameResponse, error) {
-	_, err := e.gameDS.Find(id)
+	g, err := e.gameDS.Find(id)
 	if err != nil {
-		log.Printf("Error finding g: %d, err: %v", id, err)
+		log.Printf("Error finding game: %d, err: %v", id, err)
+		return nil, err
+	}
+
+	if g.GameID == 0 {
+		return nil, nil
 	}
 
 	return &dto.GetGameResponse{
-			Rows: 1,
+			Rows:       1,
+			Columns:    g.Columns,
+			MineAmount: g.MineAmount,
 		},
 		nil
 }
 
 func (e game) Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, error) {
-	log.Println("Playing game test", playRequest)
+	log.Println("Playing game", playRequest)
 	g, err := e.gameDS.Find(id)
 	if err != nil {
 		log.Printf("Error finding g: %d, err: %v", id, err)
@@ -66,7 +73,11 @@ func (e game) Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, erro
 		return nil, err
 	}
 
-	e.gameDS.Update(gameDS)
+	err = e.gameDS.Update(gameDS)
+	if err != nil {
+		log.Printf("Error updating g: %d, err: %v", id, err)
+		return nil, err
+	}
 
 	return playResponse, nil
 }
