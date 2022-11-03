@@ -15,7 +15,7 @@
 </p>
 
 
-##  List of items completed CCC
+##  List of items completed
 
 * Design and implement a documented RESTful API for the game (think of a mobile app for your API)
 * Implement an API client library for the API designed above. Ideally, in a different language, of your preference, to the one used for the API
