@@ -1,1 +1,2 @@
 customTools = [ ".lift/woke" ]
+commentStyle = "minimal"
