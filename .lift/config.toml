@@ -1,2 +1,2 @@
 customTools = [ ".lift/woke" ]
-commentStyle = "normal"
+commentStyle = "minimal"
