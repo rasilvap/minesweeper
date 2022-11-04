@@ -56,7 +56,7 @@ func (e game) Get(id int) (*dto.GetGameResponse, error) {
 }
 
 func (e game) Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, error) {
-	log.Println("Playing game", playRequest)
+	log.Println("Playing game xxx", playRequest)
 	g, err := e.gameDS.Find(id)
 	if err != nil {
 		log.Printf("Error finding g: %d, err: %v", id, err)
