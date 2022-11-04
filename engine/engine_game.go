@@ -69,7 +69,7 @@ func (e game) Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, erro
 
 	gameDS, playResponse, err := e.minesWeeperEngine.Play(playRequest, g)
 	if err != nil {
-		log.Printf("Error playing gameTEST: %d, err: %v", id, err)
+		log.Printf("Error playing game: %d, err: %v", id, err)
 		return nil, err
 	}
 
