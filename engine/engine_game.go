@@ -75,5 +75,16 @@ func (e game) Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, erro
 
 	e.gameDS.Update(gameDS)
 
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+
 	return playResponse, nil
 }
