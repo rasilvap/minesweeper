@@ -12,7 +12,7 @@ type game struct {
 	minesWeeperEngine MinesWeeper
 }
 
-//TODO validate with pprof this with pointer gias
+//TODO validate with pprof this with pointer gia
 func NewGame(gameDS datasource.Game, minesWeeperEngine MinesWeeper) Game {
 	return game{
 		gameDS:            gameDS,
