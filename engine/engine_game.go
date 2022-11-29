@@ -27,9 +27,9 @@ func (e game) Create(rows, columns, mineAmount int) (int, error) {
 		return 0, err
 	}
 
-	e.gameDS.Insert(g)
+	id, err := e.gameDS.Insert(g)
 
-	return 0, nil
+	return id, err
 }
 
 func (e game) Get(id int) (*dto.GetGameResponse, error) {
