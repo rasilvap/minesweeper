@@ -27,13 +27,9 @@ func (e game) Create(rows, columns, mineAmount int) (int, error) {
 		return 0, err
 	}
 
-	id, err := e.gameDS.Insert(g)
-	if err != nil {
-		log.Printf("Error creating game, err: %v", err)
-		return 0, err
-	}
+	e.gameDS.Insert(g)
 
-	return id, nil
+	return 0, nil
 }
 
 func (e game) Get(id int) (*dto.GetGameResponse, error) {
