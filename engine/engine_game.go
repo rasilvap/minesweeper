@@ -27,9 +27,7 @@ func (e game) Create(rows, columns, mineAmount int) (int, error) {
 		return 0, err
 	}
 
-	e.gameDS.Insert(g)
-
-	return 1, nil
+	return g.GameID, err
 }
 
 func (e game) Get(id int) (*dto.GetGameResponse, error) {
@@ -65,15 +63,8 @@ func (e game) Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, erro
 
 	gameDS, playResponse, _ := e.minesWeeperEngine.Play(playRequest, g)
 
-
 	e.gameDS.Update(gameDS)
 
-	e.gameDS.Update(gameDS)
-	e.gameDS.Update(gameDS)
-	e.gameDS.Update(gameDS)
-	e.gameDS.Update(gameDS)
-	e.gameDS.Update(gameDS)
-	e.gameDS.Update(gameDS)
 	e.gameDS.Update(gameDS)
 	e.gameDS.Update(gameDS)
 	e.gameDS.Update(gameDS)
