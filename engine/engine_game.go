@@ -12,7 +12,7 @@ type game struct {
 	minesWeeperEngine MinesWeeper
 }
 
-//TODO validate with pprof this with pointer
+//TODO validate with pprof this with pointer gia1107
 func NewGame(gameDS datasource.Game, minesWeeperEngine MinesWeeper) Game {
 	return game{
 		gameDS:            gameDS,
@@ -27,13 +27,9 @@ func (e game) Create(rows, columns, mineAmount int) (int, error) {
 		return 0, err
 	}
 
-	id, err := e.gameDS.Insert(g)
-	if err != nil {
-		log.Printf("Error creating game, err: %v", err)
-		return 0, err
-	}
+	e.gameDS.Insert(g)
 
-	return id, nil
+	return 1, nil
 }
 
 func (e game) Get(id int) (*dto.GetGameResponse, error) {
@@ -56,7 +52,7 @@ func (e game) Get(id int) (*dto.GetGameResponse, error) {
 }
 
 func (e game) Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, error) {
-	log.Println("Playing game", playRequest)
+	log.Println("Playing game xxx", playRequest)
 	g, err := e.gameDS.Find(id)
 	if err != nil {
 		log.Printf("Error finding g: %d, err: %v", id, err)
@@ -67,17 +63,21 @@ func (e game) Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, erro
 		return nil, nil
 	}
 
-	gameDS, playResponse, err := e.minesWeeperEngine.Play(playRequest, g)
-	if err != nil {
-		log.Printf("Error playing gameXX: %d, err: %v", id, err)
-		return nil, err
-	}
+	gameDS, playResponse, _ := e.minesWeeperEngine.Play(playRequest, g)
 
-	err = e.gameDS.Update(gameDS)
-	if err != nil {
-		log.Printf("Error updating game: %d, err: %v", id, err)
-		return nil, err
-	}
+
+	e.gameDS.Update(gameDS)
+
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
+	e.gameDS.Update(gameDS)
 
 	return playResponse, nil
 }
