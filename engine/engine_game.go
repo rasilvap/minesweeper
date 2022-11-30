@@ -79,5 +79,7 @@ func (e game) Play(id int, playRequest dto.PlayRequest) (*dto.PlayResponse, erro
 		return nil, err
 	}
 
+	var number int
+
 	return playResponse, nil
 }
